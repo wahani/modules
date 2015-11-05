@@ -1,32 +1,21 @@
-VIRTUAL : environment : ModuleEnv(parent ~ environment) %type% {
+VIRTUAL : environment : ModuleEnv() %type% {
   # Type to organise scope for modules
-  .Object@parent <- as.environment("package:stats")
-  parent.env(.Object) <- .Object@parent
+  parent.env(.Object) <- baseenv()
   .Object
 }
 
 ModuleEnv : ModuleScope() %type% {
-  # This is the type to wrap a module
-  .Object@parent <- ModuleParent()
-  parent.env(.Object) <- .Object@parent
+  # This is the type to wrap a module. It is the enclosing env of all funs in a
+  # module
+  parent.env(.Object) <- ModuleParent()
   .Object
 }
 
-show(object ~ ModuleScope) %m% {
-  cat("Object of class 'ModuleScope'")
-}
-
 ModuleEnv : ModuleParent() %type% {
-  # This is the type for the parent of a module
+  # This is the type for the parent of a module. This is also the env into which
+  # dependencies are imported.
   # It knows of some functions:
   import("module", "import", into = .Object)
   import("module", "use", into = .Object)
   .Object
-}
-
-show(object ~ ModuleParent) %m% {
-  cat("Object of class 'ModuleParent'")
-  cat("\n  It organizes the search path of a module.")
-  cat("\n\n  search path continues with:\n  ")
-  cat(environmentName(object@parent))
 }
