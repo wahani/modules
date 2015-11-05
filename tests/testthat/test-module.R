@@ -38,9 +38,12 @@ test_that("delayed assignment", {
   m <- module({
     import("delayed", "assignment") # does not exist!
     temp <- function() assignment
+    checkExistens <- function() exists("assignment")
   })
   # When 'temp' is called, it should not find 'assignment'
   expect_error(m$temp())
+  expect_true(m$checkExistens())
+
 })
 
 test_that("Inheritance of module", {
@@ -59,4 +62,12 @@ test_that("Inheritance of module", {
 
   expect_equal(m1$funNew(1), 1)
 
+})
+
+test_that("package dependencies", {
+  m <- module({
+    use(as.environment("package:aoos"))
+    deps <- function() exists("%g%")
+  })
+  expect_true(m$deps())
 })
