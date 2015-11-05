@@ -1,0 +1,81 @@
+[![Build Status](https://travis-ci.org/wahani/module.png?branch=master)](https://travis-ci.org/wahani/module)
+
+# Modules in R
+```{r, results='asis', echo=FALSE}
+cat(gsub("\\n   ", "", packageDescription("module", fields = "Description")))
+```
+
+## Installation
+
+From this repo:
+```{r, eval=FALSE}
+library(devtools)
+install_github("wahani/aoos")
+```
+
+```{r, echo=FALSE}
+wahaniMiscs::getLocalPackageUpdates("module")
+```
+
+## Modules
+
+```{r}
+m <- module({
+  boringFunction <- function() cat("boring output")
+})
+
+m$boringFunction()
+str(m) # it's just a list
+```
+
+Modules have their own scope, and have no idea whats going on around them:
+
+```{r error=TRUE}
+hey <- "hey"
+m <- module({
+  isolatedFunction <- function() hey
+})
+m$isolatedFunction()
+```
+
+Unless you force them to rely on some unknown quantity outside their control:
+
+```{r}
+m <- module({
+  isolatedFunction <- function() .GlobalEnv$hey
+})
+m$isolatedFunction()
+```
+
+You have to rely on exported things of packages at some point:
+
+```{r}
+m <- module({
+  functionWithDep <- function() data.table::data.table(x = 1)
+})
+m$functionWithDep()
+```
+
+Or if you like to have more lines or state your dependencies on top:
+
+```{r}
+m <- module({
+  import(data.table, data.table)
+  functionWithDep <- function() data.table(x = 1)
+})
+m$functionWithDep()
+```
+
+You can also use other modules in that you make all their exported functions
+available in your new module definition.
+
+```{r}
+m1 <- module({
+  use(.GlobalEnv$m) # normally: pkgName::moduleName
+  anotherFunction <- function() functionWithDep()
+})
+str(m1)
+m1$anotherFunction()
+```
+
+

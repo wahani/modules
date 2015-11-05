@@ -1,11 +1,10 @@
 Package: module
-Title: Module
+Title: Still needs a title!
 Version: 0.0.1
-Authors@R: person("First", "Last", email = "first.last@example.com", role = c("aut", "cre"))
-Description: Tools to organise source code around modules.
-Depends: R (>= 3.2.2), aoos
-License: GPL-3
+Authors@R: person("Sebastian", "Warnholz", email = "wahani@gmail.com", role = c("aut", "cre"))
+Description: Provides a module in R to organise source code around. Modules enforce to be more rigerous when defining dependencies. They are to be used as a sub unit within packages.
+Depends: R (>= 3.2.2), aoos, methods
+License: GPL-3 | file LICENSE
 Encoding: UTF-8
 LazyData: true
-LinkingTo: Rcpp
-Imports: Rcpp
+Suggests: testthat

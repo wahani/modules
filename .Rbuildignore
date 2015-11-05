@@ -1,2 +1,5 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
+prepareRepo.R
+README.Rmd
+^\.travis\.yml$

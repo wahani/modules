@@ -1,27 +1,32 @@
-defaultParent <- function() {
-  as.environment("package:stats")
+VIRTUAL : environment : ModuleEnv(parent ~ environment) %type% {
+  # Type to organise scope for modules
+  .Object@parent <- as.environment("package:stats")
+  parent.env(.Object) <- .Object@parent
+  .Object
 }
 
-environment : ModuleScope(parent = defaultParent()) %type% {
-  # Class to organise inheritance for modules
-  # By default the parent is 'package:stats' and by this sets the point
-  # for the search path which you do not have to import into a module.
+ModuleEnv : ModuleScope() %type% {
+  # This is the type to wrap a module
+  .Object@parent <- ModuleParent()
   parent.env(.Object) <- .Object@parent
   .Object
 }
 
 show(object ~ ModuleScope) %m% {
   cat("Object of class 'ModuleScope'")
-  cat("\n  It organizes the scope of a module.")
-  cat("\n\n  Parent of modules scope is:\n  ")
-  cat(environmentName(object@parent))
 }
 
-ModuleScope : ModuleEnv(parent = ModuleScope()) %type% {
-  # This is the class to wrap a module
+ModuleEnv : ModuleParent() %type% {
+  # This is the type for the parent of a module
+  # It knows of some functions:
+  import("module", "import", into = .Object)
+  import("module", "use", into = .Object)
   .Object
 }
 
-show(object ~ ModuleEnv) %m% {
-  cat("Object of class 'ModuleEnv'")
+show(object ~ ModuleParent) %m% {
+  cat("Object of class 'ModuleParent'")
+  cat("\n  It organizes the search path of a module.")
+  cat("\n\n  search path continues with:\n  ")
+  cat(environmentName(object@parent))
 }

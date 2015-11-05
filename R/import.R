@@ -1,4 +1,13 @@
-importFromPackage <- function(from, ..., into = parent.env(parent.frame())) {
+#' Import objects into module
+#'
+#' @param from a package name
+#' @param ... names to import from package
+#' @param into the environment where the thing is stored. By default the parent
+#'   of the module
+#' @param module a module, aka a list, or any named collection
+#'
+#' @export
+import <- function(from, ..., into = parent.env(parent.frame())) {
 
   deleteQuotes <- function(x) {
     gsub("\\\"|\\\'", "", x)
@@ -31,4 +40,17 @@ importFromPackage <- function(from, ..., into = parent.env(parent.frame())) {
 
   invisible(NULL)
 
+}
+
+#' @export
+#' @rdname import
+use <- function(module, into = parent.env(parent.frame())) {
+  lapply(names(module), function(x) {
+    assign(
+      x,
+      value = module[[x]],
+      envir = as.environment(into)
+    )
+  })
+  invisible(NULL)
 }
