@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/wahani/module.png?branch=master)](https://travis-ci.org/wahani/module)
+[![codecov.io](https://codecov.io/github/wahani/module/coverage.svg?branch=master)](https://codecov.io/github/wahani/module?branch=master)
 
 # Modules in R
 ```{r, results='asis', echo=FALSE}
