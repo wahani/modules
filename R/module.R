@@ -72,7 +72,9 @@ import <- function(from, ..., into = parent.env(parent.frame())) {
 use <- function(module, where = parent.frame()) {
 
   module <- if (is.character(module)) {
-    as.list(as.environment(module))
+    as.list(as.environment(
+      paste0("package:", sub("package:", "", module)) # to accept both
+    ))
   } else if (is.environment(module)) {
     as.list(module)
   } else if (is.list(module)) {

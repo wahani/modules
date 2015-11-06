@@ -28,7 +28,7 @@ m$boringFunction()
 str(m) # it's just a list
 ```
 
-Modules have their own scope, and have no idea whats going on around them:
+Modules have their own scope, and have no idea what's going on around them:
 
 ```{r error=TRUE}
 hey <- "hey"
@@ -66,7 +66,7 @@ m <- module({
 m$functionWithDep(1:10)
 ```
 
-You can also use other modules by makeing all their exported functions
+You can also use other modules by making all their exported functions
 available in your new module definition.
 
 ```{r}
@@ -97,7 +97,7 @@ way around this because it is needed for everything related to S4s object
 orientation. With well written packages this is no problem.
 
 One example where you may want to have more control of the enclosing environment 
-of a function is when you parallize your code:
+of a function is when you parallelize your code:
 
 ```{r error=TRUE}
 library(parallel)

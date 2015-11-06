@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.org/wahani/module.png?branch=master)](https://travis-ci.org/wahani/module)
 
 # Modules in R
-Provides a module in R to organise source code around. Modules enforce to be more rigerous when defining dependencies. They are to be used as a sub unit within packages.
+Provides modules as an organizational unit for source code. Modules enforce to be more rigerous when defining dependencies and have something like a local search path. They are to be used as a sub unit within packages or in scripts.
 
 ## Installation
 
@@ -37,10 +37,10 @@ str(m) # it's just a list
 ## List of 1
 ##  $ boringFunction:function ()  
 ##   ..- attr(*, "srcref")=Class 'srcref'  atomic [1:8] 2 21 2 51 21 51 2 2
-##   .. .. ..- attr(*, "srcfile")=Classes 'srcfilecopy', 'srcfile' <environment: 0x1fc22950>
+##   .. .. ..- attr(*, "srcfile")=Classes 'srcfilecopy', 'srcfile' <environment: 0x5083a08>
 ```
 
-Modules have their own scope, and have no idea whats going on around them:
+Modules have their own scope, and have no idea what's going on around them:
 
 
 ```r
@@ -98,7 +98,7 @@ m$functionWithDep(1:10)
 ## [1] 5.5
 ```
 
-You can also use other modules by makeing all their exported functions
+You can also use other modules by making all their exported functions
 available in your new module definition.
 
 
@@ -114,7 +114,7 @@ str(m1)
 ## List of 1
 ##  $ anotherFunction:function (x)  
 ##   ..- attr(*, "srcref")=Class 'srcref'  atomic [1:8] 3 22 3 51 22 51 3 3
-##   .. .. ..- attr(*, "srcfile")=Classes 'srcfilecopy', 'srcfile' <environment: 0x1ff358d0>
+##   .. .. ..- attr(*, "srcfile")=Classes 'srcfilecopy', 'srcfile' <environment: 0x501ced0>
 ```
 
 ```r
@@ -156,7 +156,7 @@ way around this because it is needed for everything related to S4s object
 orientation. With well written packages this is no problem.
 
 One example where you may want to have more control of the enclosing environment 
-of a function is when you parallize your code:
+of a function is when you parallelize your code:
 
 
 ```r
