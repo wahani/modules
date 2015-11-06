@@ -13,16 +13,6 @@ install_github("wahani/aoos")
 ```
 
 
-```
-## Version on CRAN:  
-## Development Version: 0.0.1 
-## 
-## Updates in package NEWS-file since last release to CRAN:
-```
-
-```
-## Error in (function (query, package = "R", lib.loc = NULL, format = NULL, : invalid query
-```
 
 ## Modules
 
@@ -47,7 +37,7 @@ str(m) # it's just a list
 ## List of 1
 ##  $ boringFunction:function ()  
 ##   ..- attr(*, "srcref")=Class 'srcref'  atomic [1:8] 2 21 2 51 21 51 2 2
-##   .. .. ..- attr(*, "srcfile")=Classes 'srcfilecopy', 'srcfile' <environment: 0x725f390>
+##   .. .. ..- attr(*, "srcfile")=Classes 'srcfilecopy', 'srcfile' <environment: 0x1fc22950>
 ```
 
 Modules have their own scope, and have no idea whats going on around them:
@@ -84,14 +74,13 @@ You have to rely on exported things of packages at some point:
 
 ```r
 m <- module({
-  functionWithDep <- function() data.table::data.table(x = 1)
+  functionWithDep <- function(x) stats::median(x)
 })
-m$functionWithDep()
+m$functionWithDep(1:10)
 ```
 
 ```
-##    x
-## 1: 1
+## [1] 5.5
 ```
 
 Or if you like to have more lines or state your dependencies on top:
@@ -99,42 +88,116 @@ Or if you like to have more lines or state your dependencies on top:
 
 ```r
 m <- module({
-  import(data.table, data.table)
-  functionWithDep <- function() data.table(x = 1)
+  import(stats, median)
+  functionWithDep <- function(x) median(x)
 })
-m$functionWithDep()
+m$functionWithDep(1:10)
 ```
 
 ```
-##    x
-## 1: 1
+## [1] 5.5
 ```
 
-You can also use other modules in that you make all their exported functions
+You can also use other modules by makeing all their exported functions
 available in your new module definition.
 
 
 ```r
 m1 <- module({
   use(.GlobalEnv$m) # normally: pkgName::moduleName
-  anotherFunction <- function() functionWithDep()
+  anotherFunction <- function(x) functionWithDep(x)
 })
 str(m1)
 ```
 
 ```
 ## List of 1
-##  $ anotherFunction:function ()  
-##   ..- attr(*, "srcref")=Class 'srcref'  atomic [1:8] 3 22 3 49 22 49 3 3
-##   .. .. ..- attr(*, "srcfile")=Classes 'srcfilecopy', 'srcfile' <environment: 0x685d9b0>
+##  $ anotherFunction:function (x)  
+##   ..- attr(*, "srcref")=Class 'srcref'  atomic [1:8] 3 22 3 51 22 51 3 3
+##   .. .. ..- attr(*, "srcfile")=Classes 'srcfilecopy', 'srcfile' <environment: 0x1ff358d0>
 ```
 
 ```r
-m1$anotherFunction()
+m1$anotherFunction(1:10)
 ```
 
 ```
-##    x
-## 1: 1
+## [1] 5.5
 ```
 
+Because this needs to fit into my normal workflow things like this are also possible:
+
+
+```r
+m <- module({
+  use("package:methods")
+  use("package:aoos")
+  gen(x) %g% cat("default method")
+  gen(x ~ numeric) %m% cat("method for x ~ numerc")
+})
+m$gen("Hej")
+```
+
+```
+## default method
+```
+
+```r
+m$gen(1)
+```
+
+```
+## method for x ~ numerc
+```
+
+This gets messy if you rely on packages, like aoos, which depend on other
+packages to be on the search path. In case of the methods package there is no
+way around this because it is needed for everything related to S4s object
+orientation. With well written packages this is no problem.
+
+One example where you may want to have more control of the enclosing environment 
+of a function is when you parallize your code:
+
+
+```r
+library(parallel)
+dependsOn <- function(x) median(x)
+fun <- function(x) dependsOn(x) 
+
+cl <- makeCluster(2)
+clusterMap(cl, fun, replicate(2, 1:10, simplify = FALSE))
+```
+
+```
+## Error in checkForRemoteErrors(val): 2 nodes produced errors; first error: could not find function "dependsOn"
+```
+
+```r
+stopCluster(cl)
+```
+
+There are of course other options to solve this, anyway, here we go:
+
+
+```r
+m <- module({
+  import(stats, median)
+  dependsOn <- function(x) median(x)
+  fun <- function(x) dependsOn(x) 
+})
+
+cl <- makeCluster(2)
+clusterMap(cl, m$fun, replicate(2, 1:10, simplify = FALSE))
+```
+
+```
+## [[1]]
+## [1] 5.5
+## 
+## [[2]]
+## [1] 5.5
+```
+
+```r
+stopCluster(cl)
+```

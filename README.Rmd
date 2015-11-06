@@ -14,7 +14,7 @@ install_github("wahani/aoos")
 ```
 
 ```{r, echo=FALSE}
-wahaniMiscs::getLocalPackageUpdates("module")
+# wahaniMiscs::getLocalPackageUpdates("module")
 ```
 
 ## Modules
@@ -51,31 +51,74 @@ You have to rely on exported things of packages at some point:
 
 ```{r}
 m <- module({
-  functionWithDep <- function() data.table::data.table(x = 1)
+  functionWithDep <- function(x) stats::median(x)
 })
-m$functionWithDep()
+m$functionWithDep(1:10)
 ```
 
 Or if you like to have more lines or state your dependencies on top:
 
 ```{r}
 m <- module({
-  import(data.table, data.table)
-  functionWithDep <- function() data.table(x = 1)
+  import(stats, median)
+  functionWithDep <- function(x) median(x)
 })
-m$functionWithDep()
+m$functionWithDep(1:10)
 ```
 
-You can also use other modules in that you make all their exported functions
+You can also use other modules by makeing all their exported functions
 available in your new module definition.
 
 ```{r}
 m1 <- module({
   use(.GlobalEnv$m) # normally: pkgName::moduleName
-  anotherFunction <- function() functionWithDep()
+  anotherFunction <- function(x) functionWithDep(x)
 })
 str(m1)
-m1$anotherFunction()
+m1$anotherFunction(1:10)
 ```
 
+Because this needs to fit into my normal workflow things like this are also possible:
 
+```{r}
+m <- module({
+  use("package:methods")
+  use("package:aoos")
+  gen(x) %g% cat("default method")
+  gen(x ~ numeric) %m% cat("method for x ~ numerc")
+})
+m$gen("Hej")
+m$gen(1)
+```
+
+This gets messy if you rely on packages, like aoos, which depend on other
+packages to be on the search path. In case of the methods package there is no
+way around this because it is needed for everything related to S4s object
+orientation. With well written packages this is no problem.
+
+One example where you may want to have more control of the enclosing environment 
+of a function is when you parallize your code:
+
+```{r error=TRUE}
+library(parallel)
+dependsOn <- function(x) median(x)
+fun <- function(x) dependsOn(x) 
+
+cl <- makeCluster(2)
+clusterMap(cl, fun, replicate(2, 1:10, simplify = FALSE))
+stopCluster(cl)
+```
+
+There are of course other options to solve this, anyway, here we go:
+
+```{r}
+m <- module({
+  import(stats, median)
+  dependsOn <- function(x) median(x)
+  fun <- function(x) dependsOn(x) 
+})
+
+cl <- makeCluster(2)
+clusterMap(cl, m$fun, replicate(2, 1:10, simplify = FALSE))
+stopCluster(cl)
+```
