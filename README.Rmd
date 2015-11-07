@@ -1,5 +1,8 @@
 [![Build Status](https://travis-ci.org/wahani/module.png?branch=master)](https://travis-ci.org/wahani/module)
 [![codecov.io](https://codecov.io/github/wahani/module/coverage.svg?branch=master)](https://codecov.io/github/wahani/module?branch=master)
+[![CRAN](http://www.r-pkg.org/badges/version/module)](http://cran.rstudio.com/package=module)
+[![Downloads](http://cranlogs.r-pkg.org/badges/module?color=brightgreen)](http://www.r-pkg.org/pkg/module)
+
 
 # Modules in R
 ```{r, results='asis', echo=FALSE}
