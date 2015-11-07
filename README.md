@@ -5,7 +5,7 @@
 
 
 # Modules in R
-Provides a module in R to organise source code around. Modules enforce to be more rigerous when defining dependencies. They are to be used as a sub unit within packages.
+Provides modules as an organizational unit for source code. Modules enforce to be more rigerous when defining dependencies and have something like a local search path. They are to be used as a sub unit within packages or in scripts.
 
 ## Installation
 
@@ -23,13 +23,6 @@ install_github("wahani/aoos")
 
 ```r
 library(module)
-```
-
-```
-## Loading required package: aoos
-```
-
-```r
 m <- module({
   boringFunction <- function() cat("boring output")
 })
@@ -49,7 +42,7 @@ str(m) # it's just a list
 ## List of 1
 ##  $ boringFunction:function ()  
 ##   ..- attr(*, "srcref")=Class 'srcref'  atomic [1:8] 3 21 3 51 21 51 3 3
-##   .. .. ..- attr(*, "srcfile")=Classes 'srcfilecopy', 'srcfile' <environment: 0x3be9918>
+##   .. .. ..- attr(*, "srcfile")=Classes 'srcfilecopy', 'srcfile' <environment: 0x402bc78>
 ```
 
 Modules have their own scope, and have no idea what's going on around them:
@@ -126,7 +119,7 @@ str(m1)
 ## List of 1
 ##  $ anotherFunction:function (x)  
 ##   ..- attr(*, "srcref")=Class 'srcref'  atomic [1:8] 3 22 3 51 22 51 3 3
-##   .. .. ..- attr(*, "srcfile")=Classes 'srcfilecopy', 'srcfile' <environment: 0x34db360>
+##   .. .. ..- attr(*, "srcfile")=Classes 'srcfilecopy', 'srcfile' <environment: 0x4b59478>
 ```
 
 ```r
@@ -147,18 +140,11 @@ m <- module({
   gen(x) %g% cat("default method")
   gen(x ~ numeric) %m% cat("method for x ~ numerc")
 })
-```
-
-```
-## Error in eval(expr, envir, enclos): could not find function "%g%"
-```
-
-```r
 m$gen("Hej")
 ```
 
 ```
-## Error in eval(expr, envir, enclos): attempt to apply non-function
+## default method
 ```
 
 ```r
@@ -166,7 +152,7 @@ m$gen(1)
 ```
 
 ```
-## Error in eval(expr, envir, enclos): attempt to apply non-function
+## method for x ~ numerc
 ```
 
 This gets messy if you rely on packages, like aoos, which depend on other
