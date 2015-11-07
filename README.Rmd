@@ -24,6 +24,7 @@ install_github("wahani/aoos")
 ## Modules
 
 ```{r}
+library(module)
 m <- module({
   boringFunction <- function() cat("boring output")
 })

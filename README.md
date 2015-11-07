@@ -22,21 +22,23 @@ install_github("wahani/aoos")
 
 
 ```r
-m <- module({
-  boringFunction <- function() cat("boring output")
-})
+library(module)
 ```
 
 ```
-## Error in eval(expr, envir, enclos): could not find function "module"
+## Loading required package: aoos
 ```
 
 ```r
+m <- module({
+  boringFunction <- function() cat("boring output")
+})
+
 m$boringFunction()
 ```
 
 ```
-## Error in eval(expr, envir, enclos): object 'm' not found
+## boring output
 ```
 
 ```r
@@ -44,7 +46,10 @@ str(m) # it's just a list
 ```
 
 ```
-## Error in str(m): object 'm' not found
+## List of 1
+##  $ boringFunction:function ()  
+##   ..- attr(*, "srcref")=Class 'srcref'  atomic [1:8] 3 21 3 51 21 51 3 3
+##   .. .. ..- attr(*, "srcfile")=Classes 'srcfilecopy', 'srcfile' <environment: 0x3be9918>
 ```
 
 Modules have their own scope, and have no idea what's going on around them:
@@ -55,18 +60,11 @@ hey <- "hey"
 m <- module({
   isolatedFunction <- function() hey
 })
-```
-
-```
-## Error in eval(expr, envir, enclos): could not find function "module"
-```
-
-```r
 m$isolatedFunction()
 ```
 
 ```
-## Error in eval(expr, envir, enclos): object 'm' not found
+## Error in m$isolatedFunction(): object 'hey' not found
 ```
 
 Unless you force them to rely on some unknown quantity outside their control:
@@ -76,18 +74,11 @@ Unless you force them to rely on some unknown quantity outside their control:
 m <- module({
   isolatedFunction <- function() .GlobalEnv$hey
 })
-```
-
-```
-## Error in eval(expr, envir, enclos): could not find function "module"
-```
-
-```r
 m$isolatedFunction()
 ```
 
 ```
-## Error in eval(expr, envir, enclos): object 'm' not found
+## [1] "hey"
 ```
 
 You have to rely on exported things of packages at some point:
@@ -97,18 +88,11 @@ You have to rely on exported things of packages at some point:
 m <- module({
   functionWithDep <- function(x) stats::median(x)
 })
-```
-
-```
-## Error in eval(expr, envir, enclos): could not find function "module"
-```
-
-```r
 m$functionWithDep(1:10)
 ```
 
 ```
-## Error in eval(expr, envir, enclos): object 'm' not found
+## [1] 5.5
 ```
 
 Or if you like to have more lines or state your dependencies on top:
@@ -119,18 +103,11 @@ m <- module({
   import(stats, median)
   functionWithDep <- function(x) median(x)
 })
-```
-
-```
-## Error in eval(expr, envir, enclos): could not find function "module"
-```
-
-```r
 m$functionWithDep(1:10)
 ```
 
 ```
-## Error in eval(expr, envir, enclos): object 'm' not found
+## [1] 5.5
 ```
 
 You can also use other modules by making all their exported functions
@@ -142,18 +119,14 @@ m1 <- module({
   use(.GlobalEnv$m) # normally: pkgName::moduleName
   anotherFunction <- function(x) functionWithDep(x)
 })
-```
-
-```
-## Error in eval(expr, envir, enclos): could not find function "module"
-```
-
-```r
 str(m1)
 ```
 
 ```
-## Error in str(m1): object 'm1' not found
+## List of 1
+##  $ anotherFunction:function (x)  
+##   ..- attr(*, "srcref")=Class 'srcref'  atomic [1:8] 3 22 3 51 22 51 3 3
+##   .. .. ..- attr(*, "srcfile")=Classes 'srcfilecopy', 'srcfile' <environment: 0x34db360>
 ```
 
 ```r
@@ -161,7 +134,7 @@ m1$anotherFunction(1:10)
 ```
 
 ```
-## Error in eval(expr, envir, enclos): object 'm1' not found
+## [1] 5.5
 ```
 
 Because this needs to fit into my normal workflow things like this are also possible:
@@ -177,7 +150,7 @@ m <- module({
 ```
 
 ```
-## Error in eval(expr, envir, enclos): could not find function "module"
+## Error in eval(expr, envir, enclos): could not find function "%g%"
 ```
 
 ```r
@@ -185,7 +158,7 @@ m$gen("Hej")
 ```
 
 ```
-## Error in eval(expr, envir, enclos): object 'm' not found
+## Error in eval(expr, envir, enclos): attempt to apply non-function
 ```
 
 ```r
@@ -193,7 +166,7 @@ m$gen(1)
 ```
 
 ```
-## Error in eval(expr, envir, enclos): object 'm' not found
+## Error in eval(expr, envir, enclos): attempt to apply non-function
 ```
 
 This gets messy if you rely on packages, like aoos, which depend on other
@@ -231,19 +204,17 @@ m <- module({
   dependsOn <- function(x) median(x)
   fun <- function(x) dependsOn(x) 
 })
-```
 
-```
-## Error in eval(expr, envir, enclos): could not find function "module"
-```
-
-```r
 cl <- makeCluster(2)
 clusterMap(cl, m$fun, replicate(2, 1:10, simplify = FALSE))
 ```
 
 ```
-## Error in serialize(data, node$con): object 'm' not found
+## [[1]]
+## [1] 5.5
+## 
+## [[2]]
+## [1] 5.5
 ```
 
 ```r
