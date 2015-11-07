@@ -87,8 +87,8 @@ Because this needs to fit into my normal workflow things like this are also poss
 
 ```{r}
 m <- module({
-  use("package:methods")
-  use("package:aoos")
+  use("methods")
+  use("aoos")
   gen(x) %g% cat("default method")
   gen(x ~ numeric) %m% cat("method for x ~ numerc")
 })

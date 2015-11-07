@@ -66,13 +66,7 @@ test_that("Inheritance of module", {
 
 test_that("package dependencies", {
   m <- module({
-    use("package:aoos")
-    deps <- function() exists("%g%")
-  })
-  expect_true(m$deps())
-
-  m <- module({
-    use(as.environment("package:aoos"))
+    use("aoos")
     deps <- function() exists("%g%")
   })
   expect_true(m$deps())

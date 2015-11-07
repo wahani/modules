@@ -16,3 +16,7 @@ LazyData: true
 Suggests:
     testthat
 RoxygenNote: 5.0.0
+Collate:
+    'NAMESPACE.R'
+    'module.R'
+    'module-class.R'

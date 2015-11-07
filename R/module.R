@@ -71,22 +71,24 @@ import <- function(from, ..., into = parent.env(parent.frame())) {
 #' @rdname module
 use <- function(module, where = parent.frame()) {
 
-  module <- if (is.character(module)) {
-    as.list(as.environment(
-      paste0("package:", sub("package:", "", module)) # to accept both
-    ))
-  } else if (is.environment(module)) {
-    as.list(module)
-  } else if (is.list(module)) {
-    module
-  } else {
-    stop("module is expected to be a list or environment")
+  processModule(module, into) %g% standardGeneric("processModule")
+
+  processModule(module ~ character, into ~ environment) %m% {
+    do.call(
+      import,
+      c(list(module), as.list(getNamespaceExports(module)), into = into)
+    )
+  }
+
+  processModule(module ~ list, into ~ environment) %m% {
+    mapply(assign, names(module), module, MoreArgs = list(envir = into))
   }
 
   parentOfE <- parent.env(where) # E: calling environment
   grannyOfE <- parent.env(parentOfE)
-  newGranny <- list2env(module, parent = grannyOfE)
+  newGranny <- new.env(parent = grannyOfE)
   parent.env(parentOfE) <- newGranny
+  processModule(module, newGranny) # this imports all objects into newGranny
   invisible(NULL)
 
 }

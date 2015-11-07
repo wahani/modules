@@ -42,7 +42,7 @@ str(m) # it's just a list
 ## List of 1
 ##  $ boringFunction:function ()  
 ##   ..- attr(*, "srcref")=Class 'srcref'  atomic [1:8] 3 21 3 51 21 51 3 3
-##   .. .. ..- attr(*, "srcfile")=Classes 'srcfilecopy', 'srcfile' <environment: 0x402bc78>
+##   .. .. ..- attr(*, "srcfile")=Classes 'srcfilecopy', 'srcfile' <environment: 0x6fd24a0>
 ```
 
 Modules have their own scope, and have no idea what's going on around them:
@@ -119,7 +119,7 @@ str(m1)
 ## List of 1
 ##  $ anotherFunction:function (x)  
 ##   ..- attr(*, "srcref")=Class 'srcref'  atomic [1:8] 3 22 3 51 22 51 3 3
-##   .. .. ..- attr(*, "srcfile")=Classes 'srcfilecopy', 'srcfile' <environment: 0x4b59478>
+##   .. .. ..- attr(*, "srcfile")=Classes 'srcfilecopy', 'srcfile' <environment: 0x5ffec18>
 ```
 
 ```r
@@ -135,8 +135,8 @@ Because this needs to fit into my normal workflow things like this are also poss
 
 ```r
 m <- module({
-  use("package:methods")
-  use("package:aoos")
+  use("methods")
+  use("aoos")
   gen(x) %g% cat("default method")
   gen(x ~ numeric) %m% cat("method for x ~ numerc")
 })
