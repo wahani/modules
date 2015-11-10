@@ -1,14 +1,15 @@
 #' Define Modules in R
 #'
-#' Use \code{module} to define self contained organizational units. Modules have their
-#' own search path. \code{import} can be used to import single objects from a package.
-#' \code{use} will attach collections or packages.
+#' Use \code{module} to define self contained organizational units. Modules have
+#' their own search path. \code{import} can be used to import single objects
+#' from a package. \code{use} will attach collections or packages.
 #'
 #' @param expr an expression.
+#' @param parent (environment) the root of the local search path.
 #'
 #' @rdname module
 #' @export
-module <- function(expr = {}) {
+module <- function(expr = {}, parent = if (interactive()) baseenv() else parent.frame()) {
 
   evalInModule <- function(module, code) {
     eval(code, envir = as.environment(module), enclos = emptyenv())
@@ -16,7 +17,7 @@ module <- function(expr = {}) {
   }
 
   expr <- match.call()[[2]]
-  module <- ModuleScope()
+  module <- ModuleScope(parent = parent)
   module <- evalInModule(module, expr)
   as.list(module)
 

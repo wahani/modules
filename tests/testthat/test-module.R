@@ -7,11 +7,12 @@ test_that("Scope of module", {
   expect_true(Negate(exists)("fun"))
   expect_true(exists("fun", m))
 
-  # module does not know of the outside world
+  # module does not know of the outside world. This is so in interactive mode.
+  # In a apckage it is the enclosing env. The test env is not interactive.
   x <- 1
   m <- module({
     fun <- function() try(x, silent = TRUE)
-  })
+  }, baseenv())
   expect_is(m$fun(), "try-error")
 
   # imported objects are only available to module
@@ -27,9 +28,9 @@ test_that("Scope of module", {
 
   # import and related functions are part of the parent scope. Not the module
   # itself.
-  m <- module({})
-  # expect_true(Negate(exists)("import", m, inherits = FALSE))
-  # expect_true(exists("import", m))
+  m <- module({ fun <- function() 1 })
+  expect_true(Negate(exists)("import", environment(m$fun), inherits = FALSE))
+  expect_true(exists("import", environment(m$fun)))
 
 })
 
@@ -70,5 +71,43 @@ test_that("package dependencies", {
     deps <- function() exists("%g%")
   })
   expect_true(m$deps())
+
+})
+
+test_that("cross package deps", {
+
+  disposables::make_packages(
+
+    imports = "module",
+
+    M1 = {
+      m1 <- module({
+        fun <- function(x) x
+      })
+    },
+
+    M2 = {
+      m2 <- module({
+        use(M1::m1)
+        newFun <- function(...) fun(...)
+      })
+    }
+
+  )
+
+  m1 <- module(
+    parent = baseenv(),
+    fun <- function(x) x
+  )
+
+  expect_equal(
+    environmentName(parent.env(parent.env(environment(M1::m1$fun)))),
+    "M1"
+  )
+
+  expect_equal(
+    environmentName(parent.env(parent.env(environment(m1$fun)))),
+    "base"
+  )
 
 })
