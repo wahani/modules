@@ -5,21 +5,29 @@
 #' from a package. \code{use} will attach collections or packages.
 #'
 #' @param expr an expression.
-#' @param parent (environment) the root of the local search path.
+#' @param topEncl (environment) the root of the local search path.
 #'
 #' @rdname module
 #' @export
-module <- function(expr = {}, parent = if (interactive()) baseenv() else parent.frame()) {
+module <- function(expr = {}, topEncl = if (interactive()) baseenv() else parent.frame()) {
 
   evalInModule <- function(module, code) {
     eval(code, envir = as.environment(module), enclos = emptyenv())
     module
   }
 
+  getExports <- function(module) {
+    exports <- get(nameExports(), envir = module, inherits = TRUE)
+    paste0(exports, collapse = "|")
+  }
+
   expr <- match.call()[[2]]
-  module <- ModuleScope(parent = parent)
+  module <- ModuleScope(parent = topEncl)
   module <- evalInModule(module, expr)
-  as.list(module)
+  stripSelf(retList(
+    public = ls(module, pattern = getExports(module)),
+    envir = module
+  ))
 
 }
 
@@ -70,7 +78,7 @@ import <- function(from, ..., into = parent.env(parent.frame())) {
 
 #' @export
 #' @rdname module
-use <- function(module, where = parent.frame()) {
+use <- function(module, where = parent.env(parent.frame())) {
 
   processModule(module, into) %g% standardGeneric("processModule")
 
@@ -85,11 +93,29 @@ use <- function(module, where = parent.frame()) {
     mapply(assign, names(module), module, MoreArgs = list(envir = into))
   }
 
-  parentOfE <- parent.env(where) # E: calling environment
-  grannyOfE <- parent.env(parentOfE)
+  grannyOfE <- parent.env(where) # E: calling env
   newGranny <- new.env(parent = grannyOfE)
-  parent.env(parentOfE) <- newGranny
+  parent.env(where) <- newGranny
   processModule(module, newGranny) # this imports all objects into newGranny
+  invisible(NULL)
+
+}
+
+#' @export
+#' @rdname module
+export <- function(..., where = parent.env(parent.frame())) {
+
+  deparseExports <- function(mc) {
+    args <- Map(deparse, mc)
+    args[[1]] <- NULL
+    args$where <- NULL
+    args <- unlist(args)
+    deleteQuotes(args)
+  }
+
+  objectsToExport <- deparseExports(match.call())
+  assign(nameExports(), objectsToExport, envir = where)
+
   invisible(NULL)
 
 }

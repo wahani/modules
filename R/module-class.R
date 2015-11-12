@@ -17,5 +17,7 @@ ModuleEnv : ModuleParent() %type% {
   # It knows of some functions:
   import("module", "import", into = .Object)
   import("module", "use", into = .Object)
+  import("module", "export", into = .Object)
+  assign(nameExports(), "*", envir = .Object)
   .Object
 }

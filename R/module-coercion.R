@@ -8,6 +8,6 @@
 #'
 #' @export
 #' @rdname modulecoerce
-as.module <- function(filename, parent = baseenv(), ...) {
-  do.call(module, list(parse(filename, ...), parent))
+as.module <- function(filename, topEncl = baseenv(), ...) {
+  do.call(module, list(parse(filename, ...), topEncl))
 }

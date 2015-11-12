@@ -1,6 +1,6 @@
 Package: module
 Title: Still needs a title!
-Version: 0.0.4
+Version: 0.0.5
 Authors@R: person("Sebastian", "Warnholz", email = "wahani@gmail.com", role = c("aut", "cre"))
 Description: Provides modules as an organizational unit for source code. Modules
     enforce to be more rigerous when defining dependencies and have something
@@ -22,3 +22,4 @@ Collate:
     'module.R'
     'module-class.R'
     'module-coercion.R'
+    'module-helper.R'

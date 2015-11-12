@@ -96,7 +96,7 @@ test_that("cross package deps", {
   )
 
   m1 <- module(
-    parent = baseenv(),
+    topEncl = baseenv(),
     fun <- function(x) x
   )
 
@@ -109,5 +109,46 @@ test_that("cross package deps", {
     environmentName(parent.env(parent.env(environment(m1$fun)))),
     "base"
   )
+
+})
+
+test_that("Exports of module", {
+  m <- module({
+
+    fun <- function(x) x
+    .fun <- function(x) x
+    pFun <- function(x) x
+
+  })
+
+  expect_true(all(c("fun", "pFun") %in% names(m)))
+  expect_true(!(".fun" %in% names(m)))
+
+  m <- module({
+
+    export(fun)
+
+    fun <- function(x) x
+    .fun <- function(x) x
+    pFun <- function(x) x
+
+  })
+
+  expect_true("fun" %in% names(m))
+  expect_true(!(".fun" %in% names(m)))
+  expect_true(!("pFun" %in% names(m)))
+
+  m <- module({
+
+    export(fun, "pFun")
+
+    fun <- function(x) x
+    .fun <- function(x) x
+    pFun <- function(x) x
+
+  })
+
+  expect_true(all(c("fun", "pFun") %in% names(m)))
+  expect_true(!(".fun" %in% names(m)))
 
 })
