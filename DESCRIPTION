@@ -16,7 +16,8 @@ LazyData: true
 Suggests:
     disposables,
     testthat,
-    devtools
+    devtools,
+    knitr
 RoxygenNote: 5.0.0
 Collate:
     'NAMESPACE.R'
