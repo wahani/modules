@@ -15,7 +15,8 @@ Encoding: UTF-8
 LazyData: true
 Suggests:
     disposables,
-    testthat
+    testthat,
+    devtools
 RoxygenNote: 5.0.0
 Collate:
     'NAMESPACE.R'
@@ -23,3 +24,4 @@ Collate:
     'module-class.R'
     'module-coercion.R'
     'module-helper.R'
+VignetteBuilder: knitr

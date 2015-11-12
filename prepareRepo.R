@@ -1,1 +1,1 @@
-knitr::knit("README.Rmd", "README.md", envir = .GlobalEnv)
+knitr::knit("inst/doc/modulesInR.Rmd", "README.md", envir = .GlobalEnv)

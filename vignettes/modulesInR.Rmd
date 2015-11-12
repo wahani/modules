@@ -1,7 +1,7 @@
 ---
 title: "Modules in R"
 author: "Sebastian Warnholz"
-date: "2015-11-12"
+date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Modules in R}
@@ -14,14 +14,15 @@ vignette: >
 [![CRAN](http://www.r-pkg.org/badges/version/module)](http://cran.rstudio.com/package=module)
 [![Downloads](http://cranlogs.r-pkg.org/badges/module?color=brightgreen)](http://www.r-pkg.org/pkg/module)
 
-Provides modules as an organizational unit for source code. Modules enforce to be more rigerous when defining dependencies and have something like a local search path. They are to be used as a sub unit within packages or in scripts.
+```{r, results='asis', echo=FALSE}
+cat(gsub("\\n   ", "", packageDescription("module", fields = "Description")))
+```
 
 ## Installation
 
 From this GitHub:
 
-
-```r
+```{r, eval=FALSE}
 devtools::install_github("wahani/aoos")
 ```
 
@@ -41,8 +42,7 @@ different by default. Outside of packages modules know only of the base
 environment, i.e. the search path ends there. Also they are allways represented
 as a list inside R.
 
-
-```r
+```{r}
 library(module)
 m <- module({
   boringFunction <- function() cat("boring output")
@@ -51,15 +51,10 @@ m <- module({
 m$boringFunction()
 ```
 
-```
-## boring output
-```
-
 Since they are isolated from the `.GlobalEnv` the following object `hey` can not
 be found:
 
-
-```r
+```{r error=TRUE}
 hey <- "hey"
 m <- module({
   isolatedFunction <- function() hey
@@ -67,31 +62,21 @@ m <- module({
 m$isolatedFunction()
 ```
 
-```
-## Error in m$isolatedFunction(): object 'hey' not found
-```
-
 ## Imports
 
 If you rely on exported objects of packages you can refer to them explicitly
 using `::`:
 
-
-```r
+```{r}
 m <- module({
   functionWithDep <- function(x) stats::median(x)
 })
 m$functionWithDep(1:10)
 ```
 
-```
-## [1] 5.5
-```
-
 Or you can use one of several options to import objects in the local scope:
 
-
-```r
+```{r}
 m <- module({
  
   import(stats, median) # make median from package stats available
@@ -102,12 +87,7 @@ m <- module({
 m$functionWithDep(1:10)
 ```
 
-```
-## [1] 5.5
-```
-
-
-```r
+```{r}
 m <- module({
   
   use("stats") # a package or a list, i.e. a module
@@ -118,10 +98,6 @@ m <- module({
 m$functionWithDep(1:10)
 ```
 
-```
-## [1] 5.5
-```
-
 ## Exports
 
 It may also be of interest to control which objects are visible for the client.
@@ -129,8 +105,7 @@ You can do that with the `export` function. Note that export accepts regular
 expressions. If you supply more than one argument they are connected with '|'.
 Functions which begin with a `.` are never exported.
 
-
-```r
+```{r}
 m <- module({
   
   export("fun")
@@ -144,38 +119,25 @@ m <- module({
 names(m)
 ```
 
-```
-## [1] "fun"
-```
-
 ## Example: Modules as Parallel Process
 
 One example where you may want to have more control of the enclosing environment 
 of a function is when you parallelize your code. First consider the case when a 
 *naive* implementation fails.
 
-
-```r
+```{r error=TRUE}
 library(parallel)
 dependency <- identity
 fun <- function(x) dependency(x) 
 
 cl <- makeCluster(2)
 clusterMap(cl, fun, replicate(2, 1:10, simplify = FALSE))
-```
-
-```
-## Error in checkForRemoteErrors(val): 2 nodes produced errors; first error: could not find function "dependency"
-```
-
-```r
 stopCluster(cl)
 ```
 
 To make the function `fun` self contained we can define it in a module. 
 
-
-```r
+```{r}
 m <- module({
   dependency <- identity
   fun <- function(x) dependency(x) 
@@ -183,17 +145,6 @@ m <- module({
 
 cl <- makeCluster(2)
 clusterMap(cl, m$fun, replicate(2, 1:10, simplify = FALSE))
-```
-
-```
-## [[1]]
-##  [1]  1  2  3  4  5  6  7  8  9 10
-## 
-## [[2]]
-##  [1]  1  2  3  4  5  6  7  8  9 10
-```
-
-```r
 stopCluster(cl)
 ```
 
@@ -202,8 +153,7 @@ stopCluster(cl)
 
 I have trouble with S3, default S4. Most of syntactic sugar in aoos works:
 
-
-```r
+```{r}
 m <- module({
   use("methods")
   use("aoos")
@@ -211,18 +161,7 @@ m <- module({
   gen(x ~ numeric) %m% cat("method for x ~ numerc")
 })
 m$gen("Hej")
-```
-
-```
-## default method
-```
-
-```r
 m$gen(1)
-```
-
-```
-## method for x ~ numerc
 ```
 
 S4 classes or types in aoos are not working correctly because S4 makes it
@@ -230,8 +169,7 @@ terrible hard to understand the side effects of the implementation. Until now I
 was not able to isolate that. `setOldClass` with an appropriate where statement
 seems to work though:
 
-
-```r
+```{r}
 m <- module({
   use("methods")
   use("aoos")
@@ -246,14 +184,6 @@ m <- module({
 
 cl <- makeCluster(1)
 clusterMap(cl, m$gen, m$NewType(NULL))
-```
-
-```
-## $x
-## NULL
-```
-
-```r
 stopCluster(cl)
 ```
 
