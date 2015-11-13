@@ -191,6 +191,6 @@ m <- module({
 })
 
 cl <- makeCluster(1)
-clusterMap(cl, m$gen, m$NewType(NULL))
+clusterMap(cl, m$gen, list(m$NewType(NULL)))
 stopCluster(cl)
 ```

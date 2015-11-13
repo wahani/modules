@@ -253,12 +253,18 @@ m <- module({
 })
 
 cl <- makeCluster(1)
-clusterMap(cl, m$gen, m$NewType(NULL))
+clusterMap(cl, m$gen, list(m$NewType(NULL)))
 ```
 
 ```
+## [[1]]
 ## $x
 ## NULL
+## 
+## attr(,".self")
+## <environment: 0x5e5cf70>
+## attr(,"class")
+## [1] "NewType" "list"
 ```
 
 ```r
