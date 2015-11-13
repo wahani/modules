@@ -2,12 +2,13 @@
 #'
 #' Interfaces to and from modules.
 #'
-#' @param filename (character or connection) a file to be sourced as module
+#' @param x something which can be coerced into a module. \code{character} are
+#'   interpreted as file names.
 #' @param ... arguments passed to \link{parse}
 #' @inheritParams module
 #'
 #' @export
 #' @rdname modulecoerce
-as.module <- function(filename, topEncl = baseenv(), ...) {
-  do.call(module, list(parse(filename, ...), topEncl))
+list : as.module(x, topEncl = baseenv(), ...) %g% {
+  do.call(module, list(parse(x, ...), topEncl))
 }

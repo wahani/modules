@@ -18,7 +18,7 @@ Suggests:
     testthat,
     devtools,
     knitr
-RoxygenNote: 5.0.0
+RoxygenNote: 5.0.1
 Collate:
     'NAMESPACE.R'
     'module.R'

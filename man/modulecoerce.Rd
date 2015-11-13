@@ -4,10 +4,11 @@
 \alias{as.module}
 \title{Coercion for Modules}
 \usage{
-as.module(filename, topEncl = baseenv(), ...)
+as.module(x, topEncl = baseenv(), ...)
 }
 \arguments{
-\item{filename}{(character or connection) a file to be sourced as module}
+\item{x}{something which can be coerced into a module. \code{character} are
+interpreted as file names.}
 
 \item{topEncl}{(environment) the root of the local search path.}
 

@@ -1,7 +1,7 @@
 ---
 title: "Modules in R"
 author: "Sebastian Warnholz"
-date: "2015-11-12"
+date: "2015-11-13"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Modules in R}
@@ -27,19 +27,20 @@ devtools::install_github("wahani/aoos")
 
 # Modules Outside of Package Development
 
-## General Behviour
+## General Behaviour
 
 The key idea of this package is to provide a unit which is self contained, i.e.
 has it's own scope. The main and most reliable infrastructure for such
 organizational units of source code in the R ecosystem is a package. Compared to
-a pacakge modules can be considered ad-hoc, but - in the sense of an R-package -
+a package modules can be considered ad hoc, but - in the sense of an R-package -
 self contained. 
 
-There are two use cases. First when you use modules to devolop scripts, which is
+There are two use cases. First when you use modules to develop scripts, which is
 subject of this section. And then inside of packages where the scope is a bit
-different by default. Outside of packages modules know only of the base
-environment, i.e. the search path ends there. Also they are allways represented
-as a list inside R.
+different by default. Outside of packages modules know only of the base 
+environment, i.e. within a module the base environment is the the only *package*
+on the search path. Also they are always represented as a list inside R. Thus
+they can be trated as bags of functions.
 
 
 ```r
@@ -88,7 +89,8 @@ m$functionWithDep(1:10)
 ## [1] 5.5
 ```
 
-Or you can use one of several options to import objects in the local scope:
+Or you can use `import` for *attaching* single objects and `use` for *attaching*
+a module (aka a list) or a package:
 
 
 ```r
@@ -197,10 +199,17 @@ clusterMap(cl, m$fun, replicate(2, 1:10, simplify = FALSE))
 stopCluster(cl)
 ```
 
+# Modules in Packages
+
+...
+
 
 # Modules with Object Orientation
 
-I have trouble with S3, default S4. Most of syntactic sugar in aoos works:
+S3 method dispatch will not work because of the special search mechanism of
+`UseMethod`. By default the set functions of the methods package have side
+effects in the top level environment. A module has only access to that
+environment in a package. Most of the syntactic sugar (S4) in aoos works:
 
 
 ```r
@@ -225,9 +234,10 @@ m$gen(1)
 ## method for x ~ numerc
 ```
 
-S4 classes or types in aoos are not working correctly because S4 makes it
-terrible hard to understand the side effects of the implementation. Until now I
-was not able to isolate that. `setOldClass` with an appropriate where statement
+S4 classes (or types in aoos) are not working correctly because it is terribly
+hard to understand the side effects of the implementation. Until now I was not
+able to isolate that. That means that up until now I have no clue how to define
+a S4 class inside a module. `setOldClass` with an appropriate where statement
 seems to work though:
 
 
@@ -237,11 +247,9 @@ m <- module({
   use("aoos")
   gen(x) %g% cat("default method")
   gen(x ~ numeric) %m% cat("method for x ~ numerc")
-  NewType <- function(x) {
-    retList("NewType")
-  }
+  NewType <- function(x) retList("NewType")
   setOldClass("NewType", where = environment())
-  gen(x ~ NewType) %m% cat("method for x ~ NewType")
+  gen(x ~ NewType) %m% x
 })
 
 cl <- makeCluster(1)
@@ -256,6 +264,3 @@ clusterMap(cl, m$gen, m$NewType(NULL))
 ```r
 stopCluster(cl)
 ```
-
-
-
