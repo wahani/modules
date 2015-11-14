@@ -10,7 +10,7 @@ as.module(x, topEncl = baseenv(), ...)
 \item{x}{something which can be coerced into a module. \code{character} are
 interpreted as file names.}
 
-\item{topEncl}{(environment) the root of the local search path.}
+\item{topEncl}{(environment) the root of the local search path}
 
 \item{...}{arguments passed to \link{parse}}
 }

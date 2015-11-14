@@ -10,31 +10,34 @@
 module(expr = { }, topEncl = if (interactive()) baseenv() else
   parent.frame())
 
-import(from, ..., into = parent.env(parent.frame()))
+import(from, ..., where = parent.frame())
 
-use(module, where = parent.env(parent.frame()))
+use(module, where = parent.frame())
 
-export(..., where = parent.env(parent.frame()))
+export(..., where = parent.frame())
 }
 \arguments{
-\item{expr}{an expression.}
+\item{expr}{an expression}
 
-\item{topEncl}{(environment) the root of the local search path.}
+\item{topEncl}{(environment) the root of the local search path}
 
 \item{from}{(character, or unquoten expression) a package name}
 
 \item{...}{(character, or unquoted expression) names to import from package}
 
-\item{into}{(environment) the environment for imports. Always first on the
-search path.}
+\item{where}{(environment) important for testing}
 
 \item{module}{(character, list or environment) a module}
-
-\item{where}{(environment)}
 }
 \description{
 Use \code{module} to define self contained organizational units. Modules have
-their own search path. \code{import} can be used to import single objects
-from a package. \code{use} will attach collections or packages.
+their own search path. \code{import} can be used to import packages.
+\code{use} can be used to import other modules.
+}
+\examples{
+\dontrun{
+vignette("modulesInR", "module")
+}
+
 }
 

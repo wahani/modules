@@ -1,4 +1,4 @@
-test_that("Scope of module", {
+test_that("Isolation of module", {
 
   # defined objects are local to module
   m <- module({
@@ -14,6 +14,18 @@ test_that("Scope of module", {
     fun <- function() try(x, silent = TRUE)
   }, baseenv())
   expect_is(m$fun(), "try-error")
+})
+
+test_that("Imports of module", {
+  # import and related functions are part of the parent scope. Not the module
+  # itself.
+  m <- module({ fun <- function() 1 })
+  expect_true(Negate(exists)("import", environment(m$fun), inherits = FALSE))
+  expect_true(exists("import", environment(m$fun)))
+  expect_true(Negate(exists)("export", environment(m$fun), inherits = FALSE))
+  expect_true(exists("export", environment(m$fun)))
+  expect_true(Negate(exists)("use", environment(m$fun), inherits = FALSE))
+  expect_true(exists("use", environment(m$fun)))
 
   # imported objects are only available to module
   m <- module({
@@ -23,14 +35,8 @@ test_that("Scope of module", {
     })
   })
   expect_equal(m$localModule$fun(1), 1)
-  # expect_true(exists("module", m))
-  # expect_true(Negate(exists)("module", m, inherits = FALSE))
-
-  # import and related functions are part of the parent scope. Not the module
-  # itself.
-  m <- module({ fun <- function() 1 })
-  expect_true(Negate(exists)("import", environment(m$fun), inherits = FALSE))
-  expect_true(exists("import", environment(m$fun)))
+  expect_true(exists("module", environment(m$fun)))
+  expect_true(Negate(exists)("module", environment(m$fun), inherits = FALSE))
 
 })
 
@@ -47,7 +53,7 @@ test_that("delayed assignment", {
 
 })
 
-test_that("Inheritance of module", {
+test_that("Attaching other module", {
   m1 <- module({
 
     import(module, module)
@@ -67,7 +73,7 @@ test_that("Inheritance of module", {
 
 test_that("package dependencies", {
   m <- module({
-    use("aoos")
+    import("aoos")
     deps <- function() exists("%g%")
   })
   expect_true(m$deps())
@@ -150,5 +156,27 @@ test_that("Exports of module", {
 
   expect_true(all(c("fun", "pFun") %in% names(m)))
   expect_true(!(".fun" %in% names(m)))
+
+})
+
+test_that("effects on global env", {
+
+  # tmp <- tempfile()
+  # writeLines("module::import(module)
+  # import(aoos)
+  # m <- module({
+  #   fun <- identity
+  # })
+  # use(m)
+  # search()[2:4]", tmp)
+  #
+  # cl <- parallel::makeCluster(1)
+  # parallel::clusterExport(cl, "tmp", environment())
+  # res <- parallel::clusterEvalQ(cl, source(tmp))
+  # parallel::stopCluster(cl)
+  # attachedModules <- res[[1]]$value
+  # expect_equal(attachedModules,
+  #              c("import:module", "import:aoos", "import:module")
+  # )
 
 })

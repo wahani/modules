@@ -1,11 +1,16 @@
 #' Define Modules in R
 #'
 #' Use \code{module} to define self contained organizational units. Modules have
-#' their own search path. \code{import} can be used to import single objects
-#' from a package. \code{use} will attach collections or packages.
+#' their own search path. \code{import} can be used to import packages.
+#' \code{use} can be used to import other modules.
 #'
-#' @param expr an expression.
-#' @param topEncl (environment) the root of the local search path.
+#' @param expr an expression
+#' @param topEncl (environment) the root of the local search path
+#'
+#' @examples
+#' \dontrun{
+#' vignette("modulesInR", "module")
+#' }
 #'
 #' @rdname module
 #' @export
@@ -22,7 +27,7 @@ module <- function(expr = {}, topEncl = if (interactive()) baseenv() else parent
   }
 
   expr <- match.call()[[2]]
-  module <- ModuleScope(parent = topEncl)
+  module <- ModuleScope(parent = ModuleParent(topEncl))
   module <- evalInModule(module, expr)
   stripSelf(retList(
     public = ls(module, pattern = getExports(module)),
@@ -33,15 +38,12 @@ module <- function(expr = {}, topEncl = if (interactive()) baseenv() else parent
 
 #' @param from (character, or unquoten expression) a package name
 #' @param ... (character, or unquoted expression) names to import from package
-#' @param into (environment) the environment for imports. Always first on the
-#'   search path.
-#' @param module (character, list or environment) a module
-#' @param where (environment)
+#' @param where (environment) important for testing
 #'
 #' @rdname module
 #'
 #' @export
-import <- function(from, ..., into = parent.env(parent.frame())) {
+import <- function(from, ..., where = parent.frame()) {
 
   deleteQuotes <- function(x) {
     gsub("\\\"|\\\'", "", x)
@@ -56,54 +58,39 @@ import <- function(from, ..., into = parent.env(parent.frame())) {
     deleteQuotes(args)
   }
 
+  makeObjectsToImport <- function(mc, from) {
+    objectsToImport <- deparseImports(mc)
+    if (length(objectsToImport) == 0) getNamespaceExports(from)
+    else objectsToImport
+  }
+
   deparseFrom <- function(mc) {
     from <- Map(deparse, mc)$from
     deleteQuotes(from)
   }
 
-  objectsToImport <- deparseImports(match.call())
   from <- deparseFrom(match.call())
+  objectsToImport <- makeObjectsToImport(match.call(), from)
+  addDelayedDependency(from, objectsToImport, where)
 
-  lapply(objectsToImport, function(x) {
-    delayedAssign(
-      x,
-      value = getExportedValue(from, x),
-      assign.env = as.environment(into)
-    )
-  })
+  invisible(NULL)
 
+}
+
+#' @param module (character, list or environment) a module
+#'
+#' @export
+#' @rdname module
+use <- function(module, where = parent.frame()) {
+
+  addDependency(module, names(module), where)
   invisible(NULL)
 
 }
 
 #' @export
 #' @rdname module
-use <- function(module, where = parent.env(parent.frame())) {
-
-  processModule(module, into) %g% standardGeneric("processModule")
-
-  processModule(module ~ character, into ~ environment) %m% {
-    do.call(
-      import,
-      c(list(module), as.list(getNamespaceExports(module)), into = into)
-    )
-  }
-
-  processModule(module ~ list, into ~ environment) %m% {
-    mapply(assign, names(module), module, MoreArgs = list(envir = into))
-  }
-
-  grannyOfE <- parent.env(where) # E: calling env
-  newGranny <- new.env(parent = grannyOfE)
-  parent.env(where) <- newGranny
-  processModule(module, newGranny) # this imports all objects into newGranny
-  invisible(NULL)
-
-}
-
-#' @export
-#' @rdname module
-export <- function(..., where = parent.env(parent.frame())) {
+export <- function(..., where = parent.frame()) {
 
   deparseExports <- function(mc) {
     args <- Map(deparse, mc)
