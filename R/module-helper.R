@@ -43,5 +43,5 @@ makeAssignment <- function(from, what, into) {
   # from: a list of values
   # what: a character vector
   # into: an env
-  mapply(assign, what, from, MoreArgs = list(envir = into))
+  mapply(assign, what, from[what], MoreArgs = list(envir = into))
 }
