@@ -6,7 +6,7 @@ deleteQuotes <- function(x) {
 
 nameExports <- function() ".__exports__"
 
-makeDependencyHandler <- function(assignFun) {
+addDependency <- function(assignFun) {
   # builds a function to add new dependencies to an existing search path
   force(assignFun)
 
@@ -45,8 +45,3 @@ makeAssignment <- function(from, what, into) {
   # into: an env
   mapply(assign, what, from, MoreArgs = list(envir = into))
 }
-
-addDelayedDependency <- makeDependencyHandler(makeDelayedAssignment)
-
-addDependency <- makeDependencyHandler(makeAssignment)
-

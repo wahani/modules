@@ -71,7 +71,8 @@ import <- function(from, ..., where = parent.frame()) {
 
   from <- deparseFrom(match.call())
   objectsToImport <- makeObjectsToImport(match.call(), from)
-  addDelayedDependency(from, objectsToImport, where)
+
+  addDependency(makeDelayedAssignment)(from, objectsToImport, where)
 
   invisible(NULL)
 
@@ -83,7 +84,7 @@ import <- function(from, ..., where = parent.frame()) {
 #' @rdname module
 use <- function(module, where = parent.frame()) {
   module <- as.module(module)
-  addDependency(module, names(module), where)
+  addDependency(makeAssignment)(module, names(module), where)
   invisible(NULL)
 }
 
