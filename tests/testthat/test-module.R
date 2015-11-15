@@ -180,3 +180,18 @@ test_that("effects on global env", {
   # )
 
 })
+
+test_that("file as module", {
+
+  m <- module({
+    tmp <- tempfile()
+    writeLines("import(stats)
+               fun <- function(x) median(x)", tmp)
+    use(tmp)
+    funWithDep <- function(x) fun(x)
+
+  })
+
+  expect_equal(m$funWithDep(1:7), 4)
+
+})

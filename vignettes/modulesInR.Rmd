@@ -39,7 +39,7 @@ self contained.
 There are two use cases. First when you use modules to develop scripts, which is
 subject of this section; And then inside of packages where the scope is a bit
 different by default. Outside of packages modules know only of the base 
-environment, i.e. within a module the base environment is the the only *package*
+environment, i.e. within a module the base environment is the only *package*
 on the *search path*. Also they are always represented as a list inside R. Thus
 they can be treated as bags of functions.
 
@@ -92,7 +92,7 @@ m$functionWithDep(1:10)
 ```{r}
 m <- module({
   
-  import(stats) # a package or a list, i.e. a module
+  import(stats)
   
   functionWithDep <- function(x) median(x)
 

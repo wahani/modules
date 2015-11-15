@@ -1,7 +1,7 @@
 ---
 title: "Modules in R"
 author: "Sebastian Warnholz"
-date: "2015-11-13"
+date: "2015-11-15"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Modules in R}
@@ -36,11 +36,11 @@ a package modules can be considered ad hoc, but - in the sense of an R-package -
 self contained. 
 
 There are two use cases. First when you use modules to develop scripts, which is
-subject of this section. And then inside of packages where the scope is a bit
+subject of this section; And then inside of packages where the scope is a bit
 different by default. Outside of packages modules know only of the base 
-environment, i.e. within a module the base environment is the the only *package*
-on the search path. Also they are always represented as a list inside R. Thus
-they can be trated as bags of functions.
+environment, i.e. within a module the base environment is the only *package*
+on the *search path*. Also they are always represented as a list inside R. Thus
+they can be treated as bags of functions.
 
 
 ```r
@@ -89,8 +89,8 @@ m$functionWithDep(1:10)
 ## [1] 5.5
 ```
 
-Or you can use `import` for *attaching* single objects and `use` for *attaching*
-a module (aka a list) or a package:
+Or you can use `import` for *attaching* single objects or packages and `use` for *attaching*
+a module (aka a list):
 
 
 ```r
@@ -112,7 +112,7 @@ m$functionWithDep(1:10)
 ```r
 m <- module({
   
-  use("stats") # a package or a list, i.e. a module
+  import(stats)
   
   functionWithDep <- function(x) median(x)
 
@@ -163,7 +163,7 @@ dependency <- identity
 fun <- function(x) dependency(x) 
 
 cl <- makeCluster(2)
-clusterMap(cl, fun, replicate(2, 1:10, simplify = FALSE))
+clusterMap(cl, fun, 1:2)
 ```
 
 ```
@@ -184,15 +184,15 @@ m <- module({
 })
 
 cl <- makeCluster(2)
-clusterMap(cl, m$fun, replicate(2, 1:10, simplify = FALSE))
+clusterMap(cl, m$fun, 1:2)
 ```
 
 ```
 ## [[1]]
-##  [1]  1  2  3  4  5  6  7  8  9 10
+## [1] 1
 ## 
 ## [[2]]
-##  [1]  1  2  3  4  5  6  7  8  9 10
+## [1] 2
 ```
 
 ```r
@@ -214,8 +214,8 @@ environment in a package. Most of the syntactic sugar (S4) in aoos works:
 
 ```r
 m <- module({
-  use("methods")
-  use("aoos")
+  import("methods")
+  import("aoos")
   gen(x) %g% cat("default method")
   gen(x ~ numeric) %m% cat("method for x ~ numerc")
 })
@@ -243,8 +243,8 @@ seems to work though:
 
 ```r
 m <- module({
-  use("methods")
-  use("aoos")
+  import("methods")
+  import("aoos")
   gen(x) %g% cat("default method")
   gen(x ~ numeric) %m% cat("method for x ~ numerc")
   NewType <- function(x) retList("NewType")
@@ -262,7 +262,7 @@ clusterMap(cl, m$gen, list(m$NewType(NULL)))
 ## NULL
 ## 
 ## attr(,".self")
-## <environment: 0x5e5cf70>
+## <environment: 0x1a3a3ef8>
 ## attr(,"class")
 ## [1] "NewType" "list"
 ```

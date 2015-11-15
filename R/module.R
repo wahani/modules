@@ -82,10 +82,9 @@ import <- function(from, ..., where = parent.frame()) {
 #' @export
 #' @rdname module
 use <- function(module, where = parent.frame()) {
-
+  module <- as.module(module)
   addDependency(module, names(module), where)
   invisible(NULL)
-
 }
 
 #' @export

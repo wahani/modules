@@ -10,5 +10,11 @@
 #' @export
 #' @rdname modulecoerce
 list : as.module(x, topEncl = baseenv(), ...) %g% {
+  as.list(x)
+}
+
+#' @export
+#' @rdname modulecoerce
+as.module(x ~ character, topEncl, ...) %m% {
   do.call(module, list(parse(x, ...), topEncl))
 }
