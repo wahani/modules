@@ -1,10 +1,10 @@
 Package: module
-Title: Still needs a title!
+Title: Modules in R
 Version: 0.0.7
 Authors@R: person("Sebastian", "Warnholz", email = "wahani@gmail.com", role = c("aut", "cre"))
 Description: Provides modules as an organizational unit for source code. Modules
-    enforce to be more rigerous when defining dependencies and have something
-    like a local search path. They are to be used as a sub unit within packages
+    enforce to be more rigorous when defining dependencies and have
+    a local search path. They can be used as a sub unit within packages
     or in scripts.
 Depends:
     R (>= 3.2.2),
