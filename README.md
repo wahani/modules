@@ -236,11 +236,10 @@ search()
 
 ```
 ##  [1] ".GlobalEnv"        "import:module"     "import:module"    
-##  [4] "package:parallel"  "import:module"     "import:module"    
-##  [7] "package:testthat"  "package:module"    "package:aoos"     
-## [10] "tools:rstudio"     "package:stats"     "package:graphics" 
-## [13] "package:grDevices" "package:utils"     "package:datasets" 
-## [16] "package:methods"   "Autoloads"         "package:base"
+##  [4] "package:parallel"  "package:module"    "package:aoos"     
+##  [7] "tools:rstudio"     "package:stats"     "package:graphics" 
+## [10] "package:grDevices" "package:utils"     "package:datasets" 
+## [13] "package:methods"   "Autoloads"         "package:base"
 ```
 
 ```r
