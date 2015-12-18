@@ -62,9 +62,10 @@ test_that("Attaching other module", {
       fun <- function(x) x
     })
 
-    use(m)
+    use(m, TRUE)
 
     funNew <- function(x) fun(x)
+
   })
 
   expect_equal(m1$funNew(1), 1)
@@ -187,7 +188,7 @@ test_that("file as module", {
     tmp <- tempfile()
     writeLines("import(stats)
                fun <- function(x) median(x)", tmp)
-    use(tmp)
+    use(tmp, attach = TRUE)
     funWithDep <- function(x) fun(x)
 
   })

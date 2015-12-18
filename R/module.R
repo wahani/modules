@@ -23,14 +23,16 @@ module <- function(expr = {}, topEncl = if (interactive()) baseenv() else parent
 
   getExports <- function(module) {
     exports <- get(nameExports(), envir = module, inherits = TRUE)
-    paste0(exports, collapse = "|")
+    if (length(exports) == 1 && grepl("\\^", exports)) ls(module, pattern = "^*")
+    else exports
   }
 
   expr <- match.call()[[2]]
   module <- ModuleScope(parent = ModuleParent(topEncl))
   module <- evalInModule(module, expr)
+  # browser()
   stripSelf(retList(
-    public = ls(module, pattern = getExports(module)),
+    public = getExports(module),
     envir = module
   ))
 
@@ -78,14 +80,15 @@ import <- function(from, ..., where = parent.frame()) {
 
 }
 
-#' @param module (character, list or environment) a module
+#' @param module (character | list) a module as filename or object
+#' @param attach (logical) whether to attach the module to the search path
 #'
 #' @export
 #' @rdname module
-use <- function(module, where = parent.frame()) {
+use <- function(module, attach = FALSE, where = parent.frame()) {
   module <- as.module(module)
-  addDependency(makeAssignment)(module, names(module), where)
-  invisible(NULL)
+  if (attach) addDependency(makeAssignment)(module, names(module), where)
+  invisible(module)
 }
 
 #' @export

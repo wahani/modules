@@ -28,18 +28,23 @@ devtools::install_github("wahani/aoos")
 
 # Introduction
 
-The key idea of this package is to provide a unit which is self contained, i.e.
-has it's own scope. The main and most reliable infrastructure for such
+The key idea of this package is to provide a unit which is self contained, i.e. 
+has it's own scope. The main and most reliable infrastructure for such 
 organizational units of source code in the R ecosystem is a package. Compared to
 a package modules can be considered ad hoc, but - in the sense of an R-package -
-self contained. 
+self contained. Furthermore modules consist of one file; in contrast to a
+package which can wrap an arbitrary number of files.
 
 There are two use cases. First when you use modules to develop scripts, which is
-subject of this section; And then inside of packages where the scope is a bit
-different by default. Outside of packages modules know only of the base 
-environment, i.e. within a module the base environment is the only *package*
-on the *search path*. Also they are always represented as a list inside R. Thus
-they can be treated as bags of functions.
+subject of this section; And then inside of packages where modules act more like
+objects, as in object-oriented-programming. Outside of packages modules know
+only of the base environment, i.e. within a module the base environment is the
+only *package* on the *search path*. Also they are always represented as a list
+inside R. Thus they can be treated as bags of functions.
+
+In the following examples you will see the function `module` to define modules.
+Typically you do not have to call that function explicitly but instead call
+`use` to load a module into your current session.
 
 ```{r}
 library(module)
@@ -73,8 +78,8 @@ m <- module({
 m$functionWithDep(1:10)
 ```
 
-Or you can use `import` for *attaching* single objects or packages and `use` for *attaching*
-a module (aka a list):
+Or you can use `import` for *attaching* single objects or packages and `use` for
+*attaching* or loading a module:
 
 ```{r}
 m <- module({
@@ -102,8 +107,7 @@ m$functionWithDep(1:10)
 
 It may also be of interest to control which objects are visible for the client.
 You can do that with the `export` function. Note that export accepts regular
-expressions. If you supply more than one argument they are connected with '|'.
-Functions which begin with a `.` are never exported.
+expressions which are indicated by a leading '^'.
 
 ```{r}
 m <- module({
@@ -175,7 +179,7 @@ writeLines(code, fileName)
 Then we can attach such a module into this session by the following:
 
 ```{r}
-use(fileName)
+someModule <- use(fileName, attach = TRUE)
 search()
 generic(1:2)
 ```

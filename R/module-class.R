@@ -15,6 +15,6 @@ environment : ModuleScope(parent ~ ModuleParent) %type% {
   # Here are also the flags. Because of imports it might be hard to find the
   # original name-value for the exports. And to avoid multiple copies it is
   # directly in the module env
-  assign(nameExports(), "*", envir = .Object)
+  assign(nameExports(), "^*", envir = .Object)
   .Object
 }

@@ -1,6 +1,6 @@
-Package: module
+Package: modules
 Title: Modules in R
-Version: 0.0.7
+Version: 0.0.8
 Authors@R: person("Sebastian", "Warnholz", email = "wahani@gmail.com", role = c("aut", "cre"))
 Description: Provides modules as an organizational unit for source code. Modules
     enforce to be more rigorous when defining dependencies and have

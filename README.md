@@ -1,7 +1,7 @@
 ---
 title: "Modules in R"
 author: "Sebastian Warnholz"
-date: "2015-11-15"
+date: "2015-12-18"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Modules in R}
@@ -14,7 +14,7 @@ vignette: >
 [![CRAN](http://www.r-pkg.org/badges/version/module)](http://cran.rstudio.com/package=module)
 [![Downloads](http://cranlogs.r-pkg.org/badges/module?color=brightgreen)](http://www.r-pkg.org/pkg/module)
 
-Provides modules as an organizational unit for source code. Modules enforce to be more rigerous when defining dependencies and have something like a local search path. They are to be used as a sub unit within packages or in scripts.
+Provides modules as an organizational unit for source code. Modules enforce to be more rigorous when defining dependencies and have a local search path. They can be used as a sub unit within packages or in scripts.
 
 ## Installation
 
@@ -25,22 +25,25 @@ From this GitHub:
 devtools::install_github("wahani/aoos")
 ```
 
-# Modules Outside of Package Development
+# Introduction
 
-## General Behaviour
-
-The key idea of this package is to provide a unit which is self contained, i.e.
-has it's own scope. The main and most reliable infrastructure for such
+The key idea of this package is to provide a unit which is self contained, i.e. 
+has it's own scope. The main and most reliable infrastructure for such 
 organizational units of source code in the R ecosystem is a package. Compared to
 a package modules can be considered ad hoc, but - in the sense of an R-package -
-self contained. 
+self contained. Furthermore modules consist of one file; in contrast to a
+package which can wrap an arbitrary number of files.
 
 There are two use cases. First when you use modules to develop scripts, which is
-subject of this section; And then inside of packages where the scope is a bit
-different by default. Outside of packages modules know only of the base 
-environment, i.e. within a module the base environment is the only *package*
-on the *search path*. Also they are always represented as a list inside R. Thus
-they can be treated as bags of functions.
+subject of this section; And then inside of packages where modules act more like
+objects, as in object-oriented-programming. Outside of packages modules know
+only of the base environment, i.e. within a module the base environment is the
+only *package* on the *search path*. Also they are always represented as a list
+inside R. Thus they can be treated as bags of functions.
+
+In the following examples you will see the function `module` to define modules.
+Typically you do not have to call that function explicitly but instead call
+`use` to load a module into your current session.
 
 
 ```r
@@ -89,8 +92,8 @@ m$functionWithDep(1:10)
 ## [1] 5.5
 ```
 
-Or you can use `import` for *attaching* single objects or packages and `use` for *attaching*
-a module (aka a list):
+Or you can use `import` for *attaching* single objects or packages and `use` for
+*attaching* or loading a module:
 
 
 ```r
@@ -128,8 +131,7 @@ m$functionWithDep(1:10)
 
 It may also be of interest to control which objects are visible for the client.
 You can do that with the `export` function. Note that export accepts regular
-expressions. If you supply more than one argument they are connected with '|'.
-Functions which begin with a `.` are never exported.
+expressions which are indicated by a leading '^'.
 
 
 ```r
@@ -198,6 +200,61 @@ clusterMap(cl, m$fun, 1:2)
 ```r
 stopCluster(cl)
 ```
+
+
+# Scripts as modules
+
+You can make scripts into modules with `as.module` or implicitly when you refer
+to a file in a call to `use`. Inside such a script you can use `import` and
+`use` in the same way you typically use `library`. A major difference is, that
+library will not only attach the stated package but also all packages in the 
+depends field of that dependency. This is something you have to do manually
+(explicitly) with `import`. Consider the following example where we create a
+module in a temporary file with its dependencies.
+
+
+```r
+code <- "
+import(methods)
+import(aoos)
+# This is an example:
+list : generic(x) %g% standardGeneric('generic')
+generic(x ~ ANY) %m% as.list(x)
+"
+
+fileName <- tempfile()
+writeLines(code, fileName)
+```
+
+Then we can attach such a module into this session by the following:
+
+
+```r
+someModule <- use(fileName, attach = TRUE)
+search()
+```
+
+```
+##  [1] ".GlobalEnv"        "import:module"     "import:module"    
+##  [4] "package:parallel"  "import:module"     "import:module"    
+##  [7] "package:testthat"  "package:module"    "package:aoos"     
+## [10] "tools:rstudio"     "package:stats"     "package:graphics" 
+## [13] "package:grDevices" "package:utils"     "package:datasets" 
+## [16] "package:methods"   "Autoloads"         "package:base"
+```
+
+```r
+generic(1:2)
+```
+
+```
+## [[1]]
+## [1] 1
+## 
+## [[2]]
+## [1] 2
+```
+
 
 # Modules in Packages
 

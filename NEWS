@@ -1,3 +1,7 @@
+Version 0.0.8
+- use does not attach by default
+- a regex in export is indicated by a leading "^"
+
 Version 0.0.7
 
 Version 0.0.5

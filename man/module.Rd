@@ -12,7 +12,7 @@ module(expr = { }, topEncl = if (interactive()) baseenv() else
 
 import(from, ..., where = parent.frame())
 
-use(module, where = parent.frame())
+use(module, attach = FALSE, where = parent.frame())
 
 export(..., where = parent.frame())
 }
@@ -27,7 +27,9 @@ export(..., where = parent.frame())
 
 \item{where}{(environment) important for testing}
 
-\item{module}{(character, list or environment) a module}
+\item{module}{(character | list) a module as filename or object}
+
+\item{attach}{(logical) whether to attach the module to the search path}
 }
 \description{
 Use \code{module} to define self contained organizational units. Modules have
