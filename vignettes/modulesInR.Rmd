@@ -9,21 +9,21 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-[![Build Status](https://travis-ci.org/wahani/module.png?branch=master)](https://travis-ci.org/wahani/module)
-[![codecov.io](https://codecov.io/github/wahani/module/coverage.svg?branch=master)](https://codecov.io/github/wahani/module?branch=master)
-[![CRAN](http://www.r-pkg.org/badges/version/module)](http://cran.rstudio.com/package=module)
-[![Downloads](http://cranlogs.r-pkg.org/badges/module?color=brightgreen)](http://www.r-pkg.org/pkg/module)
+[![Build Status](https://travis-ci.org/wahani/modules.png?branch=master)](https://travis-ci.org/wahani/modules)
+[![codecov.io](https://codecov.io/github/wahani/modules/coverage.svg?branch=master)](https://codecov.io/github/wahani/modules?branch=master)
+[![CRAN](http://www.r-pkg.org/badges/version/modules)](http://cran.rstudio.com/package=modules)
+[![Downloads](http://cranlogs.r-pkg.org/badges/modules?color=brightgreen)](http://www.r-pkg.org/pkg/modules)
 
 ```{r, results='asis', echo=FALSE}
-cat(gsub("\\n   ", "", packageDescription("module", fields = "Description")))
+cat(gsub("\\n   ", "", packageDescription("modules", fields = "Description")))
 ```
 
 ## Installation
 
-From this GitHub:
+From GitHub:
 
 ```{r, eval=FALSE}
-devtools::install_github("wahani/aoos")
+devtools::install_github("wahani/modules")
 ```
 
 # Introduction
@@ -47,7 +47,7 @@ Typically you do not have to call that function explicitly but instead call
 `use` to load a module into your current session.
 
 ```{r}
-library(module)
+library(modules)
 m <- module({
   boringFunction <- function() cat("boring output")
 })

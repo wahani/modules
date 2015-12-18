@@ -2,9 +2,9 @@ environment : ModuleParent(parent = baseenv()) %type% {
   # This is the type for the initial parent of a module.
   # It knows of some functions:
   parent.env(.Object) <- .Object@parent
-  makeDelayedAssignment("module", "import", into = .Object)
-  makeDelayedAssignment("module", "use", into = .Object)
-  makeDelayedAssignment("module", "export", into = .Object)
+  makeDelayedAssignment("modules", "import", into = .Object)
+  makeDelayedAssignment("modules", "use", into = .Object)
+  makeDelayedAssignment("modules", "export", into = .Object)
   .Object
 }
 

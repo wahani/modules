@@ -9,20 +9,20 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-[![Build Status](https://travis-ci.org/wahani/module.png?branch=master)](https://travis-ci.org/wahani/module)
-[![codecov.io](https://codecov.io/github/wahani/module/coverage.svg?branch=master)](https://codecov.io/github/wahani/module?branch=master)
-[![CRAN](http://www.r-pkg.org/badges/version/module)](http://cran.rstudio.com/package=module)
-[![Downloads](http://cranlogs.r-pkg.org/badges/module?color=brightgreen)](http://www.r-pkg.org/pkg/module)
+[![Build Status](https://travis-ci.org/wahani/modules.png?branch=master)](https://travis-ci.org/wahani/modules)
+[![codecov.io](https://codecov.io/github/wahani/modules/coverage.svg?branch=master)](https://codecov.io/github/wahani/modules?branch=master)
+[![CRAN](http://www.r-pkg.org/badges/version/modules)](http://cran.rstudio.com/package=modules)
+[![Downloads](http://cranlogs.r-pkg.org/badges/modules?color=brightgreen)](http://www.r-pkg.org/pkg/modules)
 
 Provides modules as an organizational unit for source code. Modules enforce to be more rigorous when defining dependencies and have a local search path. They can be used as a sub unit within packages or in scripts.
 
 ## Installation
 
-From this GitHub:
+From GitHub:
 
 
 ```r
-devtools::install_github("wahani/aoos")
+devtools::install_github("wahani/modules")
 ```
 
 # Introduction
@@ -47,7 +47,14 @@ Typically you do not have to call that function explicitly but instead call
 
 
 ```r
-library(module)
+library(modules)
+```
+
+```
+## Loading required package: aoos
+```
+
+```r
 m <- module({
   boringFunction <- function() cat("boring output")
 })
@@ -235,11 +242,11 @@ search()
 ```
 
 ```
-##  [1] ".GlobalEnv"        "import:module"     "import:module"    
-##  [4] "package:parallel"  "package:module"    "package:aoos"     
-##  [7] "tools:rstudio"     "package:stats"     "package:graphics" 
-## [10] "package:grDevices" "package:utils"     "package:datasets" 
-## [13] "package:methods"   "Autoloads"         "package:base"
+##  [1] ".GlobalEnv"        "import:module"     "package:parallel" 
+##  [4] "package:modules"   "package:aoos"      "tools:rstudio"    
+##  [7] "package:stats"     "package:graphics"  "package:grDevices"
+## [10] "package:utils"     "package:datasets"  "package:methods"  
+## [13] "Autoloads"         "package:base"
 ```
 
 ```r
@@ -318,7 +325,7 @@ clusterMap(cl, m$gen, list(m$NewType(NULL)))
 ## NULL
 ## 
 ## attr(,".self")
-## <environment: 0x1a3a3ef8>
+## <environment: 0x4238408>
 ## attr(,"class")
 ## [1] "NewType" "list"
 ```

@@ -6,6 +6,7 @@ Description: Provides modules as an organizational unit for source code. Modules
     enforce to be more rigorous when defining dependencies and have
     a local search path. They can be used as a sub unit within packages
     or in scripts.
+BugReports: https://github.com/wahani/modules/issues
 Depends:
     R (>= 3.2.2),
     aoos,

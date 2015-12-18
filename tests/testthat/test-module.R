@@ -29,7 +29,7 @@ test_that("Imports of module", {
 
   # imported objects are only available to module
   m <- module({
-    import(module, module)
+    import(modules, module)
     localModule <- module({
       fun <- function(x) x
     })
@@ -56,7 +56,7 @@ test_that("delayed assignment", {
 test_that("Attaching other module", {
   m1 <- module({
 
-    import(module, module)
+    import(modules, module)
 
     m <- module({
       fun <- function(x) x
@@ -85,7 +85,7 @@ test_that("cross package deps", {
 
   disposables::make_packages(
 
-    imports = "module",
+    imports = "modules",
 
     M1 = {
       m1 <- module({
