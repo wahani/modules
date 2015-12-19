@@ -1,7 +1,7 @@
 ---
 title: "Modules in R"
 author: "Sebastian Warnholz"
-date: "2015-12-18"
+date: "2015-12-19"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Modules in R}
@@ -11,7 +11,7 @@ vignette: >
 
 [![Build Status](https://travis-ci.org/wahani/modules.png?branch=master)](https://travis-ci.org/wahani/modules)
 [![codecov.io](https://codecov.io/github/wahani/modules/coverage.svg?branch=master)](https://codecov.io/github/wahani/modules?branch=master)
-[![CRAN](http://www.r-pkg.org/badges/version/modules)](https://cran.rstudio.com/package=modules)
+[![CRAN](http://www.r-pkg.org/badges/version/modules)](https://cran.r-project.org/package=modules)
 [![Downloads](http://cranlogs.r-pkg.org/badges/modules?color=brightgreen)](http://www.r-pkg.org/pkg/modules)
 
 Provides modules as an organizational unit for source code. Modules enforce to be more rigorous when defining dependencies and have a local search path. They can be used as a sub unit within packages or in scripts.
@@ -48,6 +48,13 @@ Typically you do not have to call that function explicitly but instead call
 
 ```r
 library(modules)
+```
+
+```
+## Loading required package: aoos
+```
+
+```r
 m <- module({
   boringFunction <- function() cat("boring output")
 })
@@ -235,12 +242,11 @@ search()
 ```
 
 ```
-##  [1] ".GlobalEnv"        "import:module"     "import:module"    
-##  [4] "import:module"     "package:parallel"  "package:modules"  
-##  [7] "package:aoos"      "tools:rstudio"     "package:stats"    
-## [10] "package:graphics"  "package:grDevices" "package:utils"    
-## [13] "package:datasets"  "package:methods"   "Autoloads"        
-## [16] "package:base"
+##  [1] ".GlobalEnv"        "import:module"     "package:parallel" 
+##  [4] "package:modules"   "package:aoos"      "tools:rstudio"    
+##  [7] "package:stats"     "package:graphics"  "package:grDevices"
+## [10] "package:utils"     "package:datasets"  "package:methods"  
+## [13] "Autoloads"         "package:base"
 ```
 
 ```r
@@ -319,7 +325,7 @@ clusterMap(cl, m$gen, list(m$NewType(NULL)))
 ## NULL
 ## 
 ## attr(,".self")
-## <environment: 0x324db20>
+## <environment: 0x4d0ac30>
 ## attr(,"class")
 ## [1] "NewType" "list"
 ```
