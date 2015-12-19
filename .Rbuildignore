@@ -1,5 +1,6 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 prepareRepo.R
-README.Rmd
+README.md
 ^\.travis\.yml$
+cran-comments.md

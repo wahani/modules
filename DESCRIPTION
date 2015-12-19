@@ -1,6 +1,7 @@
 Package: modules
-Title: Modules in R
-Version: 0.0.8
+Title: Self Contained Units of Source Code
+Version: 0.1.0
+Date: 2015-12-18
 Authors@R: person("Sebastian", "Warnholz", email = "wahani@gmail.com", role = c("aut", "cre"))
 Description: Provides modules as an organizational unit for source code. Modules
     enforce to be more rigorous when defining dependencies and have
