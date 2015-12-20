@@ -47,15 +47,11 @@ module <- function(expr = {}, topEncl = if (interactive()) baseenv() else parent
 #' @export
 import <- function(from, ..., where = parent.frame()) {
 
-  deleteQuotes <- function(x) {
-    gsub("\\\"|\\\'", "", x)
-  }
-
   deparseImports <- function(mc) {
     args <- Map(deparse, mc)
     args[[1]] <- NULL
     args$from <- NULL
-    args$into <- NULL
+    args$where <- NULL
     args <- unlist(args)
     deleteQuotes(args)
   }
