@@ -12,7 +12,7 @@ vignette: >
 [![Build Status](https://travis-ci.org/wahani/modules.png?branch=master)](https://travis-ci.org/wahani/modules)
 [![codecov.io](https://codecov.io/github/wahani/modules/coverage.svg?branch=master)](https://codecov.io/github/wahani/modules?branch=master)
 [![CRAN](http://www.r-pkg.org/badges/version/modules)](https://cran.r-project.org/package=modules)
-[![Downloads](http://cranlogs.r-pkg.org/badges/modules?color=brightgreen)](http://www.r-pkg.org/pkg/modules)
+![Downloads](http://cranlogs.r-pkg.org/badges/modules)
 
 Provides modules as an organizational unit for source code. Modules enforce to be more rigorous when defining dependencies and have a local search path. They can be used as a sub unit within packages or in scripts.
 
@@ -306,7 +306,7 @@ clusterMap(cl, m$gen, list(m$NewType(NULL)))
 ## NULL
 ## 
 ## attr(,".self")
-## <environment: 0x4d0ac30>
+## <environment: 0x5c1a688>
 ## attr(,"class")
 ## [1] "NewType" "list"
 ```
