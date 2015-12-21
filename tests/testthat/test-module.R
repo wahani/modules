@@ -190,9 +190,49 @@ test_that("file as module", {
                fun <- function(x) median(x)", tmp)
     use(tmp, attach = TRUE)
     funWithDep <- function(x) fun(x)
-
   })
 
   expect_equal(m$funWithDep(1:7), 4)
+
+})
+
+test_that("duplications on search path", {
+
+  expectEqual <- function(a, b) {
+    testthat::expect_equal(a, b)
+  }
+
+  "%without%" <- function(x, set) {
+    x[!(x %in% set)]
+  }
+
+  sp0 <- getSearchPathNames()
+
+  m <- module({ })
+  use(m, attach = TRUE)
+  use(m, attach = TRUE)
+
+  sp1 <- getSearchPathNames()
+
+  tmp <- tempfile()
+  writeLines("import(stats)
+             fun <- function(x) median(x)", tmp)
+  use(tmp, attach = TRUE)
+
+  sp2 <- getSearchPathNames()
+
+  import(stats)
+
+  sp3 <- getSearchPathNames()
+
+  use(m, attach = TRUE)
+
+  sp4 <- getSearchPathNames()
+
+  expectEqual(sp1[-1], c("modules:m", sp0[-1]))
+  expectEqual(sp2[-1], c("modules:tmp", sp1[-1]))
+  expectEqual(sp3[-1], c("modules:stats", sp2[-1]))
+  expectEqual(sp4[-1], c("modules:m", sp3[-1] %without% "modules:m"))
+
 
 })

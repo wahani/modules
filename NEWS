@@ -1,3 +1,8 @@
+Version 0.1.2
+- use and import now avoid duplicate dependencies on the search path
+- new functions: getSearchPath, getSearchPathNames to explore the local search
+path
+
 Version 0.1.1
 - fix when deparsing imports
 

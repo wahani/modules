@@ -6,23 +6,34 @@ deleteQuotes <- function(x) {
 
 nameExports <- function() ".__exports__"
 
-addDependency <- function(assignFun) {
-  # builds a function to add new dependencies to an existing search path
-  force(assignFun)
+addDependency <- function(from, what, where, assignFun, name) {
+  # add new dependencies to an existing search path
 
-  addDependencyLayer <- function(where, from) {
+  addPrefix <- function(name) paste0("modules:", name)
+
+  addDependencyLayer <- function(where, from, name) {
     parentOfWhere <- parent.env(where)
     newParent <- new.env(parent = parentOfWhere)
-    attr(newParent, "name") <- paste0("import:", if (is.character(from)) from else "module")
+    attr(newParent, "name") <- addPrefix(name)
     parent.env(where) <- newParent
     newParent
   }
 
-  function(from, what, where) {
-    # into is a reference to the (new) parent of where:
-    into <- addDependencyLayer(where, from)
-    assignFun(from, what, into)
+  cleanSearchPath <- function(where, name) {
+
+    sp <- getSearchPath(where)
+    pos <- Position(function(el) identical(el, addPrefix(name)), lapply(sp, attr, "name"))
+
+    if (is.na(pos)) return(NULL) # stop here
+    else if (pos == 1) parent.env(where) <- sp[[2]]
+    else parent.env(sp[[pos - 1]]) <- sp[[pos + 1]]
+
   }
+
+  cleanSearchPath(where, name)
+  # into is a reference to the (new) parent of where:
+  into <- addDependencyLayer(where, from, name)
+  assignFun(from, what, into)
 
 }
 

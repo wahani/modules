@@ -2,6 +2,8 @@
 
 export(as.module)
 export(export)
+export(getSearchPath)
+export(getSearchPathNames)
 export(import)
 export(module)
 export(use)

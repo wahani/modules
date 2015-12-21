@@ -30,7 +30,7 @@ module <- function(expr = {}, topEncl = if (interactive()) baseenv() else parent
   expr <- match.call()[[2]]
   module <- ModuleScope(parent = ModuleParent(topEncl))
   module <- evalInModule(module, expr)
-  # browser()
+
   stripSelf(retList(
     public = getExports(module),
     envir = module
@@ -70,7 +70,7 @@ import <- function(from, ..., where = parent.frame()) {
   from <- deparseFrom(match.call())
   objectsToImport <- makeObjectsToImport(match.call(), from)
 
-  addDependency(makeDelayedAssignment)(from, objectsToImport, where)
+  addDependency(from, objectsToImport, where, makeDelayedAssignment, from)
 
   invisible(NULL)
 
@@ -82,8 +82,15 @@ import <- function(from, ..., where = parent.frame()) {
 #' @export
 #' @rdname module
 use <- function(module, attach = FALSE, where = parent.frame()) {
+  name <- as.character(substitute(module))
   module <- as.module(module)
-  if (attach) addDependency(makeAssignment)(module, names(module), where)
+  if (attach) addDependency(
+    module,
+    names(module),
+    where,
+    makeAssignment,
+    name
+  )
   invisible(module)
 }
 
