@@ -14,8 +14,7 @@
 #'
 #' @details
 #' \code{topEncl} is the environment where the search of the module begins. This
-#' is  (most of the time) the base package. When \code{identical(topenv(),
-#' globalenv())} is false it (most likely) means that the module is part of a
+#' is  (most of the time) the base package. When \code{identical(topenv(parent.frame()), globalenv())} is false it (most likely) means that the module is part of a
 #' package. In that case the module defines a sub unit within a package but has
 #' access to the packages namespace.
 #'
@@ -32,7 +31,7 @@
 #'
 #' @rdname module
 #' @export
-module <- function(expr = {}, topEncl = if (identical(topenv(), globalenv())) baseenv() else parent.frame()) {
+module <- function(expr = {}, topEncl = if (identical(topenv(parent.frame()), globalenv())) baseenv() else parent.frame()) {
 
   evalInModule <- function(module, code) {
     eval(code, envir = as.environment(module), enclos = emptyenv())

@@ -1,7 +1,7 @@
 ---
 title: "Modules in R"
 author: "Sebastian Warnholz"
-date: "2015-12-19"
+date: "2015-12-21"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Modules in R}
@@ -48,13 +48,6 @@ Typically you do not have to call that function explicitly but instead call
 
 ```r
 library(modules)
-```
-
-```
-## Loading required package: aoos
-```
-
-```r
 m <- module({
   boringFunction <- function() cat("boring output")
 })
@@ -229,28 +222,16 @@ list : generic(x) %g% standardGeneric('generic')
 generic(x ~ ANY) %m% as.list(x)
 "
 
-fileName <- tempfile()
+fileName <- tempfile(fileext = ".R")
 writeLines(code, fileName)
 ```
 
-Then we can attach such a module into this session by the following:
+Then we can load such a module into this session by the following:
 
 
 ```r
-someModule <- use(fileName, attach = TRUE)
-search()
-```
-
-```
-##  [1] ".GlobalEnv"        "import:module"     "package:parallel" 
-##  [4] "package:modules"   "package:aoos"      "tools:rstudio"    
-##  [7] "package:stats"     "package:graphics"  "package:grDevices"
-## [10] "package:utils"     "package:datasets"  "package:methods"  
-## [13] "Autoloads"         "package:base"
-```
-
-```r
-generic(1:2)
+someModule <- use(fileName)
+someModule$generic(1:2)
 ```
 
 ```

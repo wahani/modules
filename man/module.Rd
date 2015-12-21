@@ -7,8 +7,8 @@
 \alias{use}
 \title{Define Modules in R}
 \usage{
-module(expr = { }, topEncl = if (identical(topenv(), globalenv())) baseenv()
-  else parent.frame())
+module(expr = { }, topEncl = if (identical(topenv(parent.frame()),
+  globalenv())) baseenv() else parent.frame())
 
 import(from, ..., where = parent.frame())
 
@@ -40,8 +40,7 @@ their own search path. \code{import} can be used to import packages.
 }
 \details{
 \code{topEncl} is the environment where the search of the module begins. This
-is  (most of the time) the base package. When \code{identical(topenv(),
-globalenv())} is false it (most likely) means that the module is part of a
+is  (most of the time) the base package. When \code{identical(topenv(parent.frame()), globalenv())} is false it (most likely) means that the module is part of a
 package. In that case the module defines a sub unit within a package but has
 access to the packages namespace.
 

@@ -176,12 +176,11 @@ fileName <- tempfile(fileext = ".R")
 writeLines(code, fileName)
 ```
 
-Then we can attach such a module into this session by the following:
+Then we can load such a module into this session by the following:
 
 ```{r}
-someModule <- use(fileName, attach = TRUE)
-search()
-generic(1:2)
+someModule <- use(fileName)
+someModule$generic(1:2)
 ```
 
 
