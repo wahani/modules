@@ -6,15 +6,33 @@
 #'
 #' @param expr an expression
 #' @param topEncl (environment) the root of the local search path
+#' @param from (character, or unquoten expression) a package name
+#' @param ... (character, or unquoted expression) names to import from package
+#'   or names to export from module. For exports a character of length 1 with a
+#'   leading "^" is interpreted as regular expression.
+#' @param where (environment) important for testing
+#'
+#' @details
+#' \code{topEncl} is the environment where the search of the module begins. This
+#' is  (most of the time) the base package. When \code{identical(topenv(),
+#' globalenv())} is false it (most likely) means that the module is part of a
+#' package. In that case the module defines a sub unit within a package but has
+#' access to the packages namespace.
+#'
+#' \code{import} and \code{use} are no replacements for \link{library} and
+#' \link{attach}. Both will work when called in the \code{.GlobalEnv} but should
+#' only be used for development and debugging of modules.
+#'
+#' \code{export} will never export a function with a leading "." in its name.
 #'
 #' @examples
 #' \dontrun{
-#' vignette("modulesInR", "module")
+#' vignette("modulesInR", "modules")
 #' }
 #'
 #' @rdname module
 #' @export
-module <- function(expr = {}, topEncl = if (interactive()) baseenv() else parent.frame()) {
+module <- function(expr = {}, topEncl = if (identical(topenv(), globalenv())) baseenv() else parent.frame()) {
 
   evalInModule <- function(module, code) {
     eval(code, envir = as.environment(module), enclos = emptyenv())
@@ -38,12 +56,7 @@ module <- function(expr = {}, topEncl = if (interactive()) baseenv() else parent
 
 }
 
-#' @param from (character, or unquoten expression) a package name
-#' @param ... (character, or unquoted expression) names to import from package
-#' @param where (environment) important for testing
-#'
 #' @rdname module
-#'
 #' @export
 import <- function(from, ..., where = parent.frame()) {
 
@@ -82,7 +95,7 @@ import <- function(from, ..., where = parent.frame()) {
 #' @export
 #' @rdname module
 use <- function(module, attach = FALSE, where = parent.frame()) {
-  name <- as.character(substitute(module))
+  name <- if (is.character(module)) module else as.character(substitute(module))
   module <- as.module(module)
   if (attach) addDependency(
     module,

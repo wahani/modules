@@ -160,28 +160,6 @@ test_that("Exports of module", {
 
 })
 
-test_that("effects on global env", {
-
-  # tmp <- tempfile()
-  # writeLines("module::import(module)
-  # import(aoos)
-  # m <- module({
-  #   fun <- identity
-  # })
-  # use(m)
-  # search()[2:4]", tmp)
-  #
-  # cl <- parallel::makeCluster(1)
-  # parallel::clusterExport(cl, "tmp", environment())
-  # res <- parallel::clusterEvalQ(cl, source(tmp))
-  # parallel::stopCluster(cl)
-  # attachedModules <- res[[1]]$value
-  # expect_equal(attachedModules,
-  #              c("import:module", "import:aoos", "import:module")
-  # )
-
-})
-
 test_that("file as module", {
 
   m <- module({
@@ -230,9 +208,8 @@ test_that("duplications on search path", {
   sp4 <- getSearchPathNames()
 
   expectEqual(sp1[-1], c("modules:m", sp0[-1]))
-  expectEqual(sp2[-1], c("modules:tmp", sp1[-1]))
+  expectEqual(sp2[-1], c(paste0("modules:", tmp), sp1[-1]))
   expectEqual(sp3[-1], c("modules:stats", sp2[-1]))
   expectEqual(sp4[-1], c("modules:m", sp3[-1] %without% "modules:m"))
-
 
 })

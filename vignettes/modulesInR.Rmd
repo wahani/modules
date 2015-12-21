@@ -172,7 +172,7 @@ list : generic(x) %g% standardGeneric('generic')
 generic(x ~ ANY) %m% as.list(x)
 "
 
-fileName <- tempfile()
+fileName <- tempfile(fileext = ".R")
 writeLines(code, fileName)
 ```
 

@@ -15,5 +15,5 @@ getSearchPath <- function(where = parent.frame()) {
 #' @export
 #' @rdname utilityFunctions
 getSearchPathNames <- function(where = parent.frame()) {
-  lapply(getSearchPath(where), attr, "name")
+  vapply(getSearchPath(where), environmentName, character(1))
 }
