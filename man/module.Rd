@@ -53,7 +53,7 @@ only be used for development and debugging of modules.
 }
 \examples{
 \dontrun{
-vignette("modulesInR", "module")
+vignette("modulesInR", "modules")
 }
 
 }
