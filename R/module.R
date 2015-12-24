@@ -11,12 +11,16 @@
 #'   or names to export from module. For exports a character of length 1 with a
 #'   leading "^" is interpreted as regular expression.
 #' @param where (environment) important for testing
+#' @param module (character | list) a module as file- or folder-name or a list
+#'   representing a module.
+#' @param attach (logical) whether to attach the module to the search path
 #'
 #' @details
 #' \code{topEncl} is the environment where the search of the module begins. This
-#' is  (most of the time) the base package. When \code{identical(topenv(parent.frame()), globalenv())} is false it (most likely) means that the module is part of a
-#' package. In that case the module defines a sub unit within a package but has
-#' access to the packages namespace.
+#' is  (most of the time) the base package. When
+#' \code{identical(topenv(parent.frame()), globalenv())} is false it (most
+#' likely) means that the module is part of a package. In that case the module
+#' defines a sub unit within a package but has access to the packages namespace.
 #'
 #' \code{import} and \code{use} are no replacements for \link{library} and
 #' \link{attach}. Both will work when called in the \code{.GlobalEnv} but should
@@ -88,14 +92,11 @@ import <- function(from, ..., where = parent.frame()) {
 
 }
 
-#' @param module (character | list) a module as filename or object
-#' @param attach (logical) whether to attach the module to the search path
-#'
 #' @export
 #' @rdname module
-use <- function(module, attach = FALSE, where = parent.frame()) {
+use <- function(module, attach = FALSE, ..., where = parent.frame()) {
   name <- if (is.character(module)) module else as.character(substitute(module))
-  module <- as.module(module)
+  module <- as.module(module, ...)
   if (attach) addDependency(
     module,
     names(module),

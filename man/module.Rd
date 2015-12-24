@@ -12,7 +12,7 @@ module(expr = { }, topEncl = if (identical(topenv(parent.frame()),
 
 import(from, ..., where = parent.frame())
 
-use(module, attach = FALSE, where = parent.frame())
+use(module, attach = FALSE, ..., where = parent.frame())
 
 export(..., where = parent.frame())
 }
@@ -29,7 +29,8 @@ leading "^" is interpreted as regular expression.}
 
 \item{where}{(environment) important for testing}
 
-\item{module}{(character | list) a module as filename or object}
+\item{module}{(character | list) a module as file- or folder-name or a list
+representing a module.}
 
 \item{attach}{(logical) whether to attach the module to the search path}
 }
@@ -40,9 +41,10 @@ their own search path. \code{import} can be used to import packages.
 }
 \details{
 \code{topEncl} is the environment where the search of the module begins. This
-is  (most of the time) the base package. When \code{identical(topenv(parent.frame()), globalenv())} is false it (most likely) means that the module is part of a
-package. In that case the module defines a sub unit within a package but has
-access to the packages namespace.
+is  (most of the time) the base package. When
+\code{identical(topenv(parent.frame()), globalenv())} is false it (most
+likely) means that the module is part of a package. In that case the module
+defines a sub unit within a package but has access to the packages namespace.
 
 \code{import} and \code{use} are no replacements for \link{library} and
 \link{attach}. Both will work when called in the \code{.GlobalEnv} but should

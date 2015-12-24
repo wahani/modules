@@ -16,5 +16,11 @@ list : as.module(x, topEncl = baseenv(), ...) %g% {
 #' @export
 #' @rdname modulecoerce
 as.module(x ~ character, topEncl, ...) %m% {
-  do.call(module, list(parse(x, ...), topEncl))
+  stopifnot(length(x) == 1)
+  x <- if (dir.exists(x)) list.files(x, "\\.(r|R)$", FALSE, TRUE, TRUE) else x
+  modules <- lapply(x, function(x) {
+    do.call(module, list(parse(x, ...), topEncl))
+  })
+  if (length(modules) == 1) modules[[1]]
+  else `names<-`(modules, gsub("\\.(r|R)$", "", sapply(x, basename)))
 }

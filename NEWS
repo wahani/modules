@@ -1,3 +1,7 @@
+Version 0.1.3
+- as.module and thus use now accept a directory path. In this case all R-files
+in that directory are treated as module and returned as list of modules.
+
 Version 0.1.2
 - use and import now avoid duplicate dependencies on the search path
 - new functions: getSearchPath, getSearchPathNames to explore the local search
@@ -13,16 +17,8 @@ Version 0.0.8
 - use does not attach by default
 - a regex in export is indicated by a leading "^"
 
-Version 0.0.7
-
 Version 0.0.5
 - exports
 
 Version 0.0.4
 - new function: as.module
-
-Version 0.0.3
-
-Version 0.0.2
-
-Version 0.0.1
