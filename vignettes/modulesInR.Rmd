@@ -215,40 +215,41 @@ m$fun
 
 # Modules with Object Orientation
 
-S3 method dispatch will not work because of the special search mechanism of
-`UseMethod`. By default the set functions of the methods package have side
-effects in the top level environment. A module has only access to that
-environment in a package. Most of the syntactic sugar (S4) in aoos works:
+## S3
+
+S3 method dispatch will not work because of the special search mechanism of 
+`UseMethod`. What will work, however, is attaching the module so `UseMethod` can
+find the methods.
+
+```{r}
+m <- module({
+  generic <- function(x) UseMethod("generic")
+  generic.numeric <- function(x) cat("method for x ~ numeric")
+})
+# m$generic(1) # this won't work
+use(m, attach = TRUE)
+m$generic(1)
+```
+
+## S4
+
+More reliable is the dispatch in S4. By default the set functions of the methods
+package have side effects in the top level environment. So you would have to set
+the appropriate environemnt for the argument 'where'. 'aoos' provides syntactic
+sugar (S4) and has side effects in the environment in which the constructor
+functions are called so method dispatch will work:
 
 ```{r}
 m <- module({
   import("methods")
   import("aoos")
   gen(x) %g% cat("default method")
-  gen(x ~ numeric) %m% cat("method for x ~ numerc")
+  gen(x ~ numeric) %m% cat("method for x ~ numeric")
 })
 m$gen("Hej")
 m$gen(1)
 ```
 
-S4 classes (or types in aoos) are not working correctly because it is terribly
-hard to understand the side effects of the implementation. Until now I was not
-able to isolate that. That means that up until now I have no clue how to define
-a S4 class inside a module. `setOldClass` with an appropriate where statement
-seems to work though:
-
-```{r}
-m <- module({
-  import("methods")
-  import("aoos")
-  gen(x) %g% cat("default method")
-  gen(x ~ numeric) %m% cat("method for x ~ numerc")
-  NewType <- function(x) retList("NewType")
-  setOldClass("NewType", where = environment())
-  gen(x ~ NewType) %m% x
-})
-
-cl <- makeCluster(1)
-clusterMap(cl, m$gen, list(m$NewType(NULL)))
-stopCluster(cl)
-```
+S4 classes (or types in aoos) are not working correctly because `setClass` has
+side effects in the top level environment which cannot be isolated. If you want
+to have class/type definitions you need a package.
