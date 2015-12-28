@@ -95,8 +95,8 @@ test_that("cross package deps", {
 
     M2 = {
       m2 <- module({
-        use(M1::m1)
-        newFun <- function(...) fun(...)
+        import(M1, m1)
+        newFun <- function(...) m1$fun(...)
       })
     }
 
@@ -162,6 +162,10 @@ test_that("Exports of module", {
 
 test_that("file as module", {
 
+  expectEqual <- function(a, b) {
+    testthat::expect_equal(a, b)
+  }
+
   m <- module({
     tmp <- tempfile()
     writeLines("import(stats)
@@ -170,7 +174,7 @@ test_that("file as module", {
     funWithDep <- function(x) fun(x)
   })
 
-  expect_equal(m$funWithDep(1:7), 4)
+  expectEqual(m$funWithDep(1:7), 4)
 
 })
 
@@ -213,3 +217,20 @@ test_that("duplications on search path", {
   expectEqual(sp4[-1], c("modules:m", sp3[-1] %without% "modules:m"))
 
 })
+
+test_that("print method for modules", {
+
+  expectOutput <- function(x, expr) {
+    testthat::expect_output(x, expr)
+  }
+
+  expectOutput(module({
+    fun <- function() {
+      ## doc
+      NULL
+    }
+  }),
+  "fun:\nfunction\\(\\)\n")
+
+})
+

@@ -1,3 +1,6 @@
+Version 0.1.4
+- ad-hoc documentation of functions using '##' as trigger.
+
 Version 0.1.3
 - as.module and thus use now accept a directory path. In this case all R-files
 in that directory are treated as module and returned as list of modules.

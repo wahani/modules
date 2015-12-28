@@ -1,6 +1,6 @@
 Package: modules
 Title: Self Contained Units of Source Code
-Version: 0.1.3
+Version: 0.1.4
 Date: 2015-12-18
 Authors@R: person("Sebastian", "Warnholz", email = "wahani@gmail.com", role = c("aut", "cre"))
 Description: Provides modules as an organizational unit for source code. Modules
@@ -12,6 +12,7 @@ Depends:
     R (>= 3.2.2),
     aoos,
     methods
+Imports: stringr
 License: GPL-3 | file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -24,6 +25,7 @@ Suggests:
 RoxygenNote: 5.0.1
 Collate:
     'NAMESPACE.R'
+    'modfun.R'
     'module.R'
     'module-class.R'
     'module-coercion.R'

@@ -1,7 +1,7 @@
 ---
 title: "Modules in R"
 author: "Sebastian Warnholz"
-date: "2015-12-21"
+date: "2015-12-28"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Modules in R}
@@ -243,6 +243,46 @@ someModule$generic(1:2)
 ```
 
 
+# Documentation
+
+If you want proper documentation for your functions or modules you really want a
+package. However, there are some simple things you can do for ad-hoc
+documentation of modules which is to use comments:
+
+
+```r
+m <- module({
+  fun <- function(x) {
+    ## A function for illustrating documentation
+    ## x (numeric)
+    x
+  }
+})
+```
+
+There are print methods for modules and functions within modules:
+
+
+```r
+m
+```
+
+```
+## fun:
+## function(x = )
+```
+
+```r
+m$fun
+```
+
+```
+## function(x = )
+## ## A function for illustrating documentation
+## ## x (numeric)
+```
+
+
 # Modules in Packages
 
 ...
@@ -306,7 +346,7 @@ clusterMap(cl, m$gen, list(m$NewType(NULL)))
 ## NULL
 ## 
 ## attr(,".self")
-## <environment: 0x5c1a688>
+## <environment: 0x1ee99278>
 ## attr(,"class")
 ## [1] "NewType" "list"
 ```
