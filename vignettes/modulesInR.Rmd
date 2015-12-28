@@ -20,6 +20,11 @@ cat(gsub("\\n   ", "", packageDescription("modules", fields = "Description")))
 
 ## Installation
 
+From CRAN:
+```{r, eval=FALSE}
+install.packages("modules")
+```
+
 From GitHub:
 
 ```{r, eval=FALSE}
@@ -32,8 +37,8 @@ The key idea of this package is to provide a unit which is self contained, i.e.
 has it's own scope. The main and most reliable infrastructure for such 
 organizational units of source code in the R ecosystem is a package. Compared to
 a package modules can be considered ad hoc, but - in the sense of an R-package -
-self contained. Furthermore modules consist of one file; in contrast to a
-package which can wrap an arbitrary number of files.
+self contained. Furthermore modules typically consist of one file; in contrast
+to a package which can wrap an arbitrary number of files.
 
 There are two use cases. First when you use modules to develop scripts, which is
 subject of this section; And then inside of packages where modules act more like
@@ -155,19 +160,19 @@ stopCluster(cl)
 
 # Scripts as modules
 
-You can make scripts into modules with `as.module` or implicitly when you refer
-to a file in a call to `use`. Inside such a script you can use `import` and
-`use` in the same way you typically use `library`. A major difference is, that
-library will not only attach the stated package but also all packages in the 
-depends field of that dependency. This is something you have to do manually
-(explicitly) with `import`. Consider the following example where we create a
-module in a temporary file with its dependencies.
+You can make scripts into modules with `as.module` or implicitly when you refer 
+to a file (or directory) in a call to `use`. Inside such a script you can use
+`import` and `use` in the same way you typically use `library`. A major
+difference is, that library will not only attach the stated package but also all
+packages in the depends field of that dependency. This is something you have to
+do manually (explicitly) with `import`. Consider the following example where we
+create a module in a temporary file with its dependencies.
 
 ```{r}
 code <- "
 import(methods)
 import(aoos)
-# This is an example:
+# This is an example where we rely on functions in 'aoos':
 list : generic(x) %g% standardGeneric('generic')
 generic(x ~ ANY) %m% as.list(x)
 "
@@ -235,9 +240,9 @@ m$generic(1)
 
 More reliable is the dispatch in S4. By default the set functions of the methods
 package have side effects in the top level environment. So you would have to set
-the appropriate environemnt for the argument 'where'. 'aoos' provides syntactic
-sugar (S4) and has side effects in the environment in which the constructor
-functions are called so method dispatch will work:
+the appropriate environemnt for the argument 'where'. 'aoos' provides syntactic 
+sugar (S4) and has side effects in the environment in which the constructor 
+functions are called so method dispatch will work without extra work:
 
 ```{r}
 m <- module({
@@ -250,6 +255,16 @@ m$gen("Hej")
 m$gen(1)
 ```
 
-S4 classes (or types in aoos) are not working correctly because `setClass` has
-side effects in the top level environment which cannot be isolated. If you want
-to have class/type definitions you need a package.
+S4 classes (or types in aoos) have side effects in the global environment and S4
+classes are searched for in the top level environment. This means that the
+module is not self-contained because the class definition will be cached
+somewhere else.
+
+```{r}
+m <- module({
+  import("methods")
+  import("aoos")
+  numeric : NewType() %type% .Object
+})
+m$NewType(1)
+```
