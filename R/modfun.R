@@ -20,10 +20,10 @@
 modfun <- function(x) {
 
   getFormals <- function(fun) {
-    args <- paste(
+    args <- ifelse(
+      as.character(formals(fun)) == "",
       names(formals(fun)),
-      as.character(formals(fun)),
-      sep = " = "
+      paste(names(formals(fun)), as.character(formals(fun)), sep = " = ")
     )
     paste0("function(", paste(args, collapse = ", "), ")")
   }

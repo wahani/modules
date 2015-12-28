@@ -269,7 +269,7 @@ m
 
 ```
 ## fun:
-## function(x = )
+## function(x)
 ```
 
 ```r
@@ -277,7 +277,7 @@ m$fun
 ```
 
 ```
-## function(x = )
+## function(x)
 ## ## A function for illustrating documentation
 ## ## x (numeric)
 ```

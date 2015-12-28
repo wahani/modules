@@ -36,13 +36,13 @@ test_that("modfun in module", {
   })
 
   expectOutput(m$oneLineDoc,
-               "function\\(a = , b = a\\)\n## comment")
+               "function\\(a, b = a\\)\n## comment")
 
   expectOutput(m$multiLineDoc,
-               "function\\(a = , b = a\\)\n## a numeric\n##\n## Return:")
+               "function\\(a, b = a\\)\n## a numeric\n##\n## Return:")
 
   expectOutput(m$oneLineFunction,
-               "function\\(a = , b = a\\)")
+               "function\\(a, b = a\\)")
 
 })
 
@@ -65,6 +65,6 @@ test_that("modfun plays with S4", {
   })
 
   expecctIs(m$generic, "standardGeneric")
-  expectOutput(m, "generic:\nfunction\\(x = \\)")
+  expectOutput(m, "generic:\nfunction\\(x\\)")
 
 })
