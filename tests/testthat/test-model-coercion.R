@@ -29,4 +29,13 @@ test_that("as.module", {
   expectEqual(folder$tmp2$fun2(), 1)
   expectEqual(length(folder), 2)
 
+
+  file.remove(list.files(tmpDir, full.names = TRUE, pattern = "\\.(r|R)$"))
+  writeLines("fun1 <- function() 1", paste0(tmpDir, "/tmp1.R"))
+  folder <- use(tmpDir)
+
+  expectEqual(class(folder), "list")
+  expectEqual(length(folder), 1)
+  expectEqual(class(folder$tmp1), c("module", "list"))
+
 })
