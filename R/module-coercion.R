@@ -21,6 +21,6 @@ as.module(x ~ character, topEncl, ...) %m% {
   modules <- lapply(x, function(x) {
     do.call(module, list(parse(x, ...), topEncl))
   })
-  if (length(modules) == 1) modules[[1]]
+  if (length(modules) == 1 && !dir.exists(x)) modules[[1]]
   else `names<-`(modules, gsub("\\.(r|R)$", "", sapply(x, basename)))
 }
