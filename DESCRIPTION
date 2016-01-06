@@ -1,13 +1,15 @@
 Package: modules
 Title: Self Contained Units of Source Code
-Version: 0.1.4
-Date: 2015-12-18
+Version: 0.2.0
+Date: 2016-01-06
 Authors@R: person("Sebastian", "Warnholz", email = "wahani@gmail.com", role = c("aut", "cre"))
 Description: Provides modules as an organizational unit for source code. Modules
     enforce to be more rigorous when defining dependencies and have
     a local search path. They can be used as a sub unit within packages
     or in scripts.
 BugReports: https://github.com/wahani/modules/issues
+URL: https://github.com/wahani/modules
+ByteCompile: TRUE
 Depends:
     R (>= 3.2.2),
     aoos,
