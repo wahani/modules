@@ -38,4 +38,19 @@ test_that("as.module", {
   expectEqual(length(folder), 1)
   expectEqual(class(folder$tmp1), c("module", "list"))
 
+  m <- module({
+    .num <- NULL
+    set <- function(val) .num <<- val
+    get <- function() .num
+  })
+
+  m$set(2)
+  expectEqual(m$get(), 2)
+
+  m1 <- as.module(m, reInit = TRUE)
+  expectTrue(is.null(m1$get()))
+
+  m2 <- as.module(m, reInit = FALSE)
+  expectEqual(m2$get(), m$get())
+
 })

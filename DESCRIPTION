@@ -12,7 +12,8 @@ Depends:
     R (>= 3.2.2),
     aoos,
     methods
-Imports: stringr
+Imports:
+    stringr
 License: GPL-3 | file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -25,10 +26,10 @@ Suggests:
 RoxygenNote: 5.0.1
 Collate:
     'NAMESPACE.R'
+    'getSearchPath.R'
     'modfun.R'
-    'module.R'
     'module-class.R'
     'module-coercion.R'
     'module-helper.R'
-    'getSearchPath.R'
+    'module.R'
 VignetteBuilder: knitr

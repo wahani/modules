@@ -5,11 +5,12 @@
 #' @param x something which can be coerced into a module. \code{character} are
 #'   interpreted as file names.
 #' @param ... arguments passed to \link{parse}
+#' @param reInit (logical) if a module should be re-initialized
 #' @inheritParams module
 #'
 #' @export
 #' @rdname modulecoerce
-list : as.module(x, topEncl = baseenv(), ...) %g% {
+list : as.module(x, topEncl = baseenv(), reInit = TRUE, ...) %g% {
   as.list(x)
 }
 
@@ -23,4 +24,15 @@ as.module(x ~ character, topEncl, ...) %m% {
   })
   if (length(modules) == 1 && !dir.exists(x)) modules[[1]]
   else `names<-`(modules, gsub("\\.(r|R)$", "", sapply(files, basename)))
+}
+
+#' @export
+#' @rdname modulecoerce
+#' @include NAMESPACE.R
+as.module(x ~ module, topEncl, reInit = TRUE, ...) %m% {
+  if (reInit) {
+    x %invoke% new()
+  } else {
+    x
+  }
 }

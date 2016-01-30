@@ -41,32 +41,7 @@
 #' @export
 module <- function(expr = {}, topEncl = if (identical(topenv(parent.frame()), globalenv())) baseenv() else parent.frame()) {
 
-  evalInModule <- function(module, code) {
-    eval(code, envir = as.environment(module), enclos = emptyenv())
-    module
-  }
-
-  getExports <- function(module) {
-    exports <- get(nameExports(), envir = module, inherits = TRUE)
-    if (length(exports) == 1 && grepl("\\^", exports)) ls(module, pattern = "^*")
-    else exports
-  }
-
-  wrapModfun <- function(module) {
-    # wrap all functions in a module with the class modfun.
-    mapInEnv(module, modfun, is.function)
-  }
-
-  expr <- match.call()[[2]]
-  module <- ModuleScope(parent = ModuleParent(topEncl))
-  module <- evalInModule(module, expr)
-  module <- wrapModfun(module)
-
-  stripSelf(retList(
-    "module",
-    public = getExports(module),
-    envir = module
-  ))
+  ModuleConst(match.call()$expr, topEncl)$new()
 
 }
 

@@ -1,5 +1,14 @@
 # helper:
 
+invoke(lhs, rhs) %g% standardGeneric("invoke")
+
+invoke(lhs ~ module, rhs) %m% {
+  expr <- match.call()$rhs
+  eval(expr, attr(lhs, "moduleConst"), enclos = parent.frame())
+}
+
+"%invoke%" <- invoke
+
 mapInEnv <- function(x, f, p, ...) {
   env <- as.environment(x)
   ind <- unlist(eapply(env, p))

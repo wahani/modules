@@ -49,7 +49,3 @@ print.modfun <- function(x, ...) {
   }
   invisible(x)
 }
-
-# This may be needed if users want to use modfun type as argument to S4 methods.
-setOldClass(c("modfun", "function"))
-
