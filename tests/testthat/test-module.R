@@ -72,6 +72,22 @@ test_that("Attaching other module", {
 
 })
 
+test_that("exposure of module", {
+
+  m <- module({
+    import(modules, module)
+    m <- module({
+      .num <- NULL
+      set <- function(val) .num <<- val
+      get <- function() .num
+    })
+    expose(m, reInit = FALSE)
+  })
+
+  expect_equal(m$m$set(2), m$get())
+
+})
+
 test_that("package dependencies", {
   m <- module({
     import("aoos")

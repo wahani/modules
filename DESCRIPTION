@@ -24,6 +24,7 @@ Suggests:
     testthat,
     devtools,
     knitr,
+    rmarkdown,
     parallel
 RoxygenNote: 5.0.1
 Collate:

@@ -3,14 +3,20 @@
 #' Interfaces to and from modules.
 #'
 #' @param x something which can be coerced into a module. \code{character} are
-#'   interpreted as file names.
+#'   interpreted as file / folder names.
 #' @param ... arguments passed to \link{parse}
 #' @param reInit (logical) if a module should be re-initialized
 #' @inheritParams module
 #'
 #' @export
 #' @rdname modulecoerce
-list : as.module(x, topEncl = baseenv(), reInit = TRUE, ...) %g% {
+#'
+#' @examples
+#' # as.module is used by 'use' so see the vignette for examples:
+#' \dontrun{
+#' vignette("modulesInR", "modules")
+#' }
+list : as.module(x, topEncl = baseenv(), ...) %g% {
   as.list(x)
 }
 

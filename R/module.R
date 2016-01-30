@@ -9,7 +9,8 @@
 #' @param from (character, or unquoted expression) a package name
 #' @param ... (character, or unquoted expression) names to import from package
 #'   or names to export from module. For exports a character of length 1 with a
-#'   leading "^" is interpreted as regular expression.
+#'   leading "^" is interpreted as regular expression. For \code{use} and
+#'   \code{expose} arguments are passed on to \link{as.module}.
 #' @param where (environment) important for testing
 #' @param module (character | list) a module as file- or folder-name or a list
 #'   representing a module.
@@ -31,6 +32,10 @@
 #' only be used for development and debugging of modules.
 #'
 #' \code{export} will never export a function with a leading "." in its name.
+#'
+#' \code{expose} is similar to \code{use} but instead of attaching a module it
+#' will copy all elements into the calling environment. This means that all
+#' functions will be re-exported; if not stated otherwise using \code{export}.
 #'
 #' @examples
 #' \dontrun{
@@ -101,6 +106,14 @@ use <- function(module, attach = FALSE, ..., where = parent.frame()) {
     name
   )
   invisible(module)
+}
+
+#' @export
+#' @rdname module
+ expose <- function(module, ..., where = parent.frame()) {
+  module <- use(module, attach = FALSE, ..., where = where)
+  makeAssignment(module, names(module), where)
+  invisible(NULL)
 }
 
 #' @export

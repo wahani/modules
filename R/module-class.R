@@ -4,6 +4,7 @@ environment : ModuleParent(parent = baseenv()) %type% {
   parent.env(.Object) <- .Object@parent
   makeDelayedAssignment("modules", "import", into = .Object)
   makeDelayedAssignment("modules", "use", into = .Object)
+  makeDelayedAssignment("modules", "expose", into = .Object)
   makeDelayedAssignment("modules", "export", into = .Object)
   .Object
 }

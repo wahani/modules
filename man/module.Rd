@@ -2,6 +2,7 @@
 % Please edit documentation in R/module.R
 \name{module}
 \alias{export}
+\alias{expose}
 \alias{import}
 \alias{module}
 \alias{print.module}
@@ -17,6 +18,8 @@ import(from, ..., where = parent.frame())
 
 use(module, attach = FALSE, ..., where = parent.frame())
 
+expose(module, ..., where = parent.frame())
+
 export(..., where = parent.frame())
 }
 \arguments{
@@ -28,7 +31,8 @@ export(..., where = parent.frame())
 
 \item{...}{(character, or unquoted expression) names to import from package
 or names to export from module. For exports a character of length 1 with a
-leading "^" is interpreted as regular expression.}
+leading "^" is interpreted as regular expression. For \code{use} and
+\code{expose} arguments are passed on to \link{as.module}.}
 
 \item{from}{(character, or unquoted expression) a package name}
 
@@ -59,6 +63,10 @@ enclosing environment is always base.
 only be used for development and debugging of modules.
 
 \code{export} will never export a function with a leading "." in its name.
+
+\code{expose} is similar to \code{use} but instead of attaching a module it
+will copy all elements into the calling environment. This means that all
+functions will be re-exported; if not stated otherwise using \code{export}.
 }
 \examples{
 \dontrun{
