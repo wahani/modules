@@ -1,18 +1,18 @@
 
-This is a re-submission of the package, as requested. The reason for the new
-submission was the following NOTE in the previous version:
+This is a new version of the package as requested by Professor Ripley:
 
-Found the following (possibly) invalid URLs:
-  URL: http://www.r-pkg.org/pkg/modules
-    From: inst/doc/modulesInR.html
-    Status: 404
-    Message: Not Found
-  URL: https://cran.rstudio.com/package=modules
-    From: inst/doc/modulesInR.html
-    Status: 404
-    Message: Not Found
-    
-I resolved this by removing the badges from the vignette. 
+> Packages: ezknitr ggEcxtra lightsout modules pander shinyjs viridis
+> 
+> As you can see from the CRAN results pages, fetching https:// URLs is not necessarily part of a build of pandoc, so you should either declare
+>
+> 'pandoc with https: support'
+>
+> as a SystemRequirements, or preferably use R to download the file (as from R 3.3.0 R does have https: support) and point pandoc at a local copy.
+> 
+> Please correct.
+
+I resolved this by removing downloads from the vignette. So that the dependency
+should not be neeeded anymore.
 
 ## Test environments
 * ubuntu (on travis-ci), R 3.2.3
@@ -23,6 +23,6 @@ I resolved this by removing the badges from the vignette.
 There were no ERRORs, WARNINGs or NOTEs
 
 ## Downstream dependencies
-There are none, this is the first release.
+To the best of my knowledge there are none
 
 
