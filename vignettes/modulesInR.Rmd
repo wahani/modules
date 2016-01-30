@@ -210,10 +210,9 @@ m$fun
 # Modules and Coupling
 
 Best is to only use `::` and `use` with `attach = FALSE` to be explicit with
-your dependencies. However, there are some other options you have, which will
-considerably complicate things. I lack the conceptual competence to explain 
-these things with the depth they deserve, so I only present a couple of examples
-you can consider for stronger forms of coupling between modules.
+your dependencies. However, there are some other options you have, which will 
+considerably complicate things. I only present a couple of examples you can
+consider for stronger forms of coupling between modules.
 
 ## Modules to Model Mutable State
 
@@ -280,7 +279,8 @@ mutableModule$get()
 complectModule$get()
 ```
 
-And of course we can do this with `reInit = FALSE` should this be desirable:
+And of course we can do this with `reInit = FALSE` should this be desirable. In
+this case both modules are essentially the same.
 
 ```{r}
 complectModule <- module({
@@ -290,8 +290,6 @@ complectModule <- module({
 mutableModule$get()
 complectModule$get()
 ```
-
-In this case both modules are essentially the same.
 
 # Modules in Packages
 

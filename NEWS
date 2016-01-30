@@ -2,6 +2,7 @@ Version 0.2.1
 - When 'use' is called, modules are re initialized by default.
 - A 'module' now has an attribute 'moduleConst' which knows how to initialize a
   module and contains sufficient information for that process.
+- New function 'expose' to inherit a whole module.
 
 Version 0.2.0
 - CRAN release
