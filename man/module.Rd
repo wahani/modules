@@ -16,9 +16,9 @@ module(expr = { }, topEncl = if (identical(topenv(parent.frame()),
 
 import(from, ..., where = parent.frame())
 
-use(module, attach = FALSE, ..., where = parent.frame())
+use(module, ..., attach = FALSE, reInit = TRUE, where = parent.frame())
 
-expose(module, ..., where = parent.frame())
+expose(module, ..., reInit = TRUE, where = parent.frame())
 
 export(..., where = parent.frame())
 }
@@ -31,17 +31,19 @@ export(..., where = parent.frame())
 
 \item{...}{(character, or unquoted expression) names to import from package
 or names to export from module. For exports a character of length 1 with a
-leading "^" is interpreted as regular expression. For \code{use} and
-\code{expose} arguments are passed on to \link{as.module}.}
+leading "^" is interpreted as regular expression.}
 
 \item{from}{(character, or unquoted expression) a package name}
 
 \item{where}{(environment) important for testing}
 
-\item{module}{(character | list) a module as file- or folder-name or a list
+\item{module}{(character | module) a module as file or folder name or a list
 representing a module.}
 
 \item{attach}{(logical) whether to attach the module to the search path}
+
+\item{reInit}{(logical) whether to re-initialize module. This argument is
+passed to \link{as.module}.}
 }
 \description{
 Use \code{module} to define self contained organizational units. Modules have

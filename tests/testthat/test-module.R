@@ -54,6 +54,11 @@ test_that("delayed assignment", {
 })
 
 test_that("Attaching other module", {
+
+  expectEqual <- function(a, b) {
+    testthat::expect_equal(a, b)
+  }
+
   m1 <- module({
 
     import(modules, module)
@@ -62,17 +67,31 @@ test_that("Attaching other module", {
       fun <- function(x) x
     })
 
-    use(m, TRUE)
+    use(m, attach = TRUE)
 
     funNew <- function(x) fun(x)
 
+    m1 <- module({
+      fun <- function(x) x
+      fun1 <- function(x) x
+    })
+
+    use(m1, "fun1", attach = TRUE)
+
+    funNew1 <- function(x) fun1(x)
+
   })
 
-  expect_equal(m1$funNew(1), 1)
+  expectEqual(m1$funNew(1), 1)
+  expectEqual(m1$funNew1(1), 1)
 
 })
 
 test_that("exposure of module", {
+
+  expectEqual <- function(a, b) {
+    testthat::expect_equal(a, b)
+  }
 
   m <- module({
     import(modules, module)
@@ -81,10 +100,11 @@ test_that("exposure of module", {
       set <- function(val) .num <<- val
       get <- function() .num
     })
-    expose(m, reInit = FALSE)
+    expose(m, get, reInit = FALSE)
   })
 
-  expect_equal(m$m$set(2), m$get())
+  expectEqual(m$m$set(2), m$get())
+  expectEqual(names(m), c("get", "m"))
 
 })
 

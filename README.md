@@ -281,10 +281,9 @@ m$fun
 
 # Modules and Coupling
 
-Best is to only use `::` and `use` with `attach = FALSE` to be explicit with
+Best is to only use `::` and `use` with `attach = FALSE` to be explicit with 
 your dependencies. However, there are some other options you have, which will 
-considerably complicate things. I only present a couple of examples you can
-consider for stronger forms of coupling between modules.
+stronger forms of coupling between modules.
 
 ## Modules to Model Mutable State
 
@@ -370,9 +369,9 @@ complectModule$getNum()
 ## [1] 3
 ```
 
-Now this is getting really complicated, great. But this is not all we can do. We
-can further complect things using `expose`. This function will take everything
-in a module and pollute the environment from which it is called.
+This is not all we can do. we can make the coupling stronger using `expose`. 
+This function will take everything in a module and expose it the environment
+from which it is called.
 
 
 ```r

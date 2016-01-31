@@ -1,11 +1,25 @@
 # helper:
 
+deparseEllipsis <- function(mc, exclude) {
+  args <- Map(deparse, mc)
+  args[[1]] <- NULL
+  args[exclude] <- NULL
+  args <- unlist(args)
+  deleteQuotes(args)
+}
+
 invoke(lhs, rhs) %g% standardGeneric("invoke")
 
 invoke(lhs ~ module, rhs) %m% {
   expr <- match.call()$rhs
   eval(expr, attr(lhs, "moduleConst"), enclos = parent.frame())
 }
+
+invoke(lhs ~ ModuleConst, rhs) %m% {
+  expr <- match.call()$rhs
+  eval(expr, lhs, enclos = parent.frame())
+}
+
 
 "%invoke%" <- invoke
 

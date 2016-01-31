@@ -16,13 +16,13 @@
 #' \dontrun{
 #' vignette("modulesInR", "modules")
 #' }
-list : as.module(x, topEncl = baseenv(), ...) %g% {
+list : as.module(x, topEncl = baseenv(), reInit = TRUE, ...) %g% {
   as.list(x)
 }
 
 #' @export
 #' @rdname modulecoerce
-as.module(x ~ character, topEncl, ...) %m% {
+as.module(x ~ character, topEncl, reInit, ...) %m% {
   stopifnot(length(x) == 1)
   files <- if (dir.exists(x)) list.files(x, "\\.(r|R)$", FALSE, TRUE, TRUE) else x
   modules <- lapply(files, function(x) {
@@ -35,7 +35,7 @@ as.module(x ~ character, topEncl, ...) %m% {
 #' @export
 #' @rdname modulecoerce
 #' @include NAMESPACE.R
-as.module(x ~ module, topEncl, reInit = TRUE, ...) %m% {
+as.module(x ~ module, topEncl, reInit, ...) %m% {
   if (reInit) {
     x %invoke% new()
   } else {

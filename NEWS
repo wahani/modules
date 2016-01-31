@@ -1,3 +1,9 @@
+Version 0.2.2
+- 'use' and 'expose' have different argument names. '...' can now be used to
+select objects to load / attach. The order of arguments has changed to be
+consistent with 'import'. 'reInit' can be used to trigger re-initialization of
+module.
+
 Version 0.2.1
 - When 'use' is called, modules are re initialized by default.
 - A 'module' now has an attribute 'moduleConst' which knows how to initialize a

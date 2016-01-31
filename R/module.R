@@ -9,13 +9,14 @@
 #' @param from (character, or unquoted expression) a package name
 #' @param ... (character, or unquoted expression) names to import from package
 #'   or names to export from module. For exports a character of length 1 with a
-#'   leading "^" is interpreted as regular expression. For \code{use} and
-#'   \code{expose} arguments are passed on to \link{as.module}.
+#'   leading "^" is interpreted as regular expression.
 #' @param where (environment) important for testing
-#' @param module (character | list) a module as file- or folder-name or a list
+#' @param module (character | module) a module as file or folder name or a list
 #'   representing a module.
 #' @param attach (logical) whether to attach the module to the search path
 #' @param x a module
+#' @param reInit (logical) whether to re-initialize module. This argument is
+#'   passed to \link{as.module}.
 #'
 #' @details
 #' \code{topEncl} is the environment where the search of the module ends. This
@@ -46,7 +47,7 @@
 #' @export
 module <- function(expr = {}, topEncl = if (identical(topenv(parent.frame()), globalenv())) baseenv() else parent.frame()) {
 
-  ModuleConst(match.call()$expr, topEncl)$new()
+  ModuleConst(match.call()$expr, topEncl) %invoke% new()
 
 }
 
@@ -86,18 +87,25 @@ import <- function(from, ..., where = parent.frame()) {
 
   from <- deparseFrom(match.call())
   objectsToImport <- makeObjectsToImport(match.call(), from)
-
   addDependency(from, objectsToImport, where, makeDelayedAssignment, from)
-
   invisible(NULL)
 
 }
 
 #' @export
 #' @rdname module
-use <- function(module, attach = FALSE, ..., where = parent.frame()) {
+use <- function(module, ..., attach = FALSE, reInit = TRUE, where = parent.frame()) {
+
+  keepOnlySelection <- function(module, mc) {
+    namesToImport <- deparseEllipsis(mc, c("module", "attach", "reInit", "where"))
+    if (length(namesToImport) == 0) module
+    else module[namesToImport]
+  }
+
   name <- if (is.character(module)) module else as.character(substitute(module))
-  module <- as.module(module, ...)
+  module <- as.module(module, reInit = reInit)
+  module <- keepOnlySelection(module, match.call(expand.dots = TRUE))
+
   if (attach) addDependency(
     module,
     names(module),
@@ -105,13 +113,19 @@ use <- function(module, attach = FALSE, ..., where = parent.frame()) {
     makeAssignment,
     name
   )
+
   invisible(module)
+
 }
 
 #' @export
 #' @rdname module
- expose <- function(module, ..., where = parent.frame()) {
-  module <- use(module, attach = FALSE, ..., where = where)
+expose <- function(module, ..., reInit = TRUE, where = parent.frame()) {
+
+  mc <- match.call(expand.dots = TRUE)
+  mc[[1]] <- quote(use)
+  module <- eval(mc, where)
+
   makeAssignment(module, names(module), where)
   invisible(NULL)
 }
@@ -119,18 +133,7 @@ use <- function(module, attach = FALSE, ..., where = parent.frame()) {
 #' @export
 #' @rdname module
 export <- function(..., where = parent.frame()) {
-
-  deparseExports <- function(mc) {
-    args <- Map(deparse, mc)
-    args[[1]] <- NULL
-    args$where <- NULL
-    args <- unlist(args)
-    deleteQuotes(args)
-  }
-
-  objectsToExport <- deparseExports(match.call())
+  objectsToExport <- deparseEllipsis(match.call(), "where")
   assign(nameExports(), objectsToExport, envir = where)
-
   invisible(NULL)
-
 }
