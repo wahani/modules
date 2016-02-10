@@ -419,7 +419,7 @@ complectModule$get()
 ```
 
 
-# Nested modules
+# Nested Modules
 
 You can also write nested modules, which means you define modules inside
 modules. In this case dependencies of the top level module are accessible to its
@@ -448,7 +448,13 @@ m$anotherModule$fun(1:2)
 
 # Modules in Packages
 
-...
+When you use modules inside a R-package the search path of a module connects to 
+the packages namespace. So it sees all objects within the package and has access
+to all its dependencies. You can always change this by specifying the argument 
+`topEncl`. Do not use `import` inside this setting but instead rely on the 
+package to handle your dependencies. Attaching other modules using `use` and 
+`expose` can make sense but is a matter of preference. You should definitely not
+rely on modules in files and load them with `use`!
 
 
 # Modules with Object Orientation
