@@ -17,7 +17,8 @@ as.module(x, topEncl = baseenv(), reInit = TRUE, ...)
 \item{x}{something which can be coerced into a module. \code{character} are
 interpreted as file / folder names.}
 
-\item{topEncl}{(environment) the root of the local search path}
+\item{topEncl}{(environment) the root of the local search path. It is tried
+to find a good default via \link{autoTopEncl}.}
 
 \item{reInit}{(logical) if a module should be re-initialized}
 

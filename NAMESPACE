@@ -3,6 +3,7 @@
 S3method(print,modfun)
 S3method(print,module)
 export(as.module)
+export(autoTopEncl)
 export(export)
 export(expose)
 export(getSearchPath)

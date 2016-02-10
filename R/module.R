@@ -5,7 +5,8 @@
 #' \code{use} can be used to import other modules.
 #'
 #' @param expr an expression
-#' @param topEncl (environment) the root of the local search path
+#' @param topEncl (environment) the root of the local search path. It is tried
+#'   to find a good default via \link{autoTopEncl}.
 #' @param from (character, or unquoted expression) a package name
 #' @param ... (character, or unquoted expression) names to import from package
 #'   or names to export from module. For exports a character of length 1 with a
@@ -19,14 +20,16 @@
 #'   passed to \link{as.module}.
 #'
 #' @details
-#' \code{topEncl} is the environment where the search of the module ends. This
-#' is  (most of the time) the base package. When
+#' \code{topEncl} is the environment where the search of the module ends.
+#' \code{autoTopEncl} handles the different situations. In general it defaults
+#' to the base environment or the environment from which \code{module} has been
+#' called. If you are using \code{use} or \code{expose} refering to a module in
+#' a file, it will always be the base environment. When
 #' \code{identical(topenv(parent.frame()), globalenv())} is false it (most
 #' likely) means that the module is part of a package. In that case the module
 #' defines a sub unit within a package but has access to the packages namespace.
-#' This is only relevant if you use the function module explicitly. Most likely
-#' you will instead use the function 'use' or 'as.module' instead, where the top
-#' enclosing environment is always base.
+#' This is relevant when you use the function module explicitly. When you define
+#' a nested module which the module will connect to the calling environment.
 #'
 #' \code{import} and \code{use} are no replacements for \link{library} and
 #' \link{attach}. Both will work when called in the \code{.GlobalEnv} but should
@@ -45,7 +48,7 @@
 #'
 #' @rdname module
 #' @export
-module <- function(expr = {}, topEncl = if (identical(topenv(parent.frame()), globalenv())) baseenv() else parent.frame()) {
+module <- function(expr = {}, topEncl = autoTopEncl(parent.frame())) {
 
   ModuleConst(match.call()$expr, topEncl) %invoke% new()
 
@@ -136,4 +139,13 @@ export <- function(..., where = parent.frame()) {
   objectsToExport <- deparseEllipsis(match.call(), "where")
   assign(nameExports(), objectsToExport, envir = where)
   invisible(NULL)
+}
+
+#' @export
+#' @rdname module
+autoTopEncl <- function(where) {
+  # if .__exports__ exists I assume it is a nested module:
+  if (exists(nameExports(), where = where)) where
+  else if (identical(topenv(where), globalenv())) baseenv()
+  else where
 }

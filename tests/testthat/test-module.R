@@ -108,6 +108,32 @@ test_that("exposure of module", {
 
 })
 
+test_that("nested modules", {
+
+  expectEqual <- function(a, b) {
+    testthat::expect_equal(a, b)
+  }
+
+  val <- module({
+
+    import(stats, median)
+    import(modules, module)
+
+    # The nested module should be able to figure out, that it is inside a nested
+    # model and hence can connect:
+    m <- module({
+      fun <- function(x) median(x)
+    })
+
+  })$m$fun(1:10)
+
+  expectEqual(
+    val,
+    5.5
+  )
+
+})
+
 test_that("package dependencies", {
   m <- module({
     import("aoos")

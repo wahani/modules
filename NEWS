@@ -1,3 +1,9 @@
+Version 0.2.3
+- modules can now distinguish between situations in which they are constructed
+inside a package, inside another module (nested module), or inside a script.
+This behaviour is implemented in 'autoTopEncl' and can be overridden. This
+behaviour defines the search path of a module.
+
 Version 0.2.2
 - 'use' and 'expose' have different argument names. '...' can now be used to
 select objects to load / attach. The order of arguments has changed to be
@@ -26,7 +32,7 @@ Version 0.1.2
 path
 
 Version 0.1.1
-- fix when deparsing imports
+- fix when de-parsing imports
 
 Version 0.1.0
 - CRAN release

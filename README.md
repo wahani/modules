@@ -341,7 +341,7 @@ complectModule$getNum()
 ## [1] 3
 ```
 
-Depending on you expectations with respect to the above code it comes at a
+Depending on your expectations with respect to the above code it comes at a
 surprise that we can get and set that value from an attached module; Furthermore
 it is not changed in `mutableModule`. This is because `use` will trigger a
 re-initialization of any module you plug in. You can consciously override this
@@ -370,8 +370,8 @@ complectModule$getNum()
 ```
 
 This is not all we can do. we can make the coupling stronger using `expose`. 
-This function will take everything in a module and expose it the environment
-from which it is called.
+This function will take everything in a module and expose it (spam) the
+environment from which it is called.
 
 
 ```r
@@ -417,6 +417,34 @@ complectModule$get()
 ```
 ## [1] 1
 ```
+
+
+# Nested modules
+
+You can also write nested modules, which means you define modules inside
+modules. In this case dependencies of the top level module are accessible to its
+children:
+
+
+```r
+m <- module({
+  
+  import("stats", "median")
+  import("modules", "module")
+  
+  anotherModule <- module({
+    fun <- function(x) median(x)
+  })
+  
+})
+
+m$anotherModule$fun(1:2)
+```
+
+```
+## [1] 1.5
+```
+
 
 # Modules in Packages
 
