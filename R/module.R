@@ -88,12 +88,12 @@ import <- function(from, ..., where = parent.frame()) {
     deleteQuotes(from)
   }
 
-  is.installed <- function(pkg) {
-    is.element(pkg, installed.packages()[, "Package"])
+  isNotInstalled <- function(pkg) {
+    !is.element(pkg, installed.packages()[, "Package"])
   }
 
   from <- deparseFrom(match.call())
-  # if (!is.installed(from)) install.packages(from)
+  if (isNotInstalled(from)) stop("'package:", from, "' is not installed! Intall first.")
   objectsToImport <- makeObjectsToImport(match.call(), from)
   addDependency(from, objectsToImport, where, makeDelayedAssignment, from)
   invisible(NULL)

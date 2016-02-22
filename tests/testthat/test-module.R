@@ -43,7 +43,7 @@ test_that("Imports of module", {
 test_that("delayed assignment", {
   # test for delayed assignment
   m <- module({
-    import("delayed", "assignment") # does not exist!
+    import("base", "assignment") # does not exist!
     temp <- function() assignment
     checkExistens <- function() exists("assignment")
   })
@@ -135,11 +135,16 @@ test_that("nested modules", {
 })
 
 test_that("package dependencies", {
+
   m <- module({
     import("aoos")
     deps <- function() exists("%g%")
   })
-  expect_true(m$deps())
+
+  testthat::expect_true(m$deps())
+  testthat::expect_error(module({
+    import("DoesNotExist")
+  }), "'package:DoesNotExist' is not installed!")
 
 })
 
