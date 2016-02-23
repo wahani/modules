@@ -1,3 +1,6 @@
+Version 0.3.0
+- CRAN release
+
 Version 0.2.4
 - 'import' now checks if a package dependency is installed instead of quietly
 waiting for a runtime error: fail early!

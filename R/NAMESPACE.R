@@ -1,5 +1,6 @@
 #' @import aoos
 #' @import methods
+#' @importFrom utils installed.packages
 NULL
 
 globalVariables(c("processModule", "into"))

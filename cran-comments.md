@@ -1,18 +1,20 @@
-
-This is a new version of the package as requested by Professor Ripley:
-
-> Packages: ezknitr ggEcxtra lightsout modules pander shinyjs viridis
+> Thanks, we see:
 > 
-> As you can see from the CRAN results pages, fetching https:// URLs is not necessarily part of a build of pandoc, so you should either declare
->
-> 'pandoc with https: support'
->
-> as a SystemRequirements, or preferably use R to download the file (as from R 3.3.0 R does have https: support) and point pandoc at a local copy.
+> * checking R code for possible problems ... NOTE
+> import : isNotInstalled: no visible global function definition for
+>   'installed.packages'
+> Undefined global functions or variables:
+>   installed.packages
+> Consider adding
+>   importFrom("utils", "installed.packages")
+> to your NAMESPACE file.
 > 
-> Please correct.
+> Please fix and resubmit.
+>
+> Best,
+> Uwe Ligges 
 
-I resolved this by removing downloads from the vignette. So that the dependency
-should not be neeeded anymore.
+has been fixed as suggested
 
 ## Test environments
 * ubuntu (on travis-ci), R 3.2.3
@@ -24,5 +26,3 @@ There were no ERRORs, WARNINGs or NOTEs
 
 ## Downstream dependencies
 To the best of my knowledge there are none
-
-
