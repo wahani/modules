@@ -10,8 +10,10 @@ test_that("modfun", {
     NULL
   }
 
-  expectOutput(modfun(fun),
-               "function\\(\\)\n## This is documentation\n## Triggered by '##'")
+  expectOutput(
+    print(modfun(fun)),
+    "function\\(\\)\n## This is documentation\n## Triggered by '##'"
+  )
 
 })
 
@@ -35,14 +37,20 @@ test_that("modfun in module", {
     oneLineFunction <- function(a, b = a) "test"
   })
 
-  expectOutput(m$oneLineDoc,
-               "function\\(a, b = a\\)\n## comment")
+  expectOutput(
+    print(m$oneLineDoc),
+    "function\\(a, b = a\\)\n## comment"
+  )
 
-  expectOutput(m$multiLineDoc,
-               "function\\(a, b = a\\)\n## a numeric\n##\n## Return:")
+  expectOutput(
+    print(m$multiLineDoc),
+    "function\\(a, b = a\\)\n## a numeric\n##\n## Return:"
+  )
 
-  expectOutput(m$oneLineFunction,
-               "function\\(a, b = a\\)")
+  expectOutput(
+    print(m$oneLineFunction),
+    "function\\(a, b = a\\)"
+  )
 
 })
 
@@ -65,6 +73,6 @@ test_that("modfun plays with S4", {
   })
 
   expecctIs(m$generic, "standardGeneric")
-  expectOutput(m, "generic:\nfunction\\(x\\)")
+  expectOutput(print(m), "generic:\nfunction\\(x\\)")
 
 })

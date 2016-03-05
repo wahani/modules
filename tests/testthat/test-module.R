@@ -291,12 +291,12 @@ test_that("print method for modules", {
     testthat::expect_output(x, expr)
   }
 
-  expectOutput(module({
+  expectOutput(print(module({
     fun <- function() {
       ## doc
       NULL
     }
-  }),
+  })),
   "fun:\nfunction\\(\\)\n")
 
 })
