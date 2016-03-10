@@ -93,7 +93,7 @@ import <- function(from, ..., where = parent.frame()) {
   }
 
   from <- deparseFrom(match.call())
-  if (isNotInstalled(from)) stop("'package:", from, "' is not installed! Intall first.")
+  if (isNotInstalled(from)) stop("'package:", from, "' is not installed! Install first.")
   objectsToImport <- makeObjectsToImport(match.call(), from)
   addDependency(from, objectsToImport, where, makeDelayedAssignment, from)
   invisible(NULL)
