@@ -1,3 +1,7 @@
+Version 0.3.1
+- 'export' now appends the vector of exports instead of replacing it.
+- Bugfix in 'export' for regexs.
+
 Version 0.3.0
 - CRAN release
 

@@ -225,6 +225,20 @@ test_that("Exports of module", {
   expect_true(all(c("fun", "pFun") %in% names(m)))
   expect_true(!(".fun" %in% names(m)))
 
+  m <- module({
+
+    export(fun)
+
+    fun <- function(x) x
+    .fun <- function(x) x
+    pFun <- function(x) x
+    export(pFun)
+
+  })
+
+  expect_true(all(c("fun", "pFun") %in% names(m)))
+  expect_true(!(".fun" %in% names(m)))
+
 })
 
 test_that("file as module", {

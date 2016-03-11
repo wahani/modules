@@ -142,7 +142,9 @@ expose <- function(module, ..., reInit = TRUE, where = parent.frame()) {
 #' @rdname module
 export <- function(..., where = parent.frame()) {
   objectsToExport <- deparseEllipsis(match.call(), "where")
-  assign(nameExports(), objectsToExport, envir = where)
+  currentExports <- get(nameExports(), envir = where)
+  currentExports <- currentExports[currentExports != "^*"]
+  assign(nameExports(), c(currentExports, objectsToExport), envir = where)
   invisible(NULL)
 }
 

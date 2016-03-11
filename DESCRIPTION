@@ -1,6 +1,6 @@
 Package: modules
 Title: Self Contained Units of Source Code
-Version: 0.3.0
+Version: 0.3.1
 Date: 2016-02-22
 Authors@R: person("Sebastian", "Warnholz", email = "wahani@gmail.com", role = c("aut", "cre"))
 Description: Provides modules as an organizational unit for source code. Modules
@@ -17,7 +17,7 @@ Depends:
 Imports:
     stringr,
     utils
-License: GPL-3 | file LICENSE
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Suggests:

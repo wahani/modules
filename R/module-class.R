@@ -30,8 +30,8 @@ ModuleConst <- function(expr, topEncl) {
   }
 
   getExports <- function(module) {
-    exports <- get(nameExports(), envir = module, inherits = TRUE)
-    if (length(exports) == 1 && grepl("\\^", exports)) ls(module, pattern = "^*")
+    exports <- get(nameExports(), envir = module)
+    if (length(exports) == 1 && grepl("^\\^", exports)) ls(module, pattern = exports)
     else exports
   }
 
