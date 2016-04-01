@@ -11,7 +11,7 @@ BugReports: https://github.com/wahani/modules/issues
 URL: https://github.com/wahani/modules
 ByteCompile: TRUE
 Depends:
-    R (>= 3.2.2),
+    R (>= 3.2.0),
     aoos,
     methods
 Imports:
