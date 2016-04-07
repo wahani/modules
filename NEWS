@@ -1,3 +1,8 @@
+Version 0.4.0
+- Cran release
+- Minor bugfixes
+- Update for testthat compatibility
+
 Version 0.3.1
 - 'export' now appends the vector of exports instead of replacing it.
 - Bugfix in 'export' for regexs.

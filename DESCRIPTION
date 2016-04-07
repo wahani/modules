@@ -1,7 +1,7 @@
 Package: modules
 Title: Self Contained Units of Source Code
-Version: 0.3.1
-Date: 2016-02-22
+Version: 0.4.0
+Date: 2016-04-07
 Authors@R: person("Sebastian", "Warnholz", email = "wahani@gmail.com", role = c("aut", "cre"))
 Description: Provides modules as an organizational unit for source code. Modules
     enforce to be more rigorous when defining dependencies and have
