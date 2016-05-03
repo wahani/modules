@@ -65,6 +65,7 @@ m <- module({
 m$isolatedFunction()
 ```
 
+
 ## Imports
 
 If you rely on exported objects of packages you can refer to them explicitly
@@ -207,90 +208,6 @@ m$fun
 ```
 
 
-# Modules and Coupling
-
-Best is to only use `::` and `use` with `attach = FALSE` to be explicit with 
-your dependencies. However, there are some other options you have, which will 
-stronger forms of coupling between modules.
-
-## Modules to Model Mutable State
-
-This is in itself abstract but in principle you can not only put functions in
-your bag (module) but any R-object. This transforms into something which is
-probably associated with object-orientation. You can like this or not, here I
-simply use it to illustrate the strongest form of coupling between two modules I
-can come up with. 
-
-In the following I define a module to encapsulate some value and have a *get*
-and *set* method for it:
-
-```{r}
-mutableModule <- module({
-  .num <- NULL
-  get <- function() .num
-  set <- function(val) .num <<- val
-})
-mutableModule$get()
-mutableModule$set(2)
-```
-
-## Coupling Between Modules
-
-In the next module we can use `mutableModule` and rebuild the interface to
-`.num`.
-
-```{r}
-complectModule <- module({
-  use(.GlobalEnv$mutableModule, attach = TRUE)
-  getNum <- function() get()
-  set(3)
-})
-mutableModule$get()
-complectModule$getNum()
-```
-
-Depending on your expectations with respect to the above code it comes at a
-surprise that we can get and set that value from an attached module; Furthermore
-it is not changed in `mutableModule`. This is because `use` will trigger a
-re-initialization of any module you plug in. You can consciously override this
-behaviour:
-
-```{r}
-complectModule <- module({
-  use(.GlobalEnv$mutableModule, attach = TRUE, reInit = FALSE)
-  getNum <- function() get()
-  set(3)
-})
-mutableModule$get()
-complectModule$getNum()
-```
-
-This is not all we can do. we can make the coupling stronger using `expose`. 
-This function will take everything in a module and expose it (spam) the
-environment from which it is called.
-
-```{r}
-complectModule <- module({
-  expose(.GlobalEnv$mutableModule, reInit = TRUE)
-  set(4)
-})
-mutableModule$get()
-complectModule$get()
-```
-
-And of course we can do this with `reInit = FALSE` should this be desirable. In
-this case both modules are essentially the same.
-
-```{r}
-complectModule <- module({
-  expose(.GlobalEnv$mutableModule, reInit = FALSE)
-  set(1)
-})
-mutableModule$get()
-complectModule$get()
-```
-
-
 # Nested Modules
 
 You can also write nested modules, which means you define modules inside
@@ -374,3 +291,118 @@ m <- module({
 })
 m$NewType(1)
 ```
+
+
+# Modules and Coupling
+
+Best is to only use `::` and `use` with `attach = FALSE` to be explicit with 
+your dependencies. However, there are some other options you have, which will
+result in stronger forms of coupling between modules.
+
+## Modules to Model Mutable State
+
+This is in itself abstract but in principle you can not only put functions in
+your bag (module) but any R-object. This transforms into something which is
+probably associated with object-orientation. You can like this or not, here I
+simply use it to illustrate the strongest form of coupling between two modules I
+can come up with. 
+
+In the following I define a module to encapsulate some value and have a *get*
+and *set* method for it:
+
+```{r}
+mutableModule <- module({
+  .num <- NULL
+  get <- function() .num
+  set <- function(val) .num <<- val
+})
+mutableModule$get()
+mutableModule$set(2)
+```
+
+## Coupling Between Modules
+
+In the next module we can use `mutableModule` and rebuild the interface to
+`.num`.
+
+```{r}
+complectModule <- module({
+  use(.GlobalEnv$mutableModule, attach = TRUE)
+  getNum <- function() get()
+  set(3)
+})
+mutableModule$get()
+complectModule$getNum()
+```
+
+Depending on your expectations with respect to the above code it comes at a
+surprise that we can get and set that value from an attached module; Furthermore
+it is not changed in `mutableModule`. This is because `use` will trigger a
+re-initialization of any module you plug in. You can override this behaviour:
+
+```{r}
+complectModule <- module({
+  use(.GlobalEnv$mutableModule, attach = TRUE, reInit = FALSE)
+  getNum <- function() get()
+  set(3)
+})
+mutableModule$get()
+complectModule$getNum()
+```
+
+This is not all we can do. Also we can use `expose`. This function will take
+everything in a module and expose it to the environment from which it is called.
+
+```{r}
+complectModule <- module({
+  expose(.GlobalEnv$mutableModule, reInit = TRUE)
+  set(4)
+})
+mutableModule$get()
+complectModule$get()
+```
+
+And of course we can do this with `reInit = FALSE` should this be desirable. In
+this case both modules are essentially the same.
+
+```{r}
+complectModule <- module({
+  expose(.GlobalEnv$mutableModule, reInit = FALSE)
+  set(1)
+})
+mutableModule$get()
+complectModule$get()
+```
+
+
+# Related Projects
+
+There exist several projects with similar goals. First of all, the package
+[klmr/modules](https://github.com/klmr/modules) aims at providing a unit similar
+to what [Python](https://www.python.org/)-modules are. This projects is
+obviously interesting for you when you have prior knowledge in Python. In
+contrast to `klmr/modules` modules defined in this package do not aim for a full
+replacement of R-packages -- rather they provide a sub-unit within R's package
+ecosystem. Otherwise there is considerable overlap of features between the two
+packages.
+
+Second you may be interested in
+[import](https://cran.r-project.org/package=import) which provides convenient
+syntax for stating dependencies in script files. This is something which is also
+covered here, although, when you are only interested in a replacement for
+`library` the package `import` is more focused. 
+
+`modules` in this package can act as objects as in object-orientation. In 
+contrast to [R6](https://cran.r-project.org/package=R6) and reference classes
+implemented in the methods package here these objects are immutable by default.
+Furthermore it is not being made easy to change state of a module; but it is not
+difficult to do that if you really want to: see the section on coupling.
+Furthermore inheritance is not a feature, instead you have various possibilities
+for object composition. If substitutability is really an issue then you may
+also look at `aoos::retList`.
+
+The development of the `modules` package has been inspired by other languages:
+[F#](fsharpforfunandprofit.com/posts/organizing-functions), 
+[Erlang](http://learnyousomeerlang.com/modules) and 
+[julia](http://docs.julialang.org/en/release-0.4/manual/modules/).
+
