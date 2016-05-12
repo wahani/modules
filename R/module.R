@@ -131,7 +131,7 @@ use <- function(module, ..., attach = FALSE, reInit = TRUE, where = parent.frame
 expose <- function(module, ..., reInit = TRUE, where = parent.frame()) {
 
   mc <- match.call(expand.dots = TRUE)
-  mc[[1]] <- quote(use)
+  mc[[1]] <- quote(modules::use)
   module <- eval(mc, where)
 
   makeAssignment(module, names(module), where)
