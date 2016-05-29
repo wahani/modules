@@ -402,7 +402,7 @@ for object composition. If substitutability is really an issue then you may
 also look at `aoos::retList`.
 
 The development of the `modules` package has been inspired by other languages:
-[F#](fsharpforfunandprofit.com/posts/organizing-functions), 
+[F#](https://fsharpforfunandprofit.com/posts/organizing-functions/), 
 [Erlang](http://learnyousomeerlang.com/modules) and 
 [julia](http://docs.julialang.org/en/release-0.4/manual/modules/).
 
