@@ -33,7 +33,6 @@ modfun <- function(x) {
     sourceOfFun[grep("^##", sourceOfFun)]
   }
 
-  # stopifnot(!is.null(attributes(x)$srcref))
   attr(x, "formals") <- getFormals(x)
   attr(x, "doc") <- getDoc(x)
   if (!isS4(x)) class(x) <- c("modfun", "function")
