@@ -25,6 +25,7 @@ Suggests:
     testthat,
     devtools,
     knitr,
+    lintr,
     rmarkdown,
     parallel
 RoxygenNote: 5.0.1
