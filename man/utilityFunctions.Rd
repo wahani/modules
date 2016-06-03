@@ -16,4 +16,9 @@ getSearchPathNames(where = parent.frame())
 Returns a list with the environments or names of the environments on the
 search path. These functions are used for testing, use \link{search} instead.
 }
+\examples{
+getSearchPath()
+getSearchPathNames()
+
+}
 

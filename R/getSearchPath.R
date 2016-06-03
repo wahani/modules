@@ -7,6 +7,11 @@
 #'
 #' @export
 #' @rdname utilityFunctions
+#'
+#' @examples
+#' getSearchPath()
+#' getSearchPathNames()
+#'
 getSearchPath <- function(where = parent.frame()) {
   if (identical(where, emptyenv())) list(where)
   else c(where, Recall(parent.env(where)))
