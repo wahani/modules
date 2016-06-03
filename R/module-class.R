@@ -15,7 +15,7 @@ environment : ModuleScope(parent ~ ModuleParent) %type% {
   parent.env(.Object) <- .Object@parent
   # Here are also the flags. Because of imports it might be hard to find the
   # original name-value for the exports. And to avoid multiple copies it is
-  # directly in the module env
+  # directly in the module env. The value can be changed by 'expose'.
   assign(nameExports(), "^*", envir = .Object)
   .Object
 }
@@ -41,6 +41,8 @@ ModuleConst <- function(expr, topEncl) {
   }
 
   addModuleConst <- function(module) {
+    # This adds the moduleConst as an attribute to give each new module the
+    # possibility to create new instances.
     attr(module, "moduleConst") <- moduleConst
     module
   }
@@ -50,12 +52,12 @@ ModuleConst <- function(expr, topEncl) {
     module <- ModuleScope(parent = ModuleParent(topEncl))
     module <- evalInModule(module, expr)
     module <- wrapModfun(module)
-    module <- retList("module", public = getExports(module), envir = module)
+    module <- stripSelf(retList("module", public = getExports(module), envir = module))
     addModuleConst(module)
 
   }
 
-  moduleConst <- stripSelf(retList("ModuleConst", c("new", "expr", "topEncl")))
+  moduleConst <- stripSelf(retList("ModuleConst", "new"))
   moduleConst
 
 }

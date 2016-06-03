@@ -1,10 +1,10 @@
 #' Class modfun
 #'
 #' The constructor and a print method for the class 'modfun', a function in a
-#' module. The only purpose is to have a print method for ad-hoc documentation.
+#' module. The only purpose of this class is to have a print method for ad-hoc
+#' documentation.
 #'
 #' @param x (function)
-#' @param ... (ignored)
 #'
 #' @examples
 #' fun <- function() {
@@ -40,7 +40,6 @@ modfun <- function(x) {
 }
 
 #' @export
-#' @rdname modfun
 print.modfun <- function(x, ...) {
   cat(attr(x, "formals"))
   if (length(attr(x, "doc")) > 0) {

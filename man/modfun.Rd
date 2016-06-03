@@ -2,21 +2,17 @@
 % Please edit documentation in R/modfun.R
 \name{modfun}
 \alias{modfun}
-\alias{print.modfun}
 \title{Class modfun}
 \usage{
 modfun(x)
-
-\method{print}{modfun}(x, ...)
 }
 \arguments{
 \item{x}{(function)}
-
-\item{...}{(ignored)}
 }
 \description{
 The constructor and a print method for the class 'modfun', a function in a
-module. The only purpose is to have a print method for ad-hoc documentation.
+module. The only purpose of this class is to have a print method for ad-hoc
+documentation.
 }
 \examples{
 fun <- function() {
