@@ -8,7 +8,7 @@ test_that("Isolation of module", {
   expect_true(exists("fun", m))
 
   # module does not know of the outside world. This is so in interactive mode.
-  # In a apckage it is the enclosing env. The test env is not interactive.
+  # In a package it is the enclosing env. The test env is not interactive.
   x <- 1
   m <- module({
     fun <- function() try(x, silent = TRUE)
@@ -37,6 +37,16 @@ test_that("Imports of module", {
   expect_equal(m$localModule$fun(1), 1)
   expect_true(exists("module", environment(m$fun)))
   expect_true(Negate(exists)("module", environment(m$fun), inherits = FALSE))
+
+  m <- module({
+
+    expose(use("package:modules"))
+    testthat::expect_true(exists("module"))
+    ## expect_false(exists(".__T__as.environment:base"))
+    expose(use("package:utils", ".S3methods"))
+    expect_true(exists(".S3methods"))
+    
+  })
 
 })
 
