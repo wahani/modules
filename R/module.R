@@ -91,13 +91,14 @@ print.module <- function(x, ...) {
 
 #' @rdname module
 #' @export
-import <- function(from, ..., where = parent.frame()) {
+import <- function(from, ..., attach = TRUE, where = parent.frame()) {
 
   deparseImports <- function(mc) {
     args <- Map(deparse, mc)
     args[[1]] <- NULL
     args$from <- NULL
     args$where <- NULL
+    args$attach <- NULL
     args <- unlist(args)
     deleteQuotes(args)
   }
@@ -119,9 +120,10 @@ import <- function(from, ..., where = parent.frame()) {
 
   from <- deparseFrom(match.call())
   if (isNotInstalled(from)) stop("'package:", from, "' is not installed! Install first.")
+  if (!attach) where <- new.env()
   objectsToImport <- makeObjectsToImport(match.call(), from)
   addDependency(from, objectsToImport, where, makeDelayedAssignment, from)
-  invisible(NULL)
+  invisible(as.list(parent.env(where), all.names = TRUE))
 
 }
 

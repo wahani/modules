@@ -42,9 +42,12 @@ test_that("Imports of module", {
 
     expose(use("package:modules"))
     testthat::expect_true(exists("module"))
-    ## expect_false(exists(".__T__as.environment:base"))
     expose(use("package:utils", ".S3methods"))
-    expect_true(exists(".S3methods"))
+    testthat::expect_true(exists(".S3methods"))
+    m <- import("utils", ".DollarNames", attach = FALSE)
+    testthat::expect_true(!exists(".DollarNames"))
+    expose(m)
+    testthat::expect_true(exists(".DollarNames"))
     
   })
 
