@@ -39,18 +39,23 @@ test_that("Imports of module", {
   expect_true(Negate(exists)("module", environment(m$fun), inherits = FALSE))
 
   m <- module({
-
-    expose(use("package:modules"))
-    testthat::expect_true(exists("module"))
+    here <- environment()
     expose(use("package:utils", ".S3methods"))
-    testthat::expect_true(exists(".S3methods"))
-    m <- import("utils", ".DollarNames", attach = FALSE)
-    testthat::expect_true(!exists(".DollarNames"))
-    expose(m)
-    testthat::expect_true(exists(".DollarNames"))
+    usePackage <- function() exists(".S3methods", where = here, inherits = FALSE)      
+  })
     
+  testthat::expect_true(m$usePackage())
+
+  m <- module({
+    here <- environment()
+    m <- import("utils", ".S3methods", attach = FALSE)
+    importPackage <- function() names(m) == ".S3methods"
+    importPackageAttach <- function() !exists(".S3methods", where = here, inherits = FALSE)
   })
 
+  testthat::expect_true(m$importPackage())
+  testthat::expect_true(m$importPackageAttach())
+    
 })
 
 test_that("delayed assignment", {

@@ -123,7 +123,7 @@ import <- function(from, ..., attach = TRUE, where = parent.frame()) {
   if (!attach) where <- new.env()
   objectsToImport <- makeObjectsToImport(match.call(), from)
   addDependency(from, objectsToImport, where, makeDelayedAssignment, from)
-  invisible(as.list(parent.env(where), all.names = TRUE))
+  invisible(parent.env(where))
 
 }
 

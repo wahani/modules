@@ -11,7 +11,7 @@
 \usage{
 module(expr = { }, topEncl = autoTopEncl(parent.frame()))
 
-import(from, ..., where = parent.frame())
+import(from, ..., attach = TRUE, where = parent.frame())
 
 use(module, ..., attach = FALSE, reInit = TRUE, where = parent.frame())
 
@@ -33,13 +33,13 @@ to find a good default via \link{autoTopEncl}.}
 or names to export from module. For exports a character of length 1 with a
 leading "^" is interpreted as regular expression.}
 
+\item{attach}{(logical) whether to attach the module to the search path}
+
 \item{where}{(environment) typically the calling environment. Should only be
 relevant for testing.}
 
 \item{module}{(character | module) a module as file or folder name or a list
 representing a module.}
-
-\item{attach}{(logical) whether to attach the module to the search path}
 
 \item{reInit}{(logical) whether to re-initialize module. This is only
 relevant if a module has \emph{state} which can be changed. This argument
