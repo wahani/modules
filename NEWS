@@ -1,3 +1,7 @@
+Version 0.4.2
+- The function 'import' now has the additional argument 'attach' and returns an
+environment containing the specified imports.
+
 Version 0.4.1
 - Bugfix in expose when not called from within a module.
 
