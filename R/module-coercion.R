@@ -24,12 +24,22 @@ list : as.module(x, topEncl = baseenv(), reInit = TRUE, ...) %g% {
 #' @rdname modulecoerce
 as.module(x ~ character, topEncl, reInit, ...) %m% {
   stopifnot(length(x) == 1)
-  files <- if (dir.exists(x)) list.files(x, "\\.(r|R)$", FALSE, TRUE, TRUE) else x
-  modules <- lapply(files, function(x) {
+
+  dirAsModule <- function(x, topEncl, ...) {
+    files <- list.files(x, "\\.(r|R)$", FALSE, TRUE, TRUE)
+    modules <- lapply(files, fileAsModule, topEncl, ...)
+    names(modules) <- gsub("\\.(r|R)$", "", sapply(files, basename))
+    modules
+  }
+
+  fileAsModule <- function(x, topEncl, ...) {
     do.call(module, list(parse(x, ...), topEncl))
-  })
-  if (length(modules) == 1 && !dir.exists(x)) modules[[1]]
-  else `names<-`(modules, gsub("\\.(r|R)$", "", sapply(files, basename)))
+  }
+
+  if (dir.exists(x)) dirAsModule(x, topEncl, ...)
+  else if (file.exists(x)) fileAsModule(x, topEncl, ...)
+  else stop("Can`t find ", x)
+  
 }
 
 #' @export
