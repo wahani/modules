@@ -12,7 +12,10 @@ test_that("as.module", {
   writeLines("fun <- function() 1", tmp)
 
   expectTrue(exists("fun", as.module(tmp)))
-  expectTrue(exists("fun", as.module("", text = "fun <- function() 1")))
+  expectTrue(exists(
+    "fun1",
+    as.module(tmp, text = "fun1 <- function() 1")
+  ))
 
   expectEqual(
     environmentName(parent.env(parent.env(environment(as.module(tmp)$fun)))),

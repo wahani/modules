@@ -40,14 +40,6 @@ test_that("Imports of module", {
 
   m <- module({
     here <- environment()
-    expose(use("package:utils", ".S3methods"))
-    usePackage <- function() exists(".S3methods", where = here, inherits = FALSE)      
-  })
-    
-  testthat::expect_true(m$usePackage())
-
-  m <- module({
-    here <- environment()
     m <- import("utils", ".S3methods", attach = FALSE)
     importPackage <- function() names(m) == ".S3methods"
     importPackageAttach <- function() !exists(".S3methods", where = here, inherits = FALSE)

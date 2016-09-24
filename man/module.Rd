@@ -74,7 +74,7 @@ be used for development and debugging of modules.
 
 \code{expose} is similar to \code{use} but instead of attaching a module it
 will copy all elements into the calling environment. This means that
-\emph{exposed} functions functions can be (re-)exported.
+\emph{exposed} functions can be (re-)exported.
 }
 \examples{
 \dontrun{

@@ -25,25 +25,20 @@ list : as.module(x, topEncl = baseenv(), reInit = TRUE, ...) %g% {
 as.module(x ~ character, topEncl, reInit, ...) %m% {
   stopifnot(length(x) == 1)
 
-  fileAsModule <- function(x, topEncl, reInit, ...) {
-    files <- if (dir.exists(x)) list.files(x, "\\.(r|R)$", FALSE, TRUE, TRUE) else x
-    modules <- lapply(files, function(x) {
-      do.call(module, list(parse(x, ...), topEncl))
-    })
-    if (length(modules) == 1 && !dir.exists(x)) modules[[1]]
-    else `names<-`(modules, gsub("\\.(r|R)$", "", sapply(files, basename)))
+  dirAsModule <- function(x, topEncl, ...) {
+    files <- list.files(x, "\\.(r|R)$", FALSE, TRUE, TRUE)
+    modules <- lapply(files, fileAsModule, topEncl, ...)
+    names(modules) <- gsub("\\.(r|R)$", "", sapply(files, basename))
+    modules
   }
 
-  packageAsModule <- function(x) {
-    pkgName <- sub("^package:", "", x)
-    env <- new.env()
-    eval(call("import", from = pkgName, where = env))
-    as.list(parent.env(env), all.names = TRUE)
+  fileAsModule <- function(x, topEncl, ...) {
+    do.call(module, list(parse(x, ...), topEncl))
   }
 
-  if (grepl("^package:.*$", x)) packageAsModule(x)
-  else fileAsModule(x, topEncl, reInit, ...)
-  
+  if (dir.exists(x)) dirAsModule(x, topEncl, ...)
+  else if (file.exists(x)) fileAsModule(x, topEncl, ...)
+  else stop("Can`t find ", x)
   
 }
 
