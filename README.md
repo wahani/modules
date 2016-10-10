@@ -4,7 +4,10 @@
 ![Downloads](http://cranlogs.r-pkg.org/badges/modules)
 # Modules in R
 
-Provides modules as an organizational unit for source code. Modules enforce to be more rigorous when defining dependencies and have a local search path. They can be used as a sub unit within packages or in scripts.
+Provides modules as an organizational unit for source code. Modules
+enforce to be more rigorous when defining dependencies and have
+a local search path. They can be used as a sub unit within packages
+or in scripts.
 
 ## Installation
 
@@ -23,58 +26,52 @@ devtools::install_github("wahani/modules")
 
 # Introduction
 
-The key idea of this package is to provide a unit which is self contained, i.e. 
-has it's own scope. The main and most reliable infrastructure for such 
-organizational units of source code in the R ecosystem is a package. Compared to
-a package modules can be considered ad hoc, but - in the sense of an R-package -
-self contained. Furthermore modules typically consist of one file; in contrast
-to a package which can wrap an arbitrary number of files.
+The key idea of this package is to provide a unit of source code which has it's
+own scope. The main and most reliable infrastructure for such organizational
+units in the R ecosystem is a package. Modules can be used as stand alone,
+ad-hoc substitutes for a package or as a sub-unit within a package.
 
-There are two use cases. First when you use modules to develop scripts, which is
-subject of this section; And then inside of packages where modules act more like
-objects, as in object-oriented-programming. Outside of packages modules know
-only of the base environment, i.e. within a module the base environment is the
-only *package* on the *search path*. Also they are always represented as a list
-inside R. Thus they can be treated as bags of functions.
+When modules are defined inside of packages they act as bags of functions (like
+objects as in object-oriented-programming). Outside of packages modules define
+entities which only know of the base environment, i.e. within a module the base
+environment is the only *package* on the *search path*. Also they are always
+represented as a list inside R.
 
-In the following examples you will see the function `module` to define modules.
-Typically you do not have to call that function explicitly but instead call
-`use` to load a module into your current session.
+Some core features:
 
 
 ```r
-library(modules)
+library("modules")
 m <- module({
-  boringFunction <- function() cat("boring output")
+  boringFunction <- function() "boring output"
 })
-
 m$boringFunction()
 ```
 
 ```
-## boring output
+## [1] "boring output"
 ```
 
-Since they are isolated from the `.GlobalEnv` the following object `hey` can not
+Since they are isolated from the `.GlobalEnv` the following object `x` can not
 be found:
 
 
 ```r
-hey <- "hey"
+x <- "hey"
 m <- module({
-  isolatedFunction <- function() hey
+  someFunction <- function() x
 })
-m$isolatedFunction()
+m$someFunction()
 ```
 
 ```
-## Error in m$isolatedFunction(): object 'hey' not found
+## Error in m$someFunction(): object 'x' not found
 ```
 
 
 ## Imports
 
-If you rely on exported objects of packages you can refer to them explicitly
+If you rely on exported objects of a package you can refer to them explicitly
 using `::`:
 
 
@@ -96,7 +93,7 @@ Or you can use `import` for *attaching* single objects or packages and `use` for
 ```r
 m <- module({
  
-  import(stats, median) # make median from package stats available
+  import("stats", "median") # make median from package stats available
   
   functionWithDep <- function(x) median(x)
 
@@ -112,7 +109,7 @@ m$functionWithDep(1:10)
 ```r
 m <- module({
   
-  import(stats)
+  import("stats")
   
   functionWithDep <- function(x) median(x)
 
@@ -135,10 +132,12 @@ expressions which are indicated by a leading '^'.
 m <- module({
   
   export("fun")
-  
-  .privateFunction <- identity
+
+  fun <- identity # public
   privateFunction <- identity
-  fun <- identity
+  
+  # .named are always private
+  .privateFunction <- identity
   
 })
 
@@ -157,7 +156,7 @@ of a function is when you parallelize your code. First consider the case when a
 
 
 ```r
-library(parallel)
+library("parallel")
 dependency <- identity
 fun <- function(x) dependency(x) 
 
@@ -198,25 +197,57 @@ clusterMap(cl, m$fun, 1:2)
 stopCluster(cl)
 ```
 
+Note that the parallel computing facilities in `R` always provide a way to
+handle such situations. Here it is just a matter of organization if you believe
+the function itself should handle its dependencies or the parallel interface.
+
+
+# Related Projects
+
+There exist several projects with similar goals. First of all, the package
+[klmr/modules](https://github.com/klmr/modules) aims at providing a unit similar
+to what [Python](https://www.python.org/)-modules are. This project is obviously
+interesting for you when you have prior knowledge in Python. In contrast to
+`klmr/modules` modules defined here do not aim for a full replacement of
+R-packages -- rather they provide a sub-unit within R's package
+ecosystem. Otherwise there is considerable overlap of features between the two
+packages.
+
+Second you may be interested in
+[import](https://cran.r-project.org/package=import) which provides convenient
+syntax for stating dependencies in script files. This is something which is also
+covered here, although, when you are only interested in a replacement for
+`library` the package `import` is more focused. 
+
+`modules` in this package can act as objects as in object-orientation. In 
+contrast to [R6](https://cran.r-project.org/package=R6) and reference classes
+implemented in the methods package here these objects are immutable by default.
+Furthermore it is not being made easy to change state of a module; but it is not
+difficult to do that if you really want to: see the section on coupling below.
+Furthermore inheritance is not a feature, instead you have various possibilities
+for object composition.
+
+The development of the `modules` package has been inspired by other languages:
+[F#](https://fsharpforfunandprofit.com/posts/organizing-functions/), 
+[Erlang](http://learnyousomeerlang.com/modules) and 
+[julia](http://docs.julialang.org/en/release-0.4/manual/modules/).
+
 
 # Scripts as modules
 
-You can make scripts into modules with `as.module` or implicitly when you refer 
-to a file (or directory) in a call to `use`. Inside such a script you can use
-`import` and `use` in the same way you typically use `library`. A major
-difference is, that library will not only attach the stated package but also all
-packages in the depends field of that dependency. This is something you have to
-do manually (explicitly) with `import`. Consider the following example where we
-create a module in a temporary file with its dependencies.
+You can load scripts as modules when you refer to a file (or directory) in a
+call to `use`. Inside such a script you can use `import` and `use` in the same
+way you typically use `library`. A major difference is, that library will not
+only attach the stated package but also all packages in the depends field of
+that package. This is something you have to do manually (explicitly) with
+`import`. Consider the following example where we create a module in a temporary
+file with its dependencies.
 
 
 ```r
 code <- "
-import(methods)
-import(aoos)
-# This is an example where we rely on functions in 'aoos':
-list : generic(x) %g% standardGeneric('generic')
-generic(x ~ ANY) %m% as.list(x)
+import('stats', 'median')
+functionWithDep <- function(x) median(x)
 "
 
 fileName <- tempfile(fileext = ".R")
@@ -227,16 +258,39 @@ Then we can load such a module into this session by the following:
 
 
 ```r
-someModule <- use(fileName)
-someModule$generic(1:2)
+m <- use(fileName)
+m$functionWithDep(1:2)
 ```
 
 ```
-## [[1]]
-## [1] 1
-## 
-## [[2]]
-## [1] 2
+## [1] 1.5
+```
+
+
+# Nested Modules
+
+You can also write nested modules, which means you define modules inside
+modules. In this case dependencies of the top level module are accessible to its
+children:
+
+
+```r
+m <- module({
+  
+  import("stats", "median")
+  import("modules", "module")
+  
+  anotherModule <- module({
+    fun <- function(x) median(x)
+  })
+  
+})
+
+m$anotherModule$fun(1:2)
+```
+
+```
+## [1] 1.5
 ```
 
 
@@ -280,60 +334,33 @@ m$fun
 ```
 
 
-# Nested Modules
-
-You can also write nested modules, which means you define modules inside
-modules. In this case dependencies of the top level module are accessible to its
-children:
-
-
-```r
-m <- module({
-  
-  import("stats", "median")
-  import("modules", "module")
-  
-  anotherModule <- module({
-    fun <- function(x) median(x)
-  })
-  
-})
-
-m$anotherModule$fun(1:2)
-```
-
-```
-## [1] 1.5
-```
-
-
 # Modules in Packages
 
-When you use modules inside a R-package the search path of a module connects to 
-the packages namespace. So it sees all objects within the package and has access
-to all its dependencies. You can always change this by specifying the argument 
-`topEncl`. Do not use `import` inside this setting but instead rely on the 
-package to handle your dependencies. Attaching other modules using `use` and 
-`expose` can make sense but is a matter of preference. You should definitely not
-rely on modules in files and load them with `use`!
+You can use modules inside packages in the same way as illustrated above. When a
+module is defined inside a R-package its search path connects to the packages
+namespace. So it sees all objects within the package and has access to all its
+dependencies. You can always change this by specifying the argument `topEncl`
+when calling `module`. Do not use `import` inside this setting but instead rely
+on the package to handle your dependencies. Attaching other modules using `use`
+and `expose` can make sense but is a matter of preference. You should definitely
+not rely on modules in files and load them with `use`!
 
 
 # Modules with Object Orientation
 
 ## S3
 
-S3 method dispatch will not work because of the special search mechanism of 
-`UseMethod`. What will work, however, is attaching the module so `UseMethod` can
-find the methods.
+S3 method dispatch can be problamatic because of the special search mechanism of
+`UseMethod`. What will work, however, is wrapping the generic function in a
+wrapper function.
 
 
 ```r
 m <- module({
-  generic <- function(x) UseMethod("generic")
+  .generic <- function(x) UseMethod("generic")
   generic.numeric <- function(x) cat("method for x ~ numeric")
+  generic <- function(x) .generic(x)
 })
-# m$generic(1) # this won't work
-use(m, attach = TRUE)
 m$generic(1)
 ```
 
@@ -343,54 +370,11 @@ m$generic(1)
 
 ## S4
 
-More reliable is the dispatch in S4. By default the set functions of the methods
-package have side effects in the top level environment. So you would have to set
-the appropriate environment for the argument 'where'. 'aoos' provides syntactic 
-sugar (S4) and has side effects in the environment in which the constructor 
-functions are called so method dispatch will work without extra work:
-
-
-```r
-m <- module({
-  import("methods")
-  import("aoos")
-  gen(x) %g% cat("default method")
-  gen(x ~ numeric) %m% cat("method for x ~ numeric")
-})
-m$gen("Hej")
-```
-
-```
-## default method
-```
-
-```r
-m$gen(1)
-```
-
-```
-## method for x ~ numeric
-```
-
-S4 classes (or types in aoos) have side effects in the global environment and S4
-classes are searched for in the top level environment. This means that the
-module is not self-contained because the class definition will be cached
-somewhere else.
-
-
-```r
-m <- module({
-  import("methods")
-  import("aoos")
-  numeric : NewType() %type% .Object
-})
-m$NewType(1)
-```
-
-```
-## An object of class "NewType"
-## [1] 1
-```
+By default the *set* functions of the methods package have side effects in the
+top level environment. So you would have to set the appropriate environment for
+the argument 'where'. However if you really have the need for S4 generics,
+classes and methods you should consider writing a package instead; or if you are
+already in a package define them in the scope of the package.
 
 
 # Modules and Coupling
@@ -507,7 +491,7 @@ complectModule$get()
 ```
 
 And of course we can do this with `reInit = FALSE` should this be desirable. In
-this case both modules are essentially the same.
+this case both modules are essentially a copy of a reference.
 
 
 ```r
@@ -529,36 +513,3 @@ complectModule$get()
 ```
 ## [1] 1
 ```
-
-
-# Related Projects
-
-There exist several projects with similar goals. First of all, the package
-[klmr/modules](https://github.com/klmr/modules) aims at providing a unit similar
-to what [Python](https://www.python.org/)-modules are. This projects is
-obviously interesting for you when you have prior knowledge in Python. In
-contrast to `klmr/modules` modules defined in this package do not aim for a full
-replacement of R-packages -- rather they provide a sub-unit within R's package
-ecosystem. Otherwise there is considerable overlap of features between the two
-packages.
-
-Second you may be interested in
-[import](https://cran.r-project.org/package=import) which provides convenient
-syntax for stating dependencies in script files. This is something which is also
-covered here, although, when you are only interested in a replacement for
-`library` the package `import` is more focused. 
-
-`modules` in this package can act as objects as in object-orientation. In 
-contrast to [R6](https://cran.r-project.org/package=R6) and reference classes
-implemented in the methods package here these objects are immutable by default.
-Furthermore it is not being made easy to change state of a module; but it is not
-difficult to do that if you really want to: see the section on coupling.
-Furthermore inheritance is not a feature, instead you have various possibilities
-for object composition. If substitutability is really an issue then you may
-also look at `aoos::retList`.
-
-The development of the `modules` package has been inspired by other languages:
-[F#](https://fsharpforfunandprofit.com/posts/organizing-functions/), 
-[Erlang](http://learnyousomeerlang.com/modules) and 
-[julia](http://docs.julialang.org/en/release-0.4/manual/modules/).
-
