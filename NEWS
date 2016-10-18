@@ -1,3 +1,7 @@
+Version 0.4.3
+- Fix for print method.
+- Removing class and function 'modfun'
+
 Version 0.4.2
 - The function 'import' now has the additional argument 'attach' and returns an
 environment containing the specified imports.

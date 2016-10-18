@@ -101,6 +101,7 @@ m <- module({
 })
 
 m$fun
+m
 
 }
 

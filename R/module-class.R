@@ -35,11 +35,6 @@ ModuleConst <- function(expr, topEncl) {
     else exports
   }
 
-  wrapModfun <- function(module) {
-    # wrap all functions in a module with the class modfun.
-    mapInEnv(module, modfun, is.function)
-  }
-
   addModuleConst <- function(module) {
     # This adds the moduleConst as an attribute to give each new module the
     # possibility to create new instances.
@@ -48,11 +43,11 @@ ModuleConst <- function(expr, topEncl) {
   }
 
   new <- function() {
-
+    
     module <- ModuleScope(parent = ModuleParent(topEncl))
     module <- evalInModule(module, expr)
-    module <- wrapModfun(module)
-    module <- stripSelf(retList("module", public = getExports(module), envir = module))
+    module <- retList("module", public = getExports(module), envir = module@.xData)
+    module <- stripSelf(module)
     addModuleConst(module)
 
   }

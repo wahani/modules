@@ -71,6 +71,7 @@
 #' })
 #'
 #' m$fun
+#' m
 #'
 #' @rdname module
 #' @export
@@ -82,11 +83,51 @@ module <- function(expr = {}, topEncl = autoTopEncl(parent.frame())) {
 
 #' @export
 print.module <- function(x, ...) {
-  for (i in seq_along(x)) {
-    cat(names(x)[i], ":\n", attr(x[[i]], "formals"), sep = "")
-    cat("\n\n")
+  
+  getFormals <- function(fun) {
+    formalsOfFun <- formals(fun)
+    formalsOfFun[sapply(formalsOfFun, is.character)] <-
+      lapply(formalsOfFun[sapply(formalsOfFun, is.character)], function(el){
+        paste0("\"", el, "\"")
+      })
+    args <- ifelse(
+      as.character(formalsOfFun) == "",
+      names(formalsOfFun),
+      paste(names(formalsOfFun), formalsOfFun, sep = " = ")
+    )
+    paste0("function(", paste(args, collapse = ", "), ")")
   }
+
+  getDoc <- function(fun) {
+    sourceOfFun <- stringr::str_trim(attr(fun, "srcref"))
+    sourceOfFun <- sourceOfFun[grep("^##", sourceOfFun)]
+    paste(sourceOfFun, collapse = "\n")
+  }
+
+  catFuns <- function(funs) {
+    for (i in seq_along(funs)) {
+      cat(names(funs)[i], ":\n", sep = "")
+      cat(getFormals(funs[[i]]), "\n", sep = "")
+      docString <- getDoc(funs[[i]])
+      if (length(docString) > 0) cat(docString, "\n", sep = "")
+      cat("\n", sep = "")
+    }
+  }
+  
+  catRemaining <- function(remaining) {
+    for (i in seq_along(remaining)) {
+      cat(paste0(names(remaining)[i], ":\n"))
+      cat(str(remaining[[i]]))
+      cat("\n")
+    }
+  }
+
+  ind <- vapply(x, is.function, logical(1))
+  catFuns(x[ind])
+  catRemaining(x[!ind])
+  
   invisible(x)
+  
 }
 
 #' @rdname module
