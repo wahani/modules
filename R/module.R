@@ -77,7 +77,8 @@
 #' @export
 module <- function(expr = {}, topEncl = autoTopEncl(parent.frame())) {
 
-  ModuleConst(match.call()$expr, topEncl) %invoke% new()
+  moduleConstructor <- ModuleConst(match.call()$expr, topEncl)
+  moduleConstructor$new()
 
 }
 

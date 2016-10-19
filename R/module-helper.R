@@ -8,20 +8,6 @@ deparseEllipsis <- function(mc, exclude) {
   deleteQuotes(args)
 }
 
-invoke(lhs, rhs) %g% standardGeneric("invoke")
-
-invoke(lhs ~ module, rhs) %m% {
-  expr <- match.call()$rhs
-  eval(expr, attr(lhs, "moduleConst"), enclos = parent.frame())
-}
-
-invoke(lhs ~ ModuleConst, rhs) %m% {
-  expr <- match.call()$rhs
-  eval(expr, lhs, enclos = parent.frame())
-}
-
-"%invoke%" <- invoke
-
 deleteQuotes <- function(x) {
   gsub("\\\"|\\\'", "", x)
 }

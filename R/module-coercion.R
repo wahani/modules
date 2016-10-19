@@ -47,7 +47,7 @@ as.module(x ~ character, topEncl, reInit, ...) %m% {
 #' @include NAMESPACE.R
 as.module(x ~ module, topEncl, reInit, ...) %m% {
   if (reInit) {
-    x %invoke% new()
+    attr(x, "moduleConst")$new()
   } else {
     x
   }
