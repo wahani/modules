@@ -130,7 +130,7 @@ test_that("nested modules", {
     import(modules, module)
 
     # The nested module should be able to figure out, that it is inside a nested
-    # model and hence can connect:
+    # module and hence can connect:
     m <- module({
       fun <- function(x) median(x)
     })
@@ -147,8 +147,8 @@ test_that("nested modules", {
 test_that("package dependencies", {
 
   m <- module({
-    import("aoos")
-    deps <- function() exists("%g%")
+    import("utils")
+    deps <- function() exists("packageDescription")
   })
 
   testthat::expect_true(m$deps())

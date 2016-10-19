@@ -1,3 +1,6 @@
+Version 0.4.4
+- Eliminated package dependencies: 'aoos' and 'methods'
+
 Version 0.4.3
 - Fix for print method.
 - Removing class and function 'modfun'

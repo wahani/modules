@@ -1,12 +1,15 @@
-#' @import aoos
-#' @import methods
 #' @importFrom utils installed.packages str
 NULL
 
-globalVariables(c("processModule", "into"))
-
-# The central class is built on S3 to have the public interface minimalistic and
-# to not enforce S4.
-setOldClass(c("module", "list"))
-
-setOldClass("ModuleConst", "list")
+retList <- function(class = NULL, public = ls(envir), super = list(), envir = parent.frame()) {
+  ## This is a variation of aoos::retList. Without the former inheritance
+  ## mechanism. Maybe this with a different name is sufficient to supply
+  ## OO-features in this package.
+  public <- unique(c(public, names(super)))
+  classes <- c(class, class(super))
+  envir$.self <- envir
+  out <- super
+  out[public] <- as.list(envir, all.names = TRUE)[public]
+  class(out) <- classes
+  out
+}
