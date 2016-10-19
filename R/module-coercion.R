@@ -16,13 +16,19 @@
 #' \dontrun{
 #' vignette("modulesInR", "modules")
 #' }
-list : as.module(x, topEncl = baseenv(), reInit = TRUE, ...) %g% {
-  as.list(x)
+as.module <- function(x, ...) {
+  UseMethod("as.module")
 }
 
 #' @export
+as.module.default <- function(x, ...) {
+  as.list(x)
+}
+
+
+#' @export
 #' @rdname modulecoerce
-as.module(x ~ character, topEncl, reInit, ...) %m% {
+as.module.character <- function(x, topEncl = baseenv(), reInit = TRUE, ...) {
   stopifnot(length(x) == 1)
 
   dirAsModule <- function(x, topEncl, ...) {
@@ -44,8 +50,7 @@ as.module(x ~ character, topEncl, reInit, ...) %m% {
 
 #' @export
 #' @rdname modulecoerce
-#' @include NAMESPACE.R
-as.module(x ~ module, topEncl, reInit, ...) %m% {
+as.module.module <- function(x, reInit = TRUE, ...) {
   if (reInit) {
     attr(x, "moduleConst")$new()
   } else {
