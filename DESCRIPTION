@@ -8,7 +8,7 @@ Description: Provides modules as an organizational unit for source code. Modules
     a local search path. They can be used as a sub unit within packages
     or in scripts.
 BugReports: https://github.com/wahani/modules/issues
-URL: http://wahanigithub.io/modules
+URL: http://wahani.github.io/modules
 ByteCompile: TRUE
 Depends:
     R (>= 3.2.0)
