@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Modules in R by wahani</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Modules in R</h1>
+      <h2 class="project-tagline">Manage dependencies between your R files / functions / modules</h2>
+      <a href="https://github.com/wahani/modules" class="btn">View on GitHub</a>
+      <a href="https://github.com/wahani/modules/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/wahani/modules/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <p><a href="https://travis-ci.org/wahani/modules"><img src="https://travis-ci.org/wahani/modules.png?branch=master" alt="Build Status"></a>
+<a href="https://codecov.io/github/wahani/modules?branch=master"><img src="https://codecov.io/github/wahani/modules/coverage.svg?branch=master" alt="codecov.io"></a>
+<a href="https://cran.r-project.org/package=modules"><img src="http://www.r-pkg.org/badges/version/modules" alt="CRAN"></a>
+<img src="http://cranlogs.r-pkg.org/badges/modules" alt="Downloads"></p>
+
+<h1>
+<a id="modules-in-r" class="anchor" href="#modules-in-r" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Modules in R</h1>
+
+<p>Provides modules as an organizational unit for source code. Modules enforce to be more rigorous when defining dependencies and have a local search path. They can be used as a sub unit within packages or in scripts.</p>
+
+<h2>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Installation</h2>
+
+<p>From CRAN:</p>
+
+<div class="highlight highlight-source-r"><pre>install.packages(<span class="pl-s"><span class="pl-pds">"</span>modules<span class="pl-pds">"</span></span>)</pre></div>
+
+<p>From GitHub:</p>
+
+<div class="highlight highlight-source-r"><pre><span class="pl-e">devtools</span><span class="pl-k">::</span>install_github(<span class="pl-s"><span class="pl-pds">"</span>wahani/modules<span class="pl-pds">"</span></span>)</pre></div>
+
+<h1>
+<a id="introduction" class="anchor" href="#introduction" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Introduction</h1>
+
+<p>The key idea of this package is to provide a unit of source code which has it's
+own scope. The main and most reliable infrastructure for such organizational
+units in the R ecosystem is a package. Modules can be used as stand alone,
+ad-hoc substitutes for a package or as a sub-unit within a package.</p>
+
+<p>When modules are defined inside of packages they act as bags of functions (like
+objects as in object-oriented-programming). Outside of packages modules define
+entities which only know of the base environment, i.e. within a module the base
+environment is the only <em>package</em> on the <em>search path</em>. Also they are always
+represented as a list inside R.</p>
+
+<p>Some core features:</p>
+
+<div class="highlight highlight-source-r"><pre>library(<span class="pl-s"><span class="pl-pds">"</span>modules<span class="pl-pds">"</span></span>)
+<span class="pl-smi">m</span> <span class="pl-k">&lt;-</span> module({
+  <span class="pl-en">boringFunction</span> <span class="pl-k">&lt;-</span> <span class="pl-k">function</span>() <span class="pl-s"><span class="pl-pds">"</span>boring output<span class="pl-pds">"</span></span>
+})
+<span class="pl-smi">m</span><span class="pl-k">$</span>boringFunction()</pre></div>
+
+<pre><code>## [1] "boring output"
+</code></pre>
+
+<p>Since they are isolated from the <code>.GlobalEnv</code> the following object <code>x</code> can not
+be found:</p>
+
+<div class="highlight highlight-source-r"><pre><span class="pl-smi">x</span> <span class="pl-k">&lt;-</span> <span class="pl-s"><span class="pl-pds">"</span>hey<span class="pl-pds">"</span></span>
+<span class="pl-smi">m</span> <span class="pl-k">&lt;-</span> module({
+  <span class="pl-en">someFunction</span> <span class="pl-k">&lt;-</span> <span class="pl-k">function</span>() <span class="pl-smi">x</span>
+})
+<span class="pl-smi">m</span><span class="pl-k">$</span>someFunction()</pre></div>
+
+<pre><code>## Error in m$someFunction(): object 'x' not found
+</code></pre>
+
+<h2>
+<a id="imports" class="anchor" href="#imports" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Imports</h2>
+
+<p>If you rely on exported objects of a package you can refer to them explicitly
+using <code>::</code>:</p>
+
+<div class="highlight highlight-source-r"><pre><span class="pl-smi">m</span> <span class="pl-k">&lt;-</span> module({
+  <span class="pl-en">functionWithDep</span> <span class="pl-k">&lt;-</span> <span class="pl-k">function</span>(<span class="pl-smi">x</span>) <span class="pl-e">stats</span><span class="pl-k">::</span>median(<span class="pl-smi">x</span>)
+})
+<span class="pl-smi">m</span><span class="pl-k">$</span>functionWithDep(<span class="pl-c1">1</span><span class="pl-k">:</span><span class="pl-c1">10</span>)</pre></div>
+
+<pre><code>## [1] 5.5
+</code></pre>
+
+<p>Or you can use <code>import</code> for <em>attaching</em> single objects or packages and <code>use</code> for
+<em>attaching</em> or loading a module:</p>
+
+<div class="highlight highlight-source-r"><pre><span class="pl-smi">m</span> <span class="pl-k">&lt;-</span> module({
+
+  import(<span class="pl-s"><span class="pl-pds">"</span>stats<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>median<span class="pl-pds">"</span></span>) <span class="pl-c"># make median from package stats available</span>
+
+  <span class="pl-en">functionWithDep</span> <span class="pl-k">&lt;-</span> <span class="pl-k">function</span>(<span class="pl-smi">x</span>) median(<span class="pl-smi">x</span>)
+
+})
+<span class="pl-smi">m</span><span class="pl-k">$</span>functionWithDep(<span class="pl-c1">1</span><span class="pl-k">:</span><span class="pl-c1">10</span>)</pre></div>
+
+<pre><code>## [1] 5.5
+</code></pre>
+
+<div class="highlight highlight-source-r"><pre><span class="pl-smi">m</span> <span class="pl-k">&lt;-</span> module({
+
+  import(<span class="pl-s"><span class="pl-pds">"</span>stats<span class="pl-pds">"</span></span>)
+
+  <span class="pl-en">functionWithDep</span> <span class="pl-k">&lt;-</span> <span class="pl-k">function</span>(<span class="pl-smi">x</span>) median(<span class="pl-smi">x</span>)
+
+})
+<span class="pl-smi">m</span><span class="pl-k">$</span>functionWithDep(<span class="pl-c1">1</span><span class="pl-k">:</span><span class="pl-c1">10</span>)</pre></div>
+
+<pre><code>## [1] 5.5
+</code></pre>
+
+<h2>
+<a id="exports" class="anchor" href="#exports" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Exports</h2>
+
+<p>It may also be of interest to control which objects are visible for the client.
+You can do that with the <code>export</code> function. Note that export accepts regular
+expressions which are indicated by a leading '^'.</p>
+
+<div class="highlight highlight-source-r"><pre><span class="pl-smi">m</span> <span class="pl-k">&lt;-</span> module({
+
+  export(<span class="pl-s"><span class="pl-pds">"</span>fun<span class="pl-pds">"</span></span>)
+
+  <span class="pl-smi">fun</span> <span class="pl-k">&lt;-</span> <span class="pl-smi">identity</span> <span class="pl-c"># public</span>
+  <span class="pl-smi">privateFunction</span> <span class="pl-k">&lt;-</span> <span class="pl-smi">identity</span>
+
+  <span class="pl-c"># .named are always private</span>
+  .<span class="pl-smi">privateFunction</span> <span class="pl-k">&lt;-</span> <span class="pl-smi">identity</span>
+
+})
+
+names(<span class="pl-smi">m</span>)</pre></div>
+
+<pre><code>## [1] "fun"
+</code></pre>
+
+<h2>
+<a id="example-modules-as-parallel-process" class="anchor" href="#example-modules-as-parallel-process" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Example: Modules as Parallel Process</h2>
+
+<p>One example where you may want to have more control of the enclosing environment 
+of a function is when you parallelize your code. First consider the case when a 
+<em>naive</em> implementation fails.</p>
+
+<div class="highlight highlight-source-r"><pre>library(<span class="pl-s"><span class="pl-pds">"</span>parallel<span class="pl-pds">"</span></span>)
+<span class="pl-smi">dependency</span> <span class="pl-k">&lt;-</span> <span class="pl-smi">identity</span>
+<span class="pl-en">fun</span> <span class="pl-k">&lt;-</span> <span class="pl-k">function</span>(<span class="pl-smi">x</span>) dependency(<span class="pl-smi">x</span>) 
+
+<span class="pl-smi">cl</span> <span class="pl-k">&lt;-</span> makeCluster(<span class="pl-c1">2</span>)
+clusterMap(<span class="pl-smi">cl</span>, <span class="pl-smi">fun</span>, <span class="pl-c1">1</span><span class="pl-k">:</span><span class="pl-c1">2</span>)</pre></div>
+
+<pre><code>## Error in checkForRemoteErrors(val): 2 nodes produced errors; first error: could not find function "dependency"
+</code></pre>
+
+<div class="highlight highlight-source-r"><pre>stopCluster(<span class="pl-smi">cl</span>)</pre></div>
+
+<p>To make the function <code>fun</code> self contained we can define it in a module. </p>
+
+<div class="highlight highlight-source-r"><pre><span class="pl-smi">m</span> <span class="pl-k">&lt;-</span> module({
+  <span class="pl-smi">dependency</span> <span class="pl-k">&lt;-</span> <span class="pl-smi">identity</span>
+  <span class="pl-en">fun</span> <span class="pl-k">&lt;-</span> <span class="pl-k">function</span>(<span class="pl-smi">x</span>) dependency(<span class="pl-smi">x</span>) 
+})
+
+<span class="pl-smi">cl</span> <span class="pl-k">&lt;-</span> makeCluster(<span class="pl-c1">2</span>)
+clusterMap(<span class="pl-smi">cl</span>, <span class="pl-smi">m</span><span class="pl-k">$</span><span class="pl-smi">fun</span>, <span class="pl-c1">1</span><span class="pl-k">:</span><span class="pl-c1">2</span>)</pre></div>
+
+<pre><code>## [[1]]
+## [1] 1
+## 
+## [[2]]
+## [1] 2
+</code></pre>
+
+<div class="highlight highlight-source-r"><pre>stopCluster(<span class="pl-smi">cl</span>)</pre></div>
+
+<p>Note that the parallel computing facilities in <code>R</code> always provide a way to
+handle such situations. Here it is just a matter of organization if you believe
+the function itself should handle its dependencies or the parallel interface.</p>
+
+<h1>
+<a id="related-projects" class="anchor" href="#related-projects" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Related Projects</h1>
+
+<p>There exist several projects with similar goals. First of all, the package
+<a href="https://github.com/klmr/modules">klmr/modules</a> aims at providing a unit similar
+to what <a href="https://www.python.org/">Python</a>-modules are. This project is obviously
+interesting for you when you have prior knowledge in Python. In contrast to
+<code>klmr/modules</code> modules defined here do not aim for a full replacement of
+R-packages -- rather they provide a sub-unit within R's package
+ecosystem. Otherwise there is considerable overlap of features between the two
+packages.</p>
+
+<p>Second you may be interested in
+<a href="https://cran.r-project.org/package=import">import</a> which provides convenient
+syntax for stating dependencies in script files. This is something which is also
+covered here, although, when you are only interested in a replacement for
+<code>library</code> the package <code>import</code> is more focused. </p>
+
+<p><code>modules</code> in this package can act as objects as in object-orientation. In 
+contrast to <a href="https://cran.r-project.org/package=R6">R6</a> and reference classes
+implemented in the methods package here these objects are immutable by default.
+Furthermore it is not being made easy to change state of a module; but it is not
+difficult to do that if you really want to: see the section on coupling below.
+Furthermore inheritance is not a feature, instead you have various possibilities
+for object composition.</p>
+
+<p>The development of the <code>modules</code> package has been inspired by other languages:
+<a href="https://fsharpforfunandprofit.com/posts/organizing-functions/">F#</a>, 
+<a href="http://learnyousomeerlang.com/modules">Erlang</a> and 
+<a href="http://docs.julialang.org/en/release-0.4/manual/modules/">julia</a>.</p>
+
+<h1>
+<a id="scripts-as-modules" class="anchor" href="#scripts-as-modules" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Scripts as modules</h1>
+
+<p>You can load scripts as modules when you refer to a file (or directory) in a
+call to <code>use</code>. Inside such a script you can use <code>import</code> and <code>use</code> in the same
+way you typically use <code>library</code>. A major difference is, that library will not
+only attach the stated package but also all packages in the depends field of
+that package. This is something you have to do manually (explicitly) with
+<code>import</code>. Consider the following example where we create a module in a temporary
+file with its dependencies.</p>
+
+<div class="highlight highlight-source-r"><pre><span class="pl-smi">code</span> <span class="pl-k">&lt;-</span> <span class="pl-s"><span class="pl-pds">"</span></span>
+<span class="pl-s">import('stats', 'median')</span>
+<span class="pl-s">functionWithDep &lt;- function(x) median(x)</span>
+<span class="pl-s"><span class="pl-pds">"</span></span>
+
+<span class="pl-smi">fileName</span> <span class="pl-k">&lt;-</span> tempfile(<span class="pl-v">fileext</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>.R<span class="pl-pds">"</span></span>)
+writeLines(<span class="pl-smi">code</span>, <span class="pl-smi">fileName</span>)</pre></div>
+
+<p>Then we can load such a module into this session by the following:</p>
+
+<div class="highlight highlight-source-r"><pre><span class="pl-smi">m</span> <span class="pl-k">&lt;-</span> use(<span class="pl-smi">fileName</span>)
+<span class="pl-smi">m</span><span class="pl-k">$</span>functionWithDep(<span class="pl-c1">1</span><span class="pl-k">:</span><span class="pl-c1">2</span>)</pre></div>
+
+<pre><code>## [1] 1.5
+</code></pre>
+
+<h1>
+<a id="nested-modules" class="anchor" href="#nested-modules" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Nested Modules</h1>
+
+<p>You can also write nested modules, which means you define modules inside
+modules. In this case dependencies of the top level module are accessible to its
+children:</p>
+
+<div class="highlight highlight-source-r"><pre><span class="pl-smi">m</span> <span class="pl-k">&lt;-</span> module({
+
+  import(<span class="pl-s"><span class="pl-pds">"</span>stats<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>median<span class="pl-pds">"</span></span>)
+  import(<span class="pl-s"><span class="pl-pds">"</span>modules<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>module<span class="pl-pds">"</span></span>)
+
+  <span class="pl-smi">anotherModule</span> <span class="pl-k">&lt;-</span> module({
+    <span class="pl-en">fun</span> <span class="pl-k">&lt;-</span> <span class="pl-k">function</span>(<span class="pl-smi">x</span>) median(<span class="pl-smi">x</span>)
+  })
+
+})
+
+<span class="pl-smi">m</span><span class="pl-k">$</span><span class="pl-smi">anotherModule</span><span class="pl-k">$</span>fun(<span class="pl-c1">1</span><span class="pl-k">:</span><span class="pl-c1">2</span>)</pre></div>
+
+<pre><code>## [1] 1.5
+</code></pre>
+
+<h1>
+<a id="documentation" class="anchor" href="#documentation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Documentation</h1>
+
+<p>If you want proper documentation for your functions or modules you really want a
+package. However, there are some simple things you can do for ad-hoc
+documentation of modules which is to use comments:</p>
+
+<div class="highlight highlight-source-r"><pre>module({
+  <span class="pl-en">fun</span> <span class="pl-k">&lt;-</span> <span class="pl-k">function</span>(<span class="pl-smi">x</span>) {
+    <span class="pl-c">## A function for illustrating documentation</span>
+    <span class="pl-c">## x (numeric)</span>
+    <span class="pl-smi">x</span>
+  }
+})</pre></div>
+
+<pre><code>## fun:
+## function(x)
+## ## A function for illustrating documentation
+## ## x (numeric)
+</code></pre>
+
+<h1>
+<a id="modules-in-packages" class="anchor" href="#modules-in-packages" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Modules in Packages</h1>
+
+<p>You can use modules inside packages in the same way as illustrated above. When a
+module is defined inside a R-package its search path connects to the packages
+namespace. So it sees all objects within the package and has access to all its
+dependencies. You can always change this by specifying the argument <code>topEncl</code>
+when calling <code>module</code>. Do not use <code>import</code> inside this setting but instead rely
+on the package to handle your dependencies. Attaching other modules using <code>use</code>
+and <code>expose</code> can make sense but is a matter of preference. You should definitely
+not rely on modules in files and load them with <code>use</code>!</p>
+
+<h1>
+<a id="modules-with-object-orientation" class="anchor" href="#modules-with-object-orientation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Modules with Object Orientation</h1>
+
+<h2>
+<a id="s3" class="anchor" href="#s3" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>S3</h2>
+
+<p>S3 method dispatch can be problamatic because of the special search mechanism of
+<code>UseMethod</code>. What will work, however, is wrapping the generic function in a
+wrapper function.</p>
+
+<div class="highlight highlight-source-r"><pre><span class="pl-smi">m</span> <span class="pl-k">&lt;-</span> module({
+  <span class="pl-en">.generic</span> <span class="pl-k">&lt;-</span> <span class="pl-k">function</span>(<span class="pl-smi">x</span>) UseMethod(<span class="pl-s"><span class="pl-pds">"</span>generic<span class="pl-pds">"</span></span>)
+  <span class="pl-en">generic.numeric</span> <span class="pl-k">&lt;-</span> <span class="pl-k">function</span>(<span class="pl-smi">x</span>) cat(<span class="pl-s"><span class="pl-pds">"</span>method for x ~ numeric<span class="pl-pds">"</span></span>)
+  <span class="pl-en">generic</span> <span class="pl-k">&lt;-</span> <span class="pl-k">function</span>(<span class="pl-smi">x</span>) .generic(<span class="pl-smi">x</span>)
+})
+<span class="pl-smi">m</span><span class="pl-k">$</span>generic(<span class="pl-c1">1</span>)</pre></div>
+
+<pre><code>## method for x ~ numeric
+</code></pre>
+
+<h2>
+<a id="s4" class="anchor" href="#s4" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>S4</h2>
+
+<p>By default the <em>set</em> functions of the methods package have side effects in the
+top level environment. So you would have to set the appropriate environment for
+the argument 'where'. However if you really have the need for S4 generics,
+classes and methods you should consider writing a package instead; or if you are
+already in a package define them in the scope of the package.</p>
+
+<h1>
+<a id="modules-and-coupling" class="anchor" href="#modules-and-coupling" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Modules and Coupling</h1>
+
+<p>Best is to only use <code>::</code> and <code>use</code> with <code>attach = FALSE</code> to be explicit with 
+your dependencies. However, there are some other options you have, which will
+result in stronger forms of coupling between modules.</p>
+
+<h2>
+<a id="modules-to-model-mutable-state" class="anchor" href="#modules-to-model-mutable-state" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Modules to Model Mutable State</h2>
+
+<p>This is in itself abstract but in principle you can not only put functions in
+your bag (module) but any R-object. This transforms into something which is
+probably associated with object-orientation. You can like this or not, here I
+simply use it to illustrate the strongest form of coupling between two modules I
+can come up with. </p>
+
+<p>In the following I define a module to encapsulate some value and have a <em>get</em>
+and <em>set</em> method for it:</p>
+
+<div class="highlight highlight-source-r"><pre><span class="pl-smi">mutableModule</span> <span class="pl-k">&lt;-</span> module({
+  .<span class="pl-smi">num</span> <span class="pl-k">&lt;-</span> <span class="pl-c1">NULL</span>
+  <span class="pl-en">get</span> <span class="pl-k">&lt;-</span> <span class="pl-k">function</span>() .<span class="pl-smi">num</span>
+  <span class="pl-en">set</span> <span class="pl-k">&lt;-</span> <span class="pl-k">function</span>(<span class="pl-smi">val</span>) .<span class="pl-smi">num</span> <span class="pl-k">&lt;&lt;-</span> <span class="pl-smi">val</span>
+})
+<span class="pl-smi">mutableModule</span><span class="pl-k">$</span>get()</pre></div>
+
+<pre><code>## NULL
+</code></pre>
+
+<div class="highlight highlight-source-r"><pre><span class="pl-smi">mutableModule</span><span class="pl-k">$</span>set(<span class="pl-c1">2</span>)</pre></div>
+
+<h2>
+<a id="coupling-between-modules" class="anchor" href="#coupling-between-modules" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Coupling Between Modules</h2>
+
+<p>In the next module we can use <code>mutableModule</code> and rebuild the interface to
+<code>.num</code>.</p>
+
+<div class="highlight highlight-source-r"><pre><span class="pl-smi">complectModule</span> <span class="pl-k">&lt;-</span> module({
+  use(.<span class="pl-smi">GlobalEnv</span><span class="pl-k">$</span><span class="pl-smi">mutableModule</span>, <span class="pl-v">attach</span> <span class="pl-k">=</span> <span class="pl-c1">TRUE</span>)
+  <span class="pl-en">getNum</span> <span class="pl-k">&lt;-</span> <span class="pl-k">function</span>() get()
+  set(<span class="pl-c1">3</span>)
+})
+<span class="pl-smi">mutableModule</span><span class="pl-k">$</span>get()</pre></div>
+
+<pre><code>## [1] 2
+</code></pre>
+
+<div class="highlight highlight-source-r"><pre><span class="pl-smi">complectModule</span><span class="pl-k">$</span>getNum()</pre></div>
+
+<pre><code>## [1] 3
+</code></pre>
+
+<p>Depending on your expectations with respect to the above code it comes at a
+surprise that we can get and set that value from an attached module; Furthermore
+it is not changed in <code>mutableModule</code>. This is because <code>use</code> will trigger a
+re-initialization of any module you plug in. You can override this behaviour:</p>
+
+<div class="highlight highlight-source-r"><pre><span class="pl-smi">complectModule</span> <span class="pl-k">&lt;-</span> module({
+  use(.<span class="pl-smi">GlobalEnv</span><span class="pl-k">$</span><span class="pl-smi">mutableModule</span>, <span class="pl-v">attach</span> <span class="pl-k">=</span> <span class="pl-c1">TRUE</span>, <span class="pl-v">reInit</span> <span class="pl-k">=</span> <span class="pl-c1">FALSE</span>)
+  <span class="pl-en">getNum</span> <span class="pl-k">&lt;-</span> <span class="pl-k">function</span>() get()
+  set(<span class="pl-c1">3</span>)
+})
+<span class="pl-smi">mutableModule</span><span class="pl-k">$</span>get()</pre></div>
+
+<pre><code>## [1] 3
+</code></pre>
+
+<div class="highlight highlight-source-r"><pre><span class="pl-smi">complectModule</span><span class="pl-k">$</span>getNum()</pre></div>
+
+<pre><code>## [1] 3
+</code></pre>
+
+<p>This is not all we can do. Also we can use <code>expose</code>. This function will take
+everything in a module and expose it to the environment from which it is called.</p>
+
+<div class="highlight highlight-source-r"><pre><span class="pl-smi">complectModule</span> <span class="pl-k">&lt;-</span> module({
+  expose(.<span class="pl-smi">GlobalEnv</span><span class="pl-k">$</span><span class="pl-smi">mutableModule</span>, <span class="pl-v">reInit</span> <span class="pl-k">=</span> <span class="pl-c1">TRUE</span>)
+  set(<span class="pl-c1">4</span>)
+})
+<span class="pl-smi">mutableModule</span><span class="pl-k">$</span>get()</pre></div>
+
+<pre><code>## [1] 3
+</code></pre>
+
+<div class="highlight highlight-source-r"><pre><span class="pl-smi">complectModule</span><span class="pl-k">$</span>get()</pre></div>
+
+<pre><code>## [1] 4
+</code></pre>
+
+<p>And of course we can do this with <code>reInit = FALSE</code> should this be desirable. In
+this case both modules are essentially a copy of a reference.</p>
+
+<div class="highlight highlight-source-r"><pre><span class="pl-smi">complectModule</span> <span class="pl-k">&lt;-</span> module({
+  expose(.<span class="pl-smi">GlobalEnv</span><span class="pl-k">$</span><span class="pl-smi">mutableModule</span>, <span class="pl-v">reInit</span> <span class="pl-k">=</span> <span class="pl-c1">FALSE</span>)
+  set(<span class="pl-c1">1</span>)
+})
+<span class="pl-smi">mutableModule</span><span class="pl-k">$</span>get()</pre></div>
+
+<pre><code>## [1] 1
+</code></pre>
+
+<div class="highlight highlight-source-r"><pre><span class="pl-smi">complectModule</span><span class="pl-k">$</span>get()</pre></div>
+
+<pre><code>## [1] 1
+</code></pre>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/wahani/modules">Modules in R</a> is maintained by <a href="https://github.com/wahani">wahani</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
