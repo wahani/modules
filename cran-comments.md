@@ -1,9 +1,7 @@
-This is a maintenance update for compatibility reasons with the package testthat.
-
 ## Test environments
-* ubuntu (on travis-ci), R 3.2.4
+* ubuntu (on travis-ci)
 * win-builder
-* local ubuntu 14.10, R 3.2.4
+* local ubuntu 16.04, R 3.3.2
 
 ## R CMD check results
 There were no ERRORs or WARNINGs
@@ -21,4 +19,5 @@ File 'LICENSE':
 
 
 ## Downstream dependencies
-To the best of my knowledge there are none
+There is one package, saeRobust, for which I am the maintainer. There are no
+conflicts with this version.
