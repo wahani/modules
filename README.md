@@ -4,10 +4,7 @@
 ![Downloads](http://cranlogs.r-pkg.org/badges/modules)
 # Modules in R
 
-Provides modules as an organizational unit for source code. Modules
-enforce to be more rigorous when defining dependencies and have
-a local search path. They can be used as a sub unit within packages
-or in scripts.
+Provides modules as an organizational unit for source code. Modules enforce to be more rigorous when defining dependencies and have a local search path. They can be used as a sub unit within packages or in scripts.
 
 ## Installation
 
@@ -302,7 +299,7 @@ documentation of modules which is to use comments:
 
 
 ```r
-m <- module({
+module({
   fun <- function(x) {
     ## A function for illustrating documentation
     ## x (numeric)
@@ -311,23 +308,8 @@ m <- module({
 })
 ```
 
-There are print methods for modules and functions within modules:
-
-
-```r
-m
-```
-
 ```
 ## fun:
-## function(x)
-```
-
-```r
-m$fun
-```
-
-```
 ## function(x)
 ## ## A function for illustrating documentation
 ## ## x (numeric)

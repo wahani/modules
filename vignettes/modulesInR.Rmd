@@ -241,20 +241,13 @@ package. However, there are some simple things you can do for ad-hoc
 documentation of modules which is to use comments:
 
 ```{r}
-m <- module({
+module({
   fun <- function(x) {
     ## A function for illustrating documentation
     ## x (numeric)
     x
   }
 })
-```
-
-There are print methods for modules and functions within modules:
-
-```{r}
-m
-m$fun
 ```
 
 
