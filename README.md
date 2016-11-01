@@ -4,7 +4,10 @@
 ![Downloads](http://cranlogs.r-pkg.org/badges/modules)
 # Modules in R
 
-Provides modules as an organizational unit for source code. Modules enforce to be more rigorous when defining dependencies and have a local search path. They can be used as a sub unit within packages or in scripts.
+Provides modules as an organizational unit for source code. Modules
+enforce to be more rigorous when defining dependencies and have
+a local search path. They can be used as a sub unit within packages
+or in scripts.
 
 ## Installation
 
