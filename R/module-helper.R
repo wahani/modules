@@ -12,8 +12,6 @@ deleteQuotes <- function(x) {
   gsub("\\\"|\\\'", "", x)
 }
 
-nameExports <- function() ".__exports__"
-
 addDependency <- function(from, what, where, assignFun, name) {
   # add new dependencies to an existing search path
 

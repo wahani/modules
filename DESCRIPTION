@@ -30,6 +30,8 @@ RoxygenNote: 5.0.1
 Collate:
     'NAMESPACE.R'
     'getSearchPath.R'
+    'class.R'
+    'export.R'
     'module-class.R'
     'module-coercion.R'
     'module-helper.R'

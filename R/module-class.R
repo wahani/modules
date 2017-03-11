@@ -18,7 +18,7 @@ ModuleScope <- function(parent = ModuleParent()) {
   # Here are also the flags. Because of imports it might be hard to find the
   # original name-value for the exports. And to avoid multiple copies it is
   # directly in the module env. The value can be changed by 'expose'.
-  assign(nameExports(), "^*", envir = obj)
+  assign(exportNameWithinModule(), "^*", envir = obj)
   obj
 }
 
@@ -31,16 +31,11 @@ ModuleConst <- function(expr, topEncl) {
     module
   }
 
-  getExports <- function(module) {
-    exports <- get(nameExports(), envir = module)
-    if (length(exports) == 1 && grepl("^\\^", exports)) ls(module, pattern = exports)
-    else exports
-  }
-
-  addModuleConst <- function(module) {
-    # This adds the moduleConst as an attribute to give each new module the
-    # possibility to create new instances.
-    attr(module, "moduleConst") <- moduleConst
+  addMetaData <- function(module) {
+    # This adds attributes to give each new module the necessary
+    # information to construct a sibling
+    attr(module, "expr") <- expr
+    attr(module, "topEncl") <- topEncl
     module
   }
 
@@ -48,12 +43,12 @@ ModuleConst <- function(expr, topEncl) {
     
     module <- ModuleScope(parent = ModuleParent(topEncl))
     module <- evalInModule(module, expr)
-    module <- retList("module", public = getExports(module), envir = module)
-    addModuleConst(module)
+    module <- exportExtract2List(module, exportResolveFinalValue(module))
+    module <- class(module, "module")
+    addMetaData(module)
 
   }
 
-  moduleConst <- retList("ModuleConst", "new")
-  moduleConst
+  retList("ModuleConst", "new")
 
 }

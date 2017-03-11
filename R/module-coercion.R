@@ -25,7 +25,6 @@ as.module.default <- function(x, ...) {
   as.list(x)
 }
 
-
 #' @export
 #' @rdname modulecoerce
 as.module.character <- function(x, topEncl = baseenv(), reInit = TRUE, ...) {
@@ -52,7 +51,8 @@ as.module.character <- function(x, topEncl = baseenv(), reInit = TRUE, ...) {
 #' @rdname modulecoerce
 as.module.module <- function(x, reInit = TRUE, ...) {
   if (reInit) {
-    attr(x, "moduleConst")$new()
+    moduleConst <- ModuleConst(attr(x, "expr"), attr(x, "topEncl"))
+    moduleConst$new()
   } else {
     x
   }

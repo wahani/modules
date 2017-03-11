@@ -77,8 +77,8 @@
 #' @export
 module <- function(expr = {}, topEncl = autoTopEncl(parent.frame())) {
 
-  moduleConstructor <- ModuleConst(match.call()$expr, topEncl)
-  moduleConstructor$new()
+  moduleConst <- ModuleConst(match.call()$expr, topEncl)
+  moduleConst$new()
 
 }
 
@@ -209,19 +209,9 @@ expose <- function(module, ..., reInit = TRUE, where = parent.frame()) {
 
 #' @export
 #' @rdname module
-export <- function(..., where = parent.frame()) {
-  objectsToExport <- deparseEllipsis(match.call(), "where")
-  currentExports <- get(nameExports(), envir = where)
-  currentExports <- currentExports[currentExports != "^*"]
-  assign(nameExports(), c(currentExports, objectsToExport), envir = where)
-  invisible(NULL)
-}
-
-#' @export
-#' @rdname module
 autoTopEncl <- function(where) {
   # if .__exports__ exists I assume it is a nested module:
-  if (exists(nameExports(), where = where)) where
+  if (exists(exportNameWithinModule(), where = where)) where
   else if (identical(topenv(where), globalenv())) baseenv()
   else where
 }
