@@ -14,10 +14,16 @@ deleteQuotes <- function(x) {
 
 addDependency <- function(from, what, where, assignFun, name) {
   # add new dependencies to an existing search path
+  #
+  # from (list | env | pkg) a collection which is subset-able with [
+  # what (character) names of values in from
+  # where (environment) where the search path begins
+  # assignFun (function) how to put 'from::what' 'into' 
+  # name (character) the name on the search path
 
   addPrefix <- function(name) paste0("modules:", name)
 
-  addDependencyLayer <- function(where, from, name) {
+  addDependencyLayer <- function(where, name) {
     parentOfWhere <- parent.env(where)
     newParent <- new.env(parent = parentOfWhere)
     attr(newParent, "name") <- addPrefix(name)
@@ -26,19 +32,19 @@ addDependency <- function(from, what, where, assignFun, name) {
   }
 
   cleanSearchPath <- function(where, name) {
-
     sp <- getSearchPath(where)
-    pos <- Position(function(el) identical(el, addPrefix(name)), lapply(sp, attr, "name"))
-
+    pos <- Position(
+      function(el) identical(el, addPrefix(name)),
+      lapply(sp, attr, "name")
+    )
     if (is.na(pos)) return(NULL) # stop here
     else if (pos == 1) parent.env(where) <- sp[[2]]
     else parent.env(sp[[pos - 1]]) <- sp[[pos + 1]]
-
   }
 
   cleanSearchPath(where, name)
   # into is a reference to the (new) parent of where:
-  into <- addDependencyLayer(where, from, name)
+  into <- addDependencyLayer(where, name)
   assignFun(from, what, into)
 
 }

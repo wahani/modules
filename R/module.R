@@ -76,10 +76,8 @@
 #' @rdname module
 #' @export
 module <- function(expr = {}, topEncl = autoTopEncl(parent.frame())) {
-
   moduleConst <- ModuleConst(match.call()$expr, topEncl)
   moduleConst$new()
-
 }
 
 #' @export
@@ -129,82 +127,6 @@ print.module <- function(x, ...) {
   
   invisible(x)
   
-}
-
-#' @rdname module
-#' @export
-import <- function(from, ..., attach = TRUE, where = parent.frame()) {
-
-  deparseImports <- function(mc) {
-    args <- Map(deparse, mc)
-    args[[1]] <- NULL
-    args$from <- NULL
-    args$where <- NULL
-    args$attach <- NULL
-    args <- unlist(args)
-    deleteQuotes(args)
-  }
-
-  makeObjectsToImport <- function(mc, from) {
-    objectsToImport <- deparseImports(mc)
-    if (length(objectsToImport) == 0) getNamespaceExports(from)
-    else objectsToImport
-  }
-
-  deparseFrom <- function(mc) {
-    from <- Map(deparse, mc)$from
-    deleteQuotes(from)
-  }
-
-  isNotInstalled <- function(pkg) {
-    !is.element(pkg, installed.packages()[, "Package"])
-  }
-
-  from <- deparseFrom(match.call())
-  if (isNotInstalled(from)) stop("'package:", from, "' is not installed! Install first.")
-  if (!attach) where <- new.env()
-  objectsToImport <- makeObjectsToImport(match.call(), from)
-  addDependency(from, objectsToImport, where, makeDelayedAssignment, from)
-  invisible(parent.env(where))
-
-}
-
-#' @export
-#' @rdname module
-use <- function(module, ..., attach = FALSE, reInit = TRUE, where = parent.frame()) {
-
-  keepOnlySelection <- function(module, mc) {
-    namesToImport <- deparseEllipsis(mc, c("module", "attach", "reInit", "where"))
-    if (length(namesToImport) == 0) module
-    else module[namesToImport]
-  }
-
-  name <- if (is.character(module)) module else as.character(substitute(module))
-  module <- as.module(module, reInit = reInit)
-  module <- keepOnlySelection(module, match.call(expand.dots = TRUE))
-
-  if (attach) addDependency(
-    module,
-    names(module),
-    where,
-    makeAssignment,
-    name
-  )
-
-  invisible(module)
-
-}
-
-#' @export
-#' @rdname module
-expose <- function(module, ..., reInit = TRUE, where = parent.frame()) {
-
-  mc <- match.call(expand.dots = TRUE)
-  mc[[1]] <- quote(modules::use)
-  module <- eval(mc, where)
-
-  makeAssignment(module, names(module), where)
-  invisible(NULL)
 }
 
 #' @export

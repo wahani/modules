@@ -2,7 +2,7 @@
 #' @rdname module
 export <- function(..., where = parent.frame()) {
   objectsToExport <- deparseEllipsis(match.call(), "where")
-  currentExports <- exportGetValue(where)
+  currentExports <- exportGetCurrentValue(where)
   currentExports <- currentExports[currentExports != "^*"]
   assign(exportNameWithinModule(), c(currentExports, objectsToExport), envir = where)
   invisible(NULL)
@@ -10,17 +10,17 @@ export <- function(..., where = parent.frame()) {
 
 exportNameWithinModule <- function() ".__exports__"
 
-exportGetValue <- function(envir) {
+exportGetCurrentValue <- function(envir) {
   get(exportNameWithinModule(), envir = envir)
 }
 
 exportResolveFinalValue <- function(envir) {
   isRegEx <- function(s) length(s) == 1 && grepl("^\\^", s)
-  exports <- exportGetValue(envir)
+  exports <- exportGetCurrentValue(envir)
   if (isRegEx(exports)) ls(envir, pattern = exports)
   else exports
 }
 
-exportExtract2List <- function(envir, exports) {
-  as.list(envir)[exports]
+exportExtract2List <- function(envir) {
+  as.list(envir)[exportResolveFinalValue(envir)]
 }

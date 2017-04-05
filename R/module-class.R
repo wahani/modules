@@ -43,7 +43,7 @@ ModuleConst <- function(expr, topEncl) {
     
     module <- ModuleScope(parent = ModuleParent(topEncl))
     module <- evalInModule(module, expr)
-    module <- exportExtract2List(module, exportResolveFinalValue(module))
+    module <- exportExtract2List(module)
     module <- class(module, "module")
     addMetaData(module)
 

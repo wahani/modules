@@ -26,14 +26,17 @@ Suggests:
     lintr,
     rmarkdown,
     parallel
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1
 Collate:
     'NAMESPACE.R'
     'getSearchPath.R'
     'class.R'
     'export.R'
+    'expose.R'
+    'import.R'
     'module-class.R'
     'module-coercion.R'
     'module-helper.R'
     'module.R'
+    'use.R'
 VignetteBuilder: knitr

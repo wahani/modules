@@ -14,3 +14,11 @@ text <- c(
 
 writeLines(text, "README.md")
 
+## TODO
+
+## - import
+##     - warning if duplicates on search path
+## - export
+##     - error if objects are unavailable for export
+## - extend(module, with = { ... })
+## - class(x, of) -- if missing(of) -> base::class

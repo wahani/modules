@@ -32,4 +32,3 @@ Interfaces to and from modules.
 vignette("modulesInR", "modules")
 }
 }
-
