@@ -1,12 +1,12 @@
 #' Define Modules in R
 #'
-#' Use \code{module} to define self contained organizational units. Modules have
+#' Use \code{module} to define self contained organisational units. Modules have
 #' their own search path. \code{import} can be used to import packages.
 #' \code{use} can be used to import other modules. Use \code{export} to define
 #' which objects to export. \code{expose} can be used to reuse function
 #' definitions from another module.
 #'
-#' @param expr an expression
+#' @param expr,with an expression
 #' @param topEncl (environment) the root of the local search path. It is tried
 #'   to find a good default via \link{autoTopEncl}.
 #' @param from (character, or unquoted expression) a package name
@@ -26,7 +26,7 @@
 #' \code{topEncl} is the environment where the search of the module ends.
 #' \code{autoTopEncl} handles the different situations. In general it defaults
 #' to the base environment or the environment from which \code{module} has been
-#' called. If you are using \code{use} or \code{expose} refering to a module in
+#' called. If you are using \code{use} or \code{expose} referring to a module in
 #' a file, it will always be the base environment. When
 #' \code{identical(topenv(parent.frame()), globalenv())} is false it (most
 #' likely) means that the module is part of a package. In that case the module
@@ -45,6 +45,11 @@
 #' \code{expose} is similar to \code{use} but instead of attaching a module it
 #' will copy all elements into the calling environment. This means that
 #' \emph{exposed} functions can be (re-)exported.
+#'
+#' \code{extend} can be used to extend an existing module definition. This
+#' feature is meant to be used by a module author to split a module definition
+#' into different files. You can also refer to a folder name in \code{use} which
+#' is interpreted to use all files as sub-modules.
 #'
 #' @examples
 #' \dontrun{
@@ -76,8 +81,7 @@
 #' @rdname module
 #' @export
 module <- function(expr = {}, topEncl = autoTopEncl(parent.frame())) {
-  moduleConst <- ModuleConst(match.call()$expr, topEncl)
-  moduleConst$new()
+  ModuleConst(match.call()$expr, topEncl)
 }
 
 #' @export

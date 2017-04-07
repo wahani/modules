@@ -1,3 +1,6 @@
+Version 0.5.1
+- New function: extend, can be used to extend an existing module definition.
+
 Version 0.5.0
 - CRAN release
 

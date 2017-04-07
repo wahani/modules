@@ -22,3 +22,17 @@ writeLines(text, "README.md")
 ##     - error if objects are unavailable for export
 ## - extend(module, with = { ... })
 ## - class(x, of) -- if missing(of) -> base::class
+
+
+m <- modules::module({
+  fun <- identity
+})
+
+
+m2 <- extend(extend(m, {
+  fun1 <- function() 1
+}), {
+  fun2 <- function() 2
+})
+
+attr(m2, "expr")
