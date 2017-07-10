@@ -92,9 +92,9 @@ Or you can use `import` for *attaching* single objects or packages and `use` for
 
 ```r
 m <- module({
- 
+
   import("stats", "median") # make median from package stats available
-  
+
   functionWithDep <- function(x) median(x)
 
 })
@@ -108,9 +108,9 @@ m$functionWithDep(1:10)
 
 ```r
 m <- module({
-  
+
   import("stats")
-  
+
   functionWithDep <- function(x) median(x)
 
 })
@@ -130,15 +130,15 @@ expressions which are indicated by a leading '^'.
 
 ```r
 m <- module({
-  
+
   export("fun")
 
   fun <- identity # public
   privateFunction <- identity
-  
+
   # .named are always private
   .privateFunction <- identity
-  
+
 })
 
 names(m)
@@ -276,14 +276,14 @@ children:
 
 ```r
 m <- module({
-  
+
   import("stats", "median")
   import("modules", "module")
-  
+
   anotherModule <- module({
     fun <- function(x) median(x)
   })
-  
+
 })
 
 m$anotherModule$fun(1:2)
@@ -291,6 +291,30 @@ m$anotherModule$fun(1:2)
 
 ```
 ## [1] 1.5
+```
+
+
+# Parameterized Modules
+
+Sometimes it can be useful to pass arguments to a module. If you have a
+background in object oriented programming you may find this natural. From a
+functional perspective we define parameters shared by a list of closures. This
+is achieved by making the enclosing environment of the module available to the
+module itself. Note that inside a package this would be the default behaviour.
+
+
+```r
+m <- function(param) {
+  module(topEncl = environment(), {
+    fun <- function() param
+  })
+}
+
+m(1)$fun()
+```
+
+```
+## [1] 1
 ```
 
 
@@ -319,6 +343,7 @@ module({
 ```
 
 
+
 # Modules in Packages
 
 You can use modules inside packages in the same way as illustrated above. When a
@@ -335,7 +360,7 @@ not rely on modules in files and load them with `use`!
 
 ## S3
 
-S3 method dispatch can be problamatic because of the special search mechanism of
+S3 method dispatch can be problematic because of the special search mechanism of
 `UseMethod`. What will work, however, is wrapping the generic function in a
 wrapper function.
 
