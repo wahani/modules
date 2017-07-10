@@ -86,7 +86,7 @@ module <- function(expr = {}, topEncl = autoTopEncl(parent.frame())) {
 
 #' @export
 print.module <- function(x, ...) {
-  
+
   getFormals <- function(fun) {
     formalsOfFun <- formals(fun)
     formalsOfFun[sapply(formalsOfFun, is.character)] <-
@@ -116,7 +116,7 @@ print.module <- function(x, ...) {
       cat("\n", sep = "")
     }
   }
-  
+
   catRemaining <- function(remaining) {
     for (i in seq_along(remaining)) {
       cat(paste0(names(remaining)[i], ":\n"))
@@ -128,9 +128,9 @@ print.module <- function(x, ...) {
   ind <- vapply(x, is.function, logical(1))
   catFuns(x[ind])
   catRemaining(x[!ind])
-  
+
   invisible(x)
-  
+
 }
 
 #' @export

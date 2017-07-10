@@ -1,3 +1,6 @@
+Version 0.5.2
+- Update documentation for parameterized modules.
+
 Version 0.5.1
 - New function: extend, can be used to extend an existing module definition.
 

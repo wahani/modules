@@ -1,14 +1,14 @@
 ModuleParent <- function(parent = baseenv()) {
-
   obj <- new.env(parent = parent)
-
+  # The following objects are made available by default. They can be masked by
+  # other imports.
   makeDelayedAssignment("modules", "import", into = obj)
   makeDelayedAssignment("modules", "use", into = obj)
   makeDelayedAssignment("modules", "expose", into = obj)
   makeDelayedAssignment("modules", "export", into = obj)
   
   obj
-  
+
 }
 
 ModuleScope <- function(parent = ModuleParent()) {
@@ -16,15 +16,12 @@ ModuleScope <- function(parent = ModuleParent()) {
   # module
   obj <- new.env(parent = parent)
   # Here are also the flags. Because of imports it might be hard to find the
-  # original name-value for the exports. And to avoid multiple copies it is
-  # directly in the module env. The value can be changed by 'expose'.
+  # original name-value for the exports.
   assign(exportNameWithinModule(), "^*", envir = obj)
   obj
 }
 
 ModuleConst <- function(expr, topEncl) {
-  # expr
-  # topEncl: environment
 
   evalInModule <- function(module, code) {
     eval(code, envir = as.environment(module), enclos = emptyenv())
