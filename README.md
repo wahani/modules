@@ -21,7 +21,7 @@ From GitHub:
 
 
 ```r
-devtools::install_github("wahani/modules")
+if (require("devtools")) install_github("wahani/modules")
 ```
 
 # Introduction

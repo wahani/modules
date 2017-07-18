@@ -159,7 +159,7 @@ test_that("package dependencies", {
 })
 
 test_that("cross package deps", {
-
+  if (require("disposables")) {
   disposables::make_packages(
 
     imports = "modules",
@@ -192,7 +192,7 @@ test_that("cross package deps", {
   expect_equal(
     environmentName(parent.env(parent.env(environment(m1$fun)))),
     "base"
-  )
+  )}
 
 })
 
