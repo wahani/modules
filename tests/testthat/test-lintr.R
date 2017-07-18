@@ -1,5 +1,5 @@
 test_that("Package Style", {
-  if (require("lintr")) {
+  if (requireNamespace("lintr", quietly = TRUE)) {
     lintr::expect_lint_free(linters = list(
       a = lintr::assignment_linter,
       b = lintr::commas_linter,
@@ -10,6 +10,6 @@ test_that("Package Style", {
       ## g = lintr::snake_case_linter, # detects only testthat functions
       h = lintr::object_length_linter(),
       i = lintr::spaces_left_parentheses_linter
-    ))
+   ))
  }
 })

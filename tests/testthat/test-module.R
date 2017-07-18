@@ -159,7 +159,7 @@ test_that("package dependencies", {
 })
 
 test_that("cross package deps", {
-  if (require("disposables")) {
+  if (requireNamespace("disposables", quietly = TRUE)) {
   disposables::make_packages(
 
     imports = "modules",

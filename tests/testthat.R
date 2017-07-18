@@ -1,4 +1,3 @@
-library(testthat)
-library(modules)
+library("modules")
 
-test_check("modules")
+if (requireNamespace("testthat", quietly = TRUE)) testthat::test_check("modules")
