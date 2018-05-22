@@ -21,3 +21,25 @@ writeLines(text, "README.md")
 ## - export
 ##     - error if objects are unavailable for export
 
+
+library("modules")
+library("parallel")
+m <- module({
+  import("base", "identity")
+  identity
+  fun <- function(x) {
+    identity(x)
+  }
+})
+
+modules::getSearchPath(environment(m$fun)) # this setup is slow
+##parent.env(parent.env(environment(m$fun))) <- baseenv() # now it is fast
+
+system.time({
+  cl <- makeCluster(2)
+  clusterMap(cl, m$fun, 1:100)
+  stopCluster(cl)
+})
+
+
+
