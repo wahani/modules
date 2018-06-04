@@ -18,8 +18,18 @@ writeLines(text, "README.md")
 
 ## - import
 ##     - warning if duplicates on search path
+##     - stop if package not installed
 ## - export
 ##     - error if objects are unavailable for export
+## - depend
+##     - like import, but with install or update of package
+##     - make it possible to depend on elements in surrounding env, e.g. global
+##       or topenv()
+## - object
+##     - inherits from module
+##     - always has baseenv as toplevel by default
+##     - use surrounding env as first dependency layer (function)
+##     - has a class to be consistent
 
 
 library("modules")
@@ -32,7 +42,15 @@ m <- module({
   }
 })
 
+mfun <- local(envir = new.env(parent = baseenv()), {
+  modules::import("base", "identity")
+  function(x) {
+    base::identity(x)
+  }
+})
+
 modules::getSearchPath(environment(m$fun)) # this setup is slow
+modules::getSearchPath(environment(mfun)) # this setup is slow
 ##parent.env(parent.env(environment(m$fun))) <- baseenv() # now it is fast
 
 system.time({
@@ -41,5 +59,14 @@ system.time({
   stopCluster(cl)
 })
 
+system.time({
+  cl <- makeCluster(2)
+  clusterMap(cl, mfun, 1:100)
+  stopCluster(cl)
+})
 
-
+system.time({
+  cl <- makeCluster(2)
+  clusterMap(cl, identity, 1:100)
+  stopCluster(cl)
+})
