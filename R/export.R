@@ -4,7 +4,8 @@ export <- function(..., where = parent.frame()) {
   objectsToExport <- deparseEllipsis(match.call(), "where")
   currentExports <- exportGetCurrentValue(where)
   currentExports <- currentExports[currentExports != "^*"]
-  assign(exportNameWithinModule(), c(currentExports, objectsToExport), envir = where)
+  assign(exportNameWithinModule(), c(currentExports, objectsToExport),
+         envir = where)
   invisible(NULL)
 }
 
@@ -22,5 +23,14 @@ exportResolveFinalValue <- function(envir) {
 }
 
 exportExtract2List <- function(envir) {
-  as.list(envir)[exportResolveFinalValue(envir)]
+  objectsToExport <- exportResolveFinalValue(envir)
+  module <- as.list(envir)
+  if (any(ind <- !objectsToExport %in% names(module))) {
+    stop(
+      "exports not defined: ",
+      paste(objectsToExport[ind], collapse = ", ")
+    )
+  } else {
+    module[objectsToExport]
+  }
 }

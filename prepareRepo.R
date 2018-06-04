@@ -18,9 +18,6 @@ writeLines(text, "README.md")
 
 ## - import
 ##     - warning if duplicates on search path
-##     - stop if package not installed
-## - export
-##     - error if objects are unavailable for export
 ## - depend
 ##     - like import, but with install or update of package
 ##     - make it possible to depend on elements in surrounding env, e.g. global
