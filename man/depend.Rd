@@ -2,9 +2,12 @@
 % Please edit documentation in R/depend.R
 \name{depend}
 \alias{depend}
+\alias{depend.default}
 \title{Declare dependencies of modules}
 \usage{
 depend(on, ...)
+
+\method{depend}{default}(on, version = "any", libPath = NULL, ...)
 }
 \arguments{
 \item{on}{(character) a package name}

@@ -1,6 +1,6 @@
 #' Declare dependencies of modules
 #'
-#' This function will check for a dependency and will try to make it available
+#' This function will check for a dependency and tries to make it available
 #' if it is not. This is a generic function. Currently only a default method
 #' exists which assumes a package name as argument. If a package is not
 #' installed \code{depend} tries to install it.
@@ -23,6 +23,7 @@
 #' depend("modules", "0.6.0")
 depend <- function(on, ...) UseMethod("depend")
 
+#' @rdname depend
 #' @export
 depend.default <- function(on, version = "any", libPath = NULL, ...) {
 
