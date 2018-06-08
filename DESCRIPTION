@@ -1,6 +1,6 @@
 Package: modules
 Title: Self Contained Units of Source Code
-Version: 0.6.1
+Version: 0.6.2
 Authors@R: person("Sebastian", "Warnholz", email = "wahani@gmail.com", role = c("aut", "cre"))
 Description: Provides modules as an organizational unit for source code. Modules
     enforce to be more rigorous when defining dependencies and have
@@ -30,6 +30,7 @@ Collate:
     'NAMESPACE.R'
     'getSearchPath.R'
     'class.R'
+    'depend.R'
     'export.R'
     'expose.R'
     'extend.R'
