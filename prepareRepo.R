@@ -25,8 +25,8 @@ writeLines(text, "README.md")
 ##     - has a class to be consistent
 
 amodule <- function(expr = {},
-                   envir = parent.frame(), enclos = baseenv(),
-                   class = as.character(sys.call(1)[[1]])) {
+                    envir = parent.frame(), enclos = baseenv(),
+                    class = as.character(sys.call(1)[[1]])) {
   mc <- match.call()
   mc[[1]] <- quote(modules::module)
   mc$envir <- NULL
@@ -37,6 +37,15 @@ amodule <- function(expr = {},
   class(obj) <- c(class, "module", "list")
   obj
 }
+
+f <- identity
+tmp <- function() {
+  amodule({
+    tmp <- f
+  })
+}
+
+tmp()$tmp
 
 y <- 2
 

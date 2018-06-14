@@ -48,10 +48,8 @@ depend.default <- function(on, version = "any", libPath = NULL, ...) {
 
   if (needsUpdate(on)) install.packages(on, lib = libPath, ...)
   if (needsUpdate(on)) # check if we now have the correct version
-    stop("'", on, "' package version ", version, " not found!")
+    stop("'", on, "' package installation failed for version ", version)
 
   invisible(TRUE)
 
 }
-
-
