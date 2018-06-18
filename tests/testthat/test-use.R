@@ -4,7 +4,7 @@ test_that("Attaching other module", {
     testthat::expect_equal(a, b)
   }
 
-  m1 <- module({
+  m1 <- modules::module({
 
     import(modules, module)
 
@@ -50,3 +50,37 @@ test_that("file as module", {
 
 })
 
+test_that("use finds object in global scope", {
+  assign("m", list(f = identity), envir = topenv())
+  tmp <- function() {
+    module(topEncl = baseenv(), {
+      lm <- use(m)
+      tmp1 <- function() topenv()
+      tmp2 <- function() exists("m")
+      tmp3 <- function(x) lm$f(x)
+    })
+  }
+
+  t <- tmp()
+  testthat::expect_true(identical(t$tmp1(), baseenv()))
+  testthat::expect_false(t$tmp2())
+  testthat::expect_true(identical(t$lm$f, identity))
+  rm(list = "m", envir = topenv())
+})
+
+test_that("use finds object in global scope", {
+  m <- modules::module(topEncl = baseenv(), {
+    error <- try(use(xyz), silent = TRUE)
+  })
+  testthat::expect_is(m$error, "try-error")
+  testthat::expect_true(grepl("Error in use\\(module = xyz\\)", m$error))
+})
+
+test_that("Expose and use are working with package scope", {
+  m <- modules:::TestModule2()
+  testthat::expect_identical(m$foo, identity)
+  testthat::expect_identical(m$b, c)
+  testthat::expect_identical(m$c, 3)
+  testthat::expect_identical(m$tm1$b, 3)
+  testthat::expect_identical(m$tm1$foo, identity)
+})

@@ -40,4 +40,5 @@ Collate:
     'module-helper.R'
     'module.R'
     'use.R'
+    'zzz.R'
 VignetteBuilder: knitr

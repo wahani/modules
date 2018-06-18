@@ -19,7 +19,7 @@ extend(module, with)
 
 import(from, ..., attach = TRUE, where = parent.frame())
 
-module(expr = { }, topEncl = autoTopEncl(parent.frame()))
+module(expr = { }, topEncl = autoTopEncl(envir), envir = parent.frame())
 
 autoTopEncl(where)
 

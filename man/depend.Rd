@@ -24,7 +24,7 @@ packages are installed)}
   dependency can not be installed and is not available.
 }
 \description{
-This function will check for a dependency and will try to make it available
+This function will check for a dependency and tries to make it available
 if it is not. This is a generic function. Currently only a default method
 exists which assumes a package name as argument. If a package is not
 installed \code{depend} tries to install it.

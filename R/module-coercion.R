@@ -26,8 +26,15 @@ as.module.default <- function(x, ...) {
 }
 
 #' @export
+as.module.function <- function(x, ...) {
+  x
+}
+
+
+#' @export
 #' @rdname modulecoerce
-as.module.character <- function(x, topEncl = baseenv(), reInit = TRUE, ...) {
+as.module.character <- function(x, topEncl = baseenv(), reInit = TRUE, ...,
+                                envir = parent.frame()) {
   stopifnot(length(x) == 1)
 
   dirAsModule <- function(x, topEncl, ...) {
@@ -38,18 +45,18 @@ as.module.character <- function(x, topEncl = baseenv(), reInit = TRUE, ...) {
   }
 
   fileAsModule <- function(x, topEncl, ...) {
-    do.call(module, list(parse(x, ...), topEncl))
+    do.call(module, list(parse(x, ...), topEncl, envir))
   }
 
   if (dir.exists(x)) dirAsModule(x, topEncl, ...)
   else if (file.exists(x)) fileAsModule(x, topEncl, ...)
   else stop("Can`t find ", x)
-  
+
 }
 
 #' @export
 #' @rdname modulecoerce
 as.module.module <- function(x, reInit = TRUE, ...) {
-  if (reInit) ModuleConst(attr(x, "expr"), attr(x, "topEncl"))
+  if (reInit) ModuleConst(attr(x, "expr"), attr(x, "topEncl"), attr(x, "topenv"))
   else x
 }

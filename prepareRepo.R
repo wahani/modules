@@ -24,40 +24,6 @@ writeLines(text, "README.md")
 ##     - use surrounding env as first dependency layer (function)
 ##     - has a class to be consistent
 
-amodule <- function(expr = {},
-                    envir = parent.frame(), enclos = baseenv(),
-                    class = as.character(sys.call(1)[[1]])) {
-  mc <- match.call()
-  mc[[1]] <- quote(modules::module)
-  mc$envir <- NULL
-  mc$class <- NULL
-  mc$topEncl <- quote(topEncl)
-  topEncl <- list2env(as.list(envir), parent = enclos)
-  obj <- eval(mc)
-  class(obj) <- c(class, "module", "list")
-  obj
-}
-
-f <- identity
-tmp <- function() {
-  amodule({
-    tmp <- f
-  })
-}
-
-tmp()$tmp
-
-y <- 2
-
-Object <- function(y) {
-  object({
-    test <- function(x) y
-  })
-}
-
-o <- Object(5)
-o$test()
-str(o)
 
 
 library("modules")
