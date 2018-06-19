@@ -48,6 +48,10 @@ is passed to \link{as.module}.}
 
 \item{topEncl}{(environment) the root of the local search path. It is tried
 to find a good default via \link{autoTopEncl}.}
+
+\item{envir}{(environment) the environment from where \code{module} is
+called. Used to determine the top level environment and should not be
+supplied by the use.}
 }
 \description{
 Use \code{module} to define self contained organisational units. Modules have

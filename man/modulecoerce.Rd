@@ -8,7 +8,8 @@
 \usage{
 as.module(x, ...)
 
-\method{as.module}{character}(x, topEncl = baseenv(), reInit = TRUE, ...)
+\method{as.module}{character}(x, topEncl = baseenv(), reInit = TRUE, ...,
+  envir = parent.frame())
 
 \method{as.module}{module}(x, reInit = TRUE, ...)
 }
@@ -22,6 +23,10 @@ interpreted as file / folder names.}
 to find a good default via \link{autoTopEncl}.}
 
 \item{reInit}{(logical) if a module should be re-initialized}
+
+\item{envir}{(environment) the environment from where \code{module} is
+called. Used to determine the top level environment and should not be
+supplied by the use.}
 }
 \description{
 Interfaces to and from modules.
