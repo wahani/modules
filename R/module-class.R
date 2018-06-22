@@ -7,9 +7,7 @@ ModuleParent <- function(parent = baseenv()) {
   makeDelayedAssignment("modules", "import", into = obj)
   makeDelayedAssignment("modules", "use", into = obj)
   makeDelayedAssignment("modules", "depend", into = obj)
-
   obj
-
 }
 
 ModuleScope <- function(parent = ModuleParent(), topenv) {

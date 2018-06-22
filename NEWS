@@ -2,6 +2,8 @@ Version 0.7.0
 - CRAN release
 - New function 'depend' to declare package dependencies
 - Throw error when names are exported which are not available
+- New function 'amodule' aka module2 -> improved scoping of modules and
+  dependency injection
 
 Version 0.6.0
 - CRAN release

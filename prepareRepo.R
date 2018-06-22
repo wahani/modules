@@ -24,8 +24,6 @@ writeLines(text, "README.md")
 ##     - use surrounding env as first dependency layer (function)
 ##     - has a class to be consistent
 
-
-
 library("modules")
 library("parallel")
 m <- module({

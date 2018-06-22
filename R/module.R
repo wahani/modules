@@ -50,9 +50,11 @@
 #' \emph{exposed} functions can be (re-)exported.
 #'
 #' \code{extend} can be used to extend an existing module definition. This
-#' feature is meant to be used by a module author to split a module definition
-#' into different files. You can also refer to a folder name in \code{use} which
-#' is interpreted to use all files as sub-modules.
+#'   feature is meant to be used by a module author. This can be very useful to
+#'   write unit tests when they need to have access to private member functions
+#'   of the module. It is not safe as a consumer or user of a module to use this
+#'   feature as it breaks encapsulation. When you are looking for mechanisms for
+#'   reuse, \code{expose} and \code{use} should be favoured.
 #'
 #' @examples
 #' \dontrun{

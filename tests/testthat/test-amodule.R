@@ -1,4 +1,4 @@
-testthat::test_that("Construcors for parameterized modules", {
+testthat::test_that("Constructors for augmented modules", {
   dep <- oldDep <- 1
   moduleConst <- function(dep) {
     modules::module(topEncl = environment(), {
@@ -18,20 +18,6 @@ testthat::test_that("Construcors for parameterized modules", {
 })
 
 testthat::test_that("Scoping of parameterized module", {
-
-  amodule <- function(expr = {},
-                      envir = parent.frame(), enclos = baseenv(),
-                      class = as.character(sys.call(1)[[1]])) {
-    mc <- match.call()
-    mc[[1]] <- quote(modules::module)
-    mc$class <- NULL
-    mc$topEncl <- quote(topEncl)
-    mc$envir <- quote(envir)
-    topEncl <- list2env(as.list(envir), parent = enclos)
-    obj <- eval(mc)
-    class(obj) <- c(class, "module", "list")
-    obj
-  }
 
   dep <- oldDep <- 1
   moduleConst <- function(dep) {
