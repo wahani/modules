@@ -41,5 +41,5 @@ Collate:
     'module-helper.R'
     'module.R'
     'use.R'
-    'zzz.R'
+    'testModule.R'
 VignetteBuilder: knitr
