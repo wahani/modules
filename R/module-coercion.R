@@ -48,8 +48,16 @@ as.module.character <- function(x, topEncl = baseenv(), reInit = TRUE, ...,
     do.call(module, list(parse(x, ...), topEncl, envir))
   }
 
+  urlAsModule <- function(x, topEncl, ...) {
+    download.file(x, fileName <- tempfile(fileext = ".R"))
+    fileAsModule(fileName, topEncl, ...)
+  }
+
+  is.url <- function(x) grepl("^(https?|ftp)://", x)
+
   if (dir.exists(x)) dirAsModule(x, topEncl, ...)
   else if (file.exists(x)) fileAsModule(x, topEncl, ...)
+  else if (is.url(x)) urlAsModule(x, topEncl, ...)
   else stop("Can`t find ", x)
 
 }

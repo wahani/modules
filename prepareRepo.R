@@ -18,11 +18,6 @@ writeLines(text, "README.md")
 
 ## - import
 ##     - warning if duplicates on search path
-## - pmodule
-##     - inherits from module
-##     - always has baseenv as toplevel by default
-##     - use surrounding env as first dependency layer (function)
-##     - has a class to be consistent
 
 library("modules")
 library("parallel")

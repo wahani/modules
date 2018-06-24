@@ -5,6 +5,7 @@ Version 0.7.0
 - New function 'amodule' aka module2 -> improved scoping of modules and
   dependency injection
 - The function 'use' will now find symbols defined in a top level environment
+- The function 'use' can now also handle URLs
 
 Version 0.6.0
 - CRAN release
