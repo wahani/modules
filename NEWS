@@ -4,6 +4,7 @@ Version 0.7.0
 - Throw error when names are exported which are not available
 - New function 'amodule' aka module2 -> improved scoping of modules and
   dependency injection
+- The function 'use' will now find symbols defined in a top level environment
 
 Version 0.6.0
 - CRAN release
