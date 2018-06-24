@@ -84,3 +84,12 @@ test_that("Expose and use are working with package scope", {
   testthat::expect_identical(m$tm1$b, 3)
   testthat::expect_identical(m$tm1$foo, identity)
 })
+
+test_that("download of module works", {
+  testthat::skip_on_cran()
+  m <- use(
+    "https://raw.githubusercontent.com/wahani/modules/master/tests/testModule.R"
+  )
+  testthat::expect_identical(m$fun, identity)
+})
+
