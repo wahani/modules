@@ -1,6 +1,6 @@
 testthat::test_that("Packages are installed", {
   testthat::skip_on_cran()
-  utils::remove.packages("disposables")
+  try(utils::remove.packages("disposables"))
   modules::depend("disposables", "1.0.3", repos = "https://cloud.r-project.org")
   testthat::expect_true(require("disposables"))
 })
