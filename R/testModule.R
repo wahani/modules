@@ -1,3 +1,5 @@
+# File with test modules to test scoping inside a package.
+
 TestModule1 <- function(a) module({
   foo <- identity
   b <- a
