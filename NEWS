@@ -1,3 +1,9 @@
+Version 0.8.0
+- Update to documentation
+- Bugfix: find 'module' inside a module declaration
+- New function 'getSearchPathContent' to investigate the search path of a module
+- getSearchPath can now handles functions and modules as argment
+
 Version 0.7.0
 - CRAN release
 - New function 'depend' to declare package dependencies

@@ -3,14 +3,18 @@
 \name{getSearchPath}
 \alias{getSearchPath}
 \alias{getSearchPathNames}
+\alias{getSearchPathContent}
 \title{Get the search path of an environment}
 \usage{
 getSearchPath(where = parent.frame())
 
 getSearchPathNames(where = parent.frame())
+
+getSearchPathContent(where = parent.frame())
 }
 \arguments{
-\item{where}{(environment)}
+\item{where}{(environment | module | function) the object for the search path
+should be investigated.}
 }
 \description{
 Returns a list with the environments or names of the environments on the
@@ -19,5 +23,15 @@ search path. These functions are used for testing, use \link{search} instead.
 \examples{
 getSearchPath()
 getSearchPathNames()
+getSearchPathContent()
+
+m <- module({
+  export("foo")
+  import("stats", "median")
+  foo <- function() "foo"
+  bar <- function() "bar"
+})
+
+getSearchPathContent(m)
 
 }

@@ -1,4 +1,5 @@
-#' @importFrom utils installed.packages str
+#' @importFrom utils download.file install.packages installed.packages
+#'   packageVersion str
 NULL
 
 retList <- function(class = NULL, public = ls(envir), super = list(), envir = parent.frame()) {

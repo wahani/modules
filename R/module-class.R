@@ -1,12 +1,14 @@
 ModuleParent <- function(parent = baseenv()) {
   obj <- new.env(parent = parent)
+  attr(obj, "name") <- "modules:internals"
   # The following objects are made available by default. They can be masked by
   # other imports.
+  makeDelayedAssignment("modules", "depend", into = obj)
   makeDelayedAssignment("modules", "export", into = obj)
   makeDelayedAssignment("modules", "expose", into = obj)
   makeDelayedAssignment("modules", "import", into = obj)
+  makeDelayedAssignment("modules", "module", into = obj)
   makeDelayedAssignment("modules", "use", into = obj)
-  makeDelayedAssignment("modules", "depend", into = obj)
   obj
 }
 
@@ -14,6 +16,7 @@ ModuleScope <- function(parent = ModuleParent(), topenv) {
   # This is the type to wrap a module. It is the enclosing env of all funs in a
   # module
   obj <- new.env(parent = parent)
+  attr(obj, "name") <- "modules:root"
   # Here are also the flags. Because of imports it might be hard to find the
   # original name-value for the exports.
   assign(exportNameWithinModule(), "^*", envir = obj)

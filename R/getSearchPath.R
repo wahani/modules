@@ -3,7 +3,8 @@
 #' Returns a list with the environments or names of the environments on the
 #' search path. These functions are used for testing, use \link{search} instead.
 #'
-#' @param where (environment)
+#' @param where (environment | module | function) the object for the search path
+#'   should be investigated.
 #'
 #' @export
 #' @rdname utilityFunctions
@@ -11,8 +12,21 @@
 #' @examples
 #' getSearchPath()
 #' getSearchPathNames()
+#' getSearchPathContent()
+#'
+#' m <- module({
+#'   export("foo")
+#'   import("stats", "median")
+#'   foo <- function() "foo"
+#'   bar <- function() "bar"
+#' })
+#'
+#' getSearchPathContent(m)
 #'
 getSearchPath <- function(where = parent.frame()) {
+  if (is.function(where)) where <- environment(where)
+  if (is.list(where) && is.function(where[[1]])) where <- environment(where[[1]])
+  stopifnot(is.environment(where))
   if (identical(where, emptyenv())) list(where)
   else c(where, Recall(parent.env(where)))
 }
@@ -21,4 +35,17 @@ getSearchPath <- function(where = parent.frame()) {
 #' @rdname utilityFunctions
 getSearchPathNames <- function(where = parent.frame()) {
   vapply(getSearchPath(where), environmentName, character(1))
+}
+
+#' @export
+#' @rdname utilityFunctions
+getSearchPathContent <- function(where = parent.frame()) {
+  out <- lapply(getSearchPath(where), function(x) ls(envir = x))
+  names(out) <- getSearchPathNames(where)
+  class(out, c("SearchPathContent"))
+}
+
+#' @export
+print.SearchPathContent <- function(x, ...) {
+  str(x)
 }

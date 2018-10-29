@@ -6,7 +6,7 @@
 #' important difference is that the environment in which a module is created has
 #' meaning: all objects are made available to the module scope. This is
 #' what is meant by \emph{augmented} or \emph{parameterized}. Best practice for
-#' the use of this behaviour is to return these modules from functions.
+#' the use of this behavior is to return these modules from functions.
 #'
 #' @param expr (expression) a module declaration, same as \link{module}
 #' @param envir (environment) environment used to detect 'parameters'

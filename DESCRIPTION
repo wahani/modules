@@ -1,6 +1,6 @@
 Package: modules
 Title: Self Contained Units of Source Code
-Version: 0.6.4
+Version: 0.7.2
 Authors@R: person("Sebastian", "Warnholz", email = "wahani@gmail.com", role = c("aut", "cre"))
 Description: Provides modules as an organizational unit for source code. Modules
     enforce to be more rigorous when defining dependencies and have
@@ -25,7 +25,7 @@ Suggests:
     lintr,
     rmarkdown,
     parallel
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.0
 Collate:
     'amodule.R'
     'NAMESPACE.R'
