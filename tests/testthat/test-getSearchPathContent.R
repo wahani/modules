@@ -8,6 +8,6 @@ testthat::test_that("SearchPathContent", {
     bar <- function() "bar"
   })
   content <- getSearchPathContent(m)
-  testthat::expect_equal(content[[1]], c("foo", "bar"))
+  testthat::expect_equal(content[[1]], c("bar", "foo"))
   testthat::expect_equal(content[[2]], "median")
 })
