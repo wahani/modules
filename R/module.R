@@ -95,7 +95,7 @@ print.module <- function(x, ...) {
   }
 
   getDoc <- function(fun) {
-    sourceOfFun <- stringr::str_trim(attr(fun, "srcref"))
+    sourceOfFun <- trimws(attr(fun, "srcref"))
     sourceOfFun <- sourceOfFun[grep("^##", sourceOfFun)]
     paste(sourceOfFun, collapse = "\n")
   }
