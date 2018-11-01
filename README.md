@@ -430,7 +430,7 @@ In the next module we can use `mutableModule` and rebuild the interface to
 
 ```r
 complectModule <- module({
-  use(.GlobalEnv$mutableModule, attach = TRUE)
+  use(mutableModule, attach = TRUE)
   getNum <- function() get()
   set(3)
 })
@@ -457,7 +457,7 @@ re-initialization of any module you plug in. You can override this behaviour:
 
 ```r
 complectModule <- module({
-  use(.GlobalEnv$mutableModule, attach = TRUE, reInit = FALSE)
+  use(mutableModule, attach = TRUE, reInit = FALSE)
   getNum <- function() get()
   set(3)
 })
@@ -482,7 +482,7 @@ everything in a module and expose it to the environment from which it is called.
 
 ```r
 complectModule <- module({
-  expose(.GlobalEnv$mutableModule, reInit = TRUE)
+  expose(mutableModule, reInit = TRUE)
   set(4)
 })
 mutableModule$get()
@@ -506,7 +506,7 @@ this case both modules are essentially a copy of a reference.
 
 ```r
 complectModule <- module({
-  expose(.GlobalEnv$mutableModule, reInit = FALSE)
+  expose(mutableModule, reInit = FALSE)
   set(1)
 })
 mutableModule$get()
