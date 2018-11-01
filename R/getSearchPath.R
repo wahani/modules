@@ -4,7 +4,8 @@
 #' search path. These functions are used for testing, use \link{search} instead.
 #'
 #' @param where (environment | module | function) the object for the search path
-#'   should be investigated.
+#'   should be investigated. If we supply a list with functions (e.g. a module),
+#'   the environment of the first function in that list is used.
 #'
 #' @export
 #' @rdname utilityFunctions
@@ -25,7 +26,7 @@
 #'
 getSearchPath <- function(where = parent.frame()) {
   if (is.function(where)) where <- environment(where)
-  if (is.list(where) && is.function(where[[1]])) where <- environment(where[[1]])
+  if (listWithFunction(where)) where <- environment(getFirstFunction(where))
   stopifnot(is.environment(where))
   if (identical(where, emptyenv())) list(where)
   else c(where, Recall(parent.env(where)))
@@ -48,4 +49,13 @@ getSearchPathContent <- function(where = parent.frame()) {
 #' @export
 print.SearchPathContent <- function(x, ...) {
   str(x)
+}
+
+listWithFunction <- function(x) {
+  if (!is.list(x)) return(FALSE)
+  any(vapply(x, is.function, logical(1)))
+}
+
+getFirstFunction <- function(x) {
+  Filter(is.function, x)[[1]]
 }
