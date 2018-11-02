@@ -34,7 +34,7 @@ testthat::test_that("find duplicates on search path", {
 
   testthat::expect_message(
     regexp = NA,
-    module({
+    module(topEncl = baseenv(), {
       import("stats", "median")
     })
   )
