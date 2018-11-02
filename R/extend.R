@@ -55,9 +55,3 @@ extendCheckPrerequisites <- function(module) {
   hasAttributes <- c("expr", "topEncl") %in% names(attributes(module))
   stopifnot(all(hasAttributes))
 }
-
-extendWipeSrcMemory <- function(module) {
-  expr <- attr(module, "expr")
-  attributes(expr) <- NULL
-  expr
-}
