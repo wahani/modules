@@ -15,34 +15,40 @@
 #'
 #' @details
 #' \code{topEncl} is the environment where the search of the module ends.
-#' \code{autoTopEncl} handles the different situations. In general it defaults
-#' to the base environment or the environment from which \code{module} has been
-#' called. If you are using \code{use} or \code{expose} referring to a module in
-#' a file, it will always be the base environment. When
-#' \code{identical(topenv(parent.frame()), globalenv())} is false it (most
-#' likely) means that the module is part of a package. In that case the module
-#' defines a sub unit within a package but has access to the packages namespace.
-#' This is relevant when you use the function module explicitly. When you define
-#' a nested module the search path connects to the environment of the enclosing
-#' module.
+#'   \code{autoTopEncl} handles the different situations. In general it defaults
+#'   to the base environment or the environment from which \code{module} has
+#'   been called. If you are using \code{use} or \code{expose} referring to a
+#'   module in a file, it will always be the base environment. When
+#'   \code{identical(topenv(parent.frame()), globalenv())} is false it (most
+#'   likely) means that the module is part of a package. In that case the module
+#'   defines a sub unit within a package but has access to the packages
+#'   namespace. This is relevant when you use the function module explicitly.
+#'   When you define a nested module the search path connects to the environment
+#'   of the enclosing module.
 #'
-#' \link{import} and \link{use} can replace \link{library} and \link{attach}.
-#' However they behave differently and are only designed to be used within
-#' modules. Both will work when called in the \code{.GlobalEnv} but here they
-#' should only be used for development and debugging of modules.
+#' The use of \link{library}, \link{attach}, and \link{source} are discouraged
+#'   within modules. They change the global state of an R session, the
+#'   \link{.GlobalEnv}, and may not have the intended effect within modules.
+#'   \link{import} and \link{use} can replace calls to \link{library} and
+#'   \link{attach}. Both will work when called in the \code{.GlobalEnv}
+#'   but here they should only be used for development and debugging of modules.
+#'   \link{source} often is used to load additional user code into a session.
+#'   This is what \link{use} is designed to do within modules. \link{use} will
+#'   except files and folders to be used.
 #'
 #' \link{export} will never export a function with a leading "." in its name.
 #'
 #' \link{expose} is similar to \link{use} but instead of attaching a module it
-#' will copy all elements into the calling environment. This means that
-#' \emph{exposed} functions can be (re-)exported.
+#'   will copy all elements into the calling environment. This means that
+#'   \emph{exposed} functions can be (re-)exported.
 #'
 #' \link{extend} can be used to extend an existing module definition. This
-#' feature is meant to be used by the module author. This can be very useful to
-#' write unit tests when they need to have access to private member functions
-#' of the module. It is not safe as a user of a module to use this
-#' feature: it breaks encapsulation. When you are looking for mechanisms for
-#' reuse \link{expose} and \link{use} should be favoured.
+#'   feature is meant to be used by the module author. This can be very useful
+#'   to write unit tests when they need to have access to private member
+#'   functions of the module. It is not safe as a user of a module to use this
+#'   feature: it breaks encapsulation. When you are looking for mechanisms for
+#'   reuse \link{expose} and \link{use} should be favoured.
+#'
 #'
 #' @examples
 #' \dontrun{

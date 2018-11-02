@@ -12,9 +12,9 @@
 #'
 #' @details
 #' \code{import} and \link{use} can replace \link{library} and \link{attach}.
-#' However they behave differently and are only designed to be used within
-#' modules. Both will work when called in the \code{.GlobalEnv} but here they
-#' should only be used for development and debugging of modules.
+#'   However they behave differently and are only designed to be used within
+#'   modules. Both will work when called in the \code{.GlobalEnv} but here they
+#'   should only be used for development and debugging of modules.
 #'
 #' \code{import} adds a layer to a local search path. More precisely to the
 #'   calling environment, which is the environment supplied by \code{where}.
@@ -32,7 +32,7 @@
 #'   import will remove the previous one from the search path. Then the new
 #'   import layer is added. If several smaller import declarations are
 #'   desirable, use \code{attach = FALSE} and bind the return value of
-#'   \code{import} to names.
+#'   \code{import} to a name.
 #'
 #' @return An \link{environment} is returned invisibly comprising the imports.
 #'
