@@ -59,3 +59,17 @@ listWithFunction <- function(x) {
 getFirstFunction <- function(x) {
   Filter(is.function, x)[[1]]
 }
+
+#' @export
+#' @rdname utilityFunctions
+getSearchPathDuplicates <- function(where = parent.frame()) {
+  sp <- getSearchPathContent(where)
+  localNames <- sp[[1]]
+  spNames <- unlist(sp[-1])
+  duplicates <- localNames[is.element(localNames, spNames)]
+  out <- lapply(duplicates, function(d) {
+    names(sp[-1])[unlist(lapply(sp[-1], is.element, el = d))]
+  })
+  names(out) <- duplicates
+  out
+}

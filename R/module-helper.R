@@ -38,14 +38,35 @@ addDependency <- function(from, what, where, assignFun, name) {
       lapply(sp, attr, "name")
     )
     if (is.na(pos)) return(NULL) # stop here
-    else if (pos == 1) parent.env(where) <- sp[[2]]
-    else parent.env(sp[[pos - 1]]) <- sp[[pos + 1]]
+    else {
+      message(
+        "Replacing attached import/use on search path for: ",
+        addPrefix(name), ".")
+      if (pos == 1) parent.env(where) <- sp[[2]]
+      else parent.env(sp[[pos - 1]]) <- sp[[pos + 1]]
+    }
+  }
+
+  messageDuplicates <- function(into) {
+    duplicates <- getSearchPathDuplicates(into)
+    if (length(duplicates) == 0) return(NULL)
+    msg <- sprintf(
+      "Masking (%s):\n%s",
+      environmentName(into),
+      paste(collapse = "\n", paste0(
+        "  `", names(duplicates), "` ",
+        "from: ", unlist(lapply(duplicates, paste, collapse = ", "))
+      ))
+    )
+    message(msg)
   }
 
   cleanSearchPath(where, name)
   # into is a reference to the (new) parent of where:
   into <- addDependencyLayer(where, name)
-  assignFun(from, what, into)
+  res <- assignFun(from, what, into)
+  messageDuplicates(into)
+  res
 
 }
 

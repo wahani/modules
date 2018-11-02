@@ -16,13 +16,18 @@ writeLines(text, "README.md")
 
 ## TODO
 
-## - import
-##     - warning if duplicates on search path
+## - depend
+##   - on .tar.gz
+
 
 library("modules")
 library("parallel")
 m <- module({
-  import("base", "identity")
+  import("stats", "median")
+})
+
+m <- module({
+  import("base", "identity", "search")
   identity
   fun <- function(x) {
     identity(x)
@@ -57,3 +62,4 @@ system.time({
   clusterMap(cl, identity, 1:100)
   stopCluster(cl)
 })
+

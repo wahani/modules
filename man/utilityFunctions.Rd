@@ -4,6 +4,7 @@
 \alias{getSearchPath}
 \alias{getSearchPathNames}
 \alias{getSearchPathContent}
+\alias{getSearchPathDuplicates}
 \title{Get the search path of an environment}
 \usage{
 getSearchPath(where = parent.frame())
@@ -11,10 +12,13 @@ getSearchPath(where = parent.frame())
 getSearchPathNames(where = parent.frame())
 
 getSearchPathContent(where = parent.frame())
+
+getSearchPathDuplicates(where = parent.frame())
 }
 \arguments{
 \item{where}{(environment | module | function) the object for the search path
-should be investigated.}
+should be investigated. If we supply a list with functions (e.g. a module),
+the environment of the first function in that list is used.}
 }
 \description{
 Returns a list with the environments or names of the environments on the

@@ -16,6 +16,9 @@ import(from, ..., attach = TRUE, where = parent.frame())
 \item{where}{(environment) typically the calling environment. Should only be
 relevant for testing.}
 }
+\value{
+An \link{environment} is returned invisibly comprising the imports.
+}
 \description{
 You can declare imports similar to what we would do in a R package: we list
 complete packages or single function names from a package. These listed
@@ -38,6 +41,12 @@ should only be used for development and debugging of modules.
   return an environment with the imports and can be bound to a name.
   \link{library} will also load packages in the 'Depends' field of a package,
   this is something \code{import} will not do.
+
+Only one \code{import} declaration per package is allowed. A second call to
+  import will remove the previous one from the search path. Then the new
+  import layer is added. If several smaller import declarations are
+  desirable, use \code{attach = FALSE} and bind the return value of
+  \code{import} to names.
 }
 \examples{
 m <- module({

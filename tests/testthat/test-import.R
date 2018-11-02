@@ -106,11 +106,15 @@ test_that("duplications on search path", {
     x[!(x %in% set)]
   }
 
+  expectMessage <- function(obj) {
+    testthat::expect_message(obj)
+  }
+
   sp0 <- getSearchPathNames()
 
   m <- module({ })
   use(m, attach = TRUE)
-  use(m, attach = TRUE)
+  expectMessage(use(m, attach = TRUE))
 
   sp1 <- getSearchPathNames()
 
@@ -125,7 +129,7 @@ test_that("duplications on search path", {
 
   sp3 <- getSearchPathNames()
 
-  use(m, attach = TRUE)
+  expectMessage(use(m, attach = TRUE))
 
   sp4 <- getSearchPathNames()
 

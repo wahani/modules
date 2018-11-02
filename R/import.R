@@ -28,6 +28,14 @@
 #'   \link{library} will also load packages in the 'Depends' field of a package,
 #'   this is something \code{import} will not do.
 #'
+#' Only one \code{import} declaration per package is allowed. A second call to
+#'   import will remove the previous one from the search path. Then the new
+#'   import layer is added. If several smaller import declarations are
+#'   desirable, use \code{attach = FALSE} and bind the return value of
+#'   \code{import} to names.
+#'
+#' @return An \link{environment} is returned invisibly comprising the imports.
+#'
 #' @export
 #' @examples
 #' m <- module({

@@ -1,5 +1,3 @@
-context("getSearchPathContent")
-
 testthat::test_that("SearchPathContent", {
   m <- module({
     export("foo")

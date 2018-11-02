@@ -7,6 +7,9 @@ ModuleParent <- function(parent = baseenv()) {
   makeDelayedAssignment("modules", "export", into = obj)
   makeDelayedAssignment("modules", "expose", into = obj)
   makeDelayedAssignment("modules", "import", into = obj)
+  assign("attach", lattach, envir = obj)
+  assign("library", llibrary, envir = obj)
+  assign("source", lsource, envir = obj)
   makeDelayedAssignment("modules", "module", into = obj)
   makeDelayedAssignment("modules", "use", into = obj)
   obj
