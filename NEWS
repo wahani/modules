@@ -3,6 +3,7 @@ Version 0.8.0
 - Bugfix: find 'module' inside a module declaration
 - New function 'getSearchPathContent' to investigate the search path of a module
 - getSearchPath can now handles functions and modules as argment
+- New vignettes
 
 Version 0.7.0
 - CRAN release

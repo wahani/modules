@@ -1,0 +1,189 @@
+---
+title: "Modules: Organizing R Source Code"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Modules: Organizing R Source Code}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Introduction
+
+This vignette explains how to use modules outside of R packages as a means to organize a project or data analysis. Using modules we may gain some of the features we also expect from packages but with less overhead.
+
+A lot of R projects run into problems when they grow. Even relatively simple
+data analysis projects can span a thounsand lines easily. R has two important
+building blocks to organize projects: functions and packages. However packages
+do present a hurdle for a lot of users with little programming background. In
+those cases we often rely on splitting up the code base into files and *source*
+(refering to the function `source`) them in order. Modules, in this context,
+present a more sophisticated way to *source* files by providing three important
+features:
+
+- (Imports) loading a package is local to a module and avoids name clashes in
+the global environment.
+- (Exports) variable assignment are local to a module and (a) do not polute the
+global environment and (b) hide details of a module.
+- Modules make it easy to spread your code base accross files and reuse them
+when needed. Each file is self contained.
+
+# Example
+
+You can load scripts as modules when you refer to a file (or directory) in a
+call to `use`. Inside such a script you can use `import` and `use` in the same
+way you typically use `library`. Consider the following example where we create
+a module in a temporary file with its dependencies.
+
+```{r}
+code <- "
+import('stats', 'median')
+functionWithDep <- function(x) median(x)
+"
+
+fileName <- tempfile(fileext = ".R")
+writeLines(code, fileName)
+```
+
+Then we can load such a module into this session by the following:
+
+```{r}
+library(modules)
+m <- use(fileName)
+m$functionWithDep(1:2)
+```
+
+# Pseudo-code example
+
+To give a bit more context of how you can structure a project, consider the following file structure:
+
+```
+/
+  /R
+    munging.R
+    graphics.R
+  /data
+    some.csv
+  /results
+    /tables
+      ...
+    /figs
+  main.R
+  README.md
+```
+
+You put all your R code into the `R` folder. This folder may or may not have a
+nested folder structure itself. You probably have a folder for your data and one
+into which you store all results. The important part here is that you have split
+your code base into different files. `main.R` in the project root acts as the
+*master* file in this example. This file kicks of all steps of our analysis and
+*connects the dots*. `munging.R` and `graphics.R` implement helper functions but
+do not execute any of the analysis.
+
+**main.R**
+
+```{r eval = FALSE}
+lib <- modules::use("R")
+dat <- read.csv("data/some.csv")
+
+# munging
+dat <- lib$munging$clean(dat)
+dat <- lib$munging$recode(dat)
+
+# generate results
+lib$graphics$barplot(dat)
+lib$graphics$lineplot(dat)
+```
+
+The `main.R` file implements no logic of the analysis. Its responsibility is to
+connect all steps. Each file in the `R` folder then implements a *phase* of the
+project. In larger projects it is likely that each phase will need its own
+folder. The implementation may then look something along the lines of:
+
+**R/munging.R**
+
+```{r eval = FALSE}
+export("clean")
+clean <- function(dat) {
+  # ...
+}
+
+export("recode")
+recode <- function(dat) {
+  # ...
+}
+
+helper <- function(...) {
+  # This function is private
+  # ...
+}
+```
+
+**R/graphics.R**
+
+```{r eval = FALSE}
+import("ggplot2")
+export("barplot", "lineplot")
+
+barplot <- function(dat) {
+  # ...
+}
+
+lineplot <- function(dat) {
+  # ...
+}
+
+helper <- function(...) {
+  # ...
+}
+```
+
+- Each file is coerced into a module and can have its own set of imports. They
+do not share them.
+- Loading the complete folder, or each module individually is a matter of preference. Loading complete folders saves a couple of lines.
+- Each module has its own set of exports. This keeps the interface clean and
+minimal.
+
+# Documentation
+
+If you want proper documentation for your functions or modules you really want a
+package. There are some simple things you can do for ad-hoc
+documentation of modules which is to use comments:
+
+```{r}
+module({
+  fun <- function(x) {
+    ## A function for illustrating documentation
+    ## x (numeric) some values
+    x
+  }
+})
+```
+
+# Best practices
+
+- Modules in files should not load other modules in other files. You should view
+a module as a stand alone and self-contained unit. Dependencies should refer to
+packages if possible. The benefit is ease of reuse. If your modules do
+depend on each other, you use dependency injection to encode these
+relationships. See the vignette on *modules as objects*.
+- Modules should always declare exports. This clearly communicates which parts
+are safe to use and avoids that other parts of our code base relies on
+implementation details.
+- Do not use `library`, `attach` or `source` inside of modules. It is likely
+that they do not do what you want. `import` and `use` are to be preferred in
+this context.
+- A good length for a module in a file is appr. 100 lines of code. The idea is
+to keep things organised and modular. If we only have one big module or a
+collection of big modules we do not gain much.
+- All other R coding guidelines still apply inside of modules.
+- If you need documentation, or want to distribute and publish code: R-Packages
+are the way to go.
+

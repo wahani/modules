@@ -1,0 +1,283 @@
+---
+title: "Modules as R Objects"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Modules as R Objects}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Introduction
+
+In this vignette you can find details on
+
+- how modules can be treated as data and how they are connected to Rs data
+types.
+- how modules can be viewed as objects as in object orientation.
+- and how you can use them inside of packages.
+
+# Modules as first class citizen in R
+
+Modules are first class citizens in the sense that they can be treated
+like any other data structure in R:
+
+- they can be created anywhere, including inside another module,
+- they can be passed to functions,
+- and returned from functions.
+
+Modules are represented as *list* type in R. Such that
+
+```{r}
+library("modules")
+m <- module({
+  foo <- function() "foo"
+})
+is.list(m)
+class(m)
+```
+
+S3 methods may be defined for the class *module*. The package itself only
+implements a method for the generic function `print`.
+
+## Nested Modules
+
+Nested modules are modules defined inside other modules. In this case
+dependencies of the top level module are accessible to its children:
+
+```{r}
+m <- module({
+
+  import("stats", "median")
+
+  anotherModule <- module({
+    foo <- function() "foo"
+  })
+  
+  bar <- function() "bar"
+
+})
+
+getSearchPathContent(m)
+getSearchPathContent(m$anotherModule)
+```
+
+# Modules as objects
+
+Sometimes it can be useful to pass arguments to a module. If you have a
+background in object oriented programming you may find this natural. From a
+functional perspective we define parameters shared by a list of closures. This
+is achieved by making the enclosing environment of the module available to the
+module itself. 
+
+```{r}
+m <- function(param) {
+  amodule({
+    fun <- function() param
+  })
+}
+m(1)$fun()
+```
+
+`amodule` is a wrapper around `module` to abstract the following pattern:
+
+```{r}
+
+m <- function(param) {
+  module(topEncl = environment(), {
+    fun <- function() param
+  })
+}
+m(1)$fun()
+```
+
+Using one of these approaches you construct a local namespace definition with
+the option to pass down some arguments. 
+
+## Dependency injection
+
+This can be very useful to encode a dependency between two modules. Instead of:
+
+```{r}
+a <- module({
+  foo <- function() "foo"
+})
+
+b <- module({
+  a <- use(a)
+  foo <- function() a$foo()
+})
+```
+
+which would hard code the dependency, the following may be superior:
+
+```{r}
+B <- function(a) {
+  amodule({
+    foo <- function() a$foo()
+  })
+}
+b <- B(a)
+```
+
+
+## Modules to model mutable state
+
+You can not only put functions into your bag (module) but any R-object. This
+includes data: modules can be state-full. To illustrate this we define a
+module to encapsulate some value and have a *get* and *set* method for it:
+
+```{r}
+mutableModule <- module({
+  .num <- NULL
+  get <- function() .num
+  set <- function(val) .num <<- val
+})
+mutableModule$get()
+mutableModule$set(2)
+```
+
+In the next module we can use `mutableModule` and rebuild the interface to
+`.num`.
+
+```{r}
+complectModule <- module({
+  suppressMessages(use(mutableModule, attach = TRUE))
+  getNum <- function() get()
+  set(3)
+})
+mutableModule$get()
+complectModule$getNum()
+```
+
+Depending on your expectations with respect to the above code it comes at a
+surprise that we can get and set that value from an attached module; Furthermore
+it is not changed in `mutableModule`. This is because `use` will trigger a
+re-initialization of any module you plug in. You can override this behaviour:
+
+```{r}
+complectModule <- module({
+  suppressMessages(use(mutableModule, attach = TRUE, reInit = FALSE))
+  getNum <- function() get()
+  set(3)
+})
+mutableModule$get()
+complectModule$getNum()
+```
+
+
+## Module composition
+
+In contrast to systems of object orientation, modules do not provide a formal
+mechanism of inheritance. Instead we can use various modes of composition.
+Inheritance often is used to reuse code; or to add functionality to an existing
+module.
+
+In this context we may use *parameterized modules*, `use`, `expose` and
+`extend`. The first two have already been discussed, as has been dependency
+injection as a strategy to encode relationships between modules.
+
+`expose` is most useful when we want to re-export functions from another module:
+
+```{r}
+A <- function() {
+  amodule({
+    foo <- function() "foo"
+  })
+}
+
+B <- function(a) {
+  amodule({
+    expose(a)
+    bar <- function() "bar"
+  })
+}
+
+B(A())$foo()
+B(A())$bar()
+```
+
+Here we can easily add functionality to a module, or only reuse parts of it.
+Another way to achieve this is to use `extend`. The difference is, that with
+`expose` we re-export existing functionality unchanged. With `extend` we add
+lines of code to an existing module definition. This means we can (a) override
+private members of that module and (b) generally gain access to all
+implementation details. Hence the following two definitions are equivalent:
+
+**Variant A**
+
+```{r}
+a <- module({
+  foo <- function() "foo"
+  bar <- function() "bar"
+})
+
+a
+```
+
+**Variant B**
+
+```{r}
+a <- module({
+  foo <- function() "foo"
+})
+
+a <- extend(a, {
+  bar <- function() "bar"
+})
+
+a
+```
+
+`extend` should be used with great care. It is possible and easy to breake functionality of the module you extend. This is not possible or at least more challenging using `expose`. 
+
+## Unit tests for modules
+
+The real use case for `extend` is to add unit tests to a module. You can think
+of using one of two patterns:
+
+**Variant A**
+
+```{r}
+a <- module({
+  foo <- function() "foo"
+  test <- function() {
+    stopifnot(foo() == "foo")
+  }
+})
+```
+
+**Variant B**
+
+```{r}
+a <- module({
+  foo <- function() "foo"
+})
+extend(a, {
+  stopifnot(foo() == "foo")
+})
+```
+
+The latter alternative will keep the interface clean and gives access to private
+member functions. Sometimes this can be very useful for testing.
+
+
+# Modules in Packages
+
+You can use modules inside packages in the same way as illustrated above. When a
+module is defined inside a R-package its search path connects to the packages
+namespace. So it sees all objects within the package and has access to all its
+dependencies. You can always change this by specifying the argument `topEncl`
+when calling `module`. Do not use `import` inside this setting but instead rely
+on the package to handle your dependencies. Attaching other modules using `use`
+and `expose` can make sense but is a matter of preference. You should definitely
+not rely on modules in files and load them with `use`!
+
+
