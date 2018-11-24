@@ -103,7 +103,7 @@ the option to pass down some arguments.
 
 ## Dependency injection
 
-This can be very useful to encode a dependency between two modules. Instead of:
+This can be very useful to handle dependencies between two modules. Instead of:
 
 ```{r}
 a <- module({
@@ -116,7 +116,7 @@ b <- module({
 })
 ```
 
-which would hard code the dependency, the following may be superior:
+which would hard code the dependency, we can write:
 
 ```{r}
 B <- function(a) {
@@ -127,6 +127,11 @@ B <- function(a) {
 b <- B(a)
 ```
 
+There are many good reasons to follow such a strategy. As an example: consider
+the case in which module `a` introduces side effects. By leaving it open as
+argument we can later decide what exactly we pass down to the constructor of
+`b`. This may be important to us when we want to mock a database, disable
+logging or otherwise handle access to external ressources.
 
 ## Modules to model mutable state
 
@@ -171,7 +176,6 @@ complectModule <- module({
 mutableModule$get()
 complectModule$getNum()
 ```
-
 
 ## Module composition
 
@@ -271,13 +275,19 @@ member functions. Sometimes this can be very useful for testing.
 
 # Modules in Packages
 
-You can use modules inside packages in the same way as illustrated above. When a
-module is defined inside a R-package its search path connects to the packages
-namespace. So it sees all objects within the package and has access to all its
-dependencies. You can always change this by specifying the argument `topEncl`
-when calling `module`. Do not use `import` inside this setting but instead rely
-on the package to handle your dependencies. Attaching other modules using `use`
-and `expose` can make sense but is a matter of preference. You should definitely
-not rely on modules in files and load them with `use`!
+Of course a good way to write R code is to write packages. Modules inside of
+packages make a lot of sense, because also in a package we only have one scope
+to work with. Modules provide more options.
 
+- `modules::module`: will connect to the packages namespace by default.
+Functions defined inside modules have access to the internal scope of the
+package.
+- `modules::amodule`: provides a slightly saver way and requires explicit
+registration of objects from the packages namespace. This can happen via
+dependency injection or `modules::use`.
 
+If you write constructor functions for your modules (see example below) you automatically take advantage of `R CMD check`. `R CMD check` will provide some static code analysis tools which are generally helpful.
+
+As you would avoid using `library` inside of packages, you should also avoid
+using `modules::import`. The R package namespace mechanism is more than capable
+of handling all dependencies.
