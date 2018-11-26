@@ -49,7 +49,7 @@ to a function definition; it comprises:
 implicitly)
 
 Similar to a function you may supply arguments to a module; see the vignette on
-modules as objects for this topic.
+modules as objects on this topic.
 
 To illustrate the very basic functionality of a module, consider the following
 example:
@@ -63,8 +63,28 @@ m$foo()
 ```
 
 Here `m` is the collection of objects created inside the module. This is a
-`list` with the function `foo` as only element. Since modules are isolated from
-the `.GlobalEnv` the following object `x` can not be found:
+`list` with the function `foo` as only element. We can do the same thing and define a module in a seperate file:
+
+**module.R**
+
+```
+foo <- function() "foo"
+```
+
+**main.R**
+
+```{r eval = FALSE}
+m <- modules::use("module.R")
+m$foo()
+```
+
+```
+## [1] "foo"
+```
+
+The two examples illustrate the two ways in which modules can be constructed.
+Since modules are isolated from the `.GlobalEnv` the following object `x` can
+not be found:
 
 ```{r error=TRUE}
 x <- "hey"
