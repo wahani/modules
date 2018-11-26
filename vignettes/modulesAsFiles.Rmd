@@ -17,22 +17,24 @@ knitr::opts_chunk$set(
 
 # Introduction
 
-This vignette explains how to use modules outside of R packages as a means to organize a project or data analysis. Using modules we may gain some of the features we also expect from packages but with less overhead.
+This vignette explains how to use modules outside of R packages as a means to
+organize a project or data analysis. Using modules we may gain some of the
+features we also expect from packages but with less overhead.
 
 A lot of R projects run into problems when they grow. Even relatively simple
-data analysis projects can span a thounsand lines easily. R has two important
+data analysis projects can span a thousand lines easily. R has two important
 building blocks to organize projects: functions and packages. However packages
 do present a hurdle for a lot of users with little programming background. In
 those cases we often rely on splitting up the code base into files and *source*
-(refering to the function `source`) them in order. Modules, in this context,
-present a more sophisticated way to *source* files by providing three important
-features:
+them into our R session (referring to the function `source`). Modules, in this
+context, present a more sophisticated way to *source* files by providing three
+important features:
 
 - (Imports) loading a package is local to a module and avoids name clashes in
 the global environment.
-- (Exports) variable assignment are local to a module and (a) do not polute the
+- (Exports) variable assignment are local to a module and (a) do not pollute the
 global environment and (b) hide details of a module.
-- Modules make it easy to spread your code base accross files and reuse them
+- Modules make it easy to spread your code base across files and reuse them
 when needed. Each file is self contained.
 
 # Example
@@ -62,7 +64,8 @@ m$functionWithDep(1:2)
 
 # Pseudo-code example
 
-To give a bit more context of how you can structure a project, consider the following file structure:
+To give a bit more context of how you can structure a project, consider the
+following file structure:
 
 ```
 /
@@ -84,8 +87,7 @@ nested folder structure itself. You probably have a folder for your data and one
 into which you store all results. The important part here is that you have split
 your code base into different files. `main.R` in the project root acts as the
 *master* file in this example. This file kicks of all steps of our analysis and
-*connects the dots*. `munging.R` and `graphics.R` implement helper functions but
-do not execute any of the analysis.
+*connects the dots*. `munging.R` and `graphics.R` implement helper functions.
 
 **main.R**
 
@@ -147,7 +149,8 @@ helper <- function(...) {
 
 - Each file is coerced into a module and can have its own set of imports. They
 do not share them.
-- Loading the complete folder, or each module individually is a matter of preference. Loading complete folders saves a couple of lines.
+- Loading the complete folder, or each module individually is a matter of
+  preference. Loading complete folders saves a couple of lines.
 - Each module has its own set of exports. This keeps the interface clean and
 minimal.
 
@@ -175,7 +178,7 @@ packages if possible. The benefit is ease of reuse. If your modules do
 depend on each other, you use dependency injection to encode these
 relationships. See the vignette on *modules as objects*.
 - Modules should always declare exports. This clearly communicates which parts
-are safe to use and avoids that other parts of our code base relies on
+are safe to use and avoids that other parts of our code base rely on
 implementation details.
 - Do not use `library`, `attach` or `source` inside of modules. It is likely
 that they do not do what you want. `import` and `use` are to be preferred in
