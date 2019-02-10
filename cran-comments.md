@@ -1,12 +1,11 @@
 ## Test environments
 * ubuntu (on travis-ci)
 * win-builder
-* local ubuntu 16.04, R 3.4.4
+* local ubuntu 18.10, R 3.5.1
 
 ## R CMD check results
 
-* This is a maintenance release to address the demand to use packages in
-  suggests conditionally.
+* This release is issued to fix problems in CRAN checks on: https://cran.r-project.org/web/checks/check_results_modules.html
 * There were no ERRORs or WARNINGs or NOTEs
 
 ## Downstream dependencies
