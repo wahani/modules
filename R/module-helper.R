@@ -39,7 +39,7 @@ addDependency <- function(from, what, where, assignFun, name) {
     )
     if (is.na(pos)) return(NULL) # stop here
     else {
-      message(
+      packageStartupMessage(
         "Replacing attached import/use on search path for: ",
         addPrefix(name), ".")
       if (pos == 1) parent.env(where) <- sp[[2]]
@@ -58,7 +58,7 @@ addDependency <- function(from, what, where, assignFun, name) {
         "from: ", unlist(lapply(duplicates, paste, collapse = ", "))
       ))
     )
-    message(msg)
+    packageStartupMessage(msg)
   }
 
   cleanSearchPath(where, name)

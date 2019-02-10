@@ -4,6 +4,9 @@ Version 0.8.0
 - New function 'getSearchPathContent' to investigate the search path of a module
 - getSearchPath can now handles functions and modules as argment
 - New vignettes
+- 'use' and 'import' now signal conflicts using 'packageStartupMessage' instead
+  of 'message'. They can now also be uppressed using
+  'suppressPackageStartupMessage'.
 
 Version 0.7.0
 - CRAN release
