@@ -112,7 +112,7 @@ getSearchPathContent(m)
 ## List of 4
 ##  $ modules:root     : chr "someFunction"
 ##  $ modules:internals: chr [1:9] "attach" "depend" "export" "expose" ...
-##  $ base             : chr [1:1221] "-" "-.Date" "-.POSIXt" ":" ...
+##  $ base             : chr [1:1222] "-" "-.Date" "-.POSIXt" ":" ...
 ##  $ R_EmptyEnv       : chr(0) 
 ##  - attr(*, "class")= chr [1:2] "SearchPathContent" "list"
 ```
@@ -169,7 +169,7 @@ getSearchPathContent(m)
 ##  $ modules:root     : chr "functionWithDep"
 ##  $ modules:stats    : chr "median"
 ##  $ modules:internals: chr [1:9] "attach" "depend" "export" "expose" ...
-##  $ base             : chr [1:1221] "-" "-.Date" "-.POSIXt" ":" ...
+##  $ base             : chr [1:1222] "-" "-.Date" "-.POSIXt" ":" ...
 ##  $ R_EmptyEnv       : chr(0) 
 ##  - attr(*, "class")= chr [1:2] "SearchPathContent" "list"
 ```
@@ -339,6 +339,6 @@ for object composition.
 The development of the `modules` package has been inspired by other languages:
 [F#](https://fsharpforfunandprofit.com/posts/organizing-functions/), 
 [Erlang](http://learnyousomeerlang.com/modules) and 
-[julia](http://docs.julialang.org/en/release-0.4/manual/modules/).
+[julia](https://docs.julialang.org/en/v1/manual/modules/index.html).
 
 

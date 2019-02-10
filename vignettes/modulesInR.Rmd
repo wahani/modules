@@ -257,6 +257,6 @@ for object composition.
 The development of the `modules` package has been inspired by other languages:
 [F#](https://fsharpforfunandprofit.com/posts/organizing-functions/), 
 [Erlang](http://learnyousomeerlang.com/modules) and 
-[julia](http://docs.julialang.org/en/release-0.4/manual/modules/).
+[julia](https://docs.julialang.org/en/v1/manual/modules/index.html).
 
 
