@@ -4,7 +4,10 @@
 ![Downloads](http://cranlogs.r-pkg.org/badges/modules)
 # Modules in R
 
-Provides modules as an organizational unit for source code. Modules enforce to be more rigorous when defining dependencies and have a local search path. They can be used as a sub unit within packages or in scripts.
+Provides modules as an organizational unit for source code. Modules
+enforce to be more rigorous when defining dependencies and have
+a local search path. They can be used as a sub unit within packages
+or in scripts.
 
 ## Installation
 
@@ -98,7 +101,7 @@ m$someFunction()
 ```
 
 ```
-## Error in m$someFunction(): Objekt 'x' nicht gefunden
+## Error in m$someFunction(): object 'x' not found
 ```
 
 ```r
@@ -273,7 +276,7 @@ clusterMap(cl, fun, 1:2)
 ```
 
 ```
-## Error in checkForRemoteErrors(val): 2 nodes produced errors; first error: konnte Funktion "dependency" nicht finden
+## Error in checkForRemoteErrors(val): 2 nodes produced errors; first error: could not find function "dependency"
 ```
 
 ```r
