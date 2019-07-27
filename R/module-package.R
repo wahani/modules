@@ -6,13 +6,15 @@ use_modules <- function(folder = ".") {
 
 addConfigure <- function(folder = ".") {
   folder <- normalizePath(folder)
-  message(sprintf("Creating %s", configureFile <- paste0(folder, "/configure")))
+  message(sprintf("Creating %s[.win]", configureFile <- normalizePath(paste0(folder, "/configure"))))
   code <- c(
     '#!/bin/sh', '',
     '$R_HOME/bin/Rscript -e "modules::initModules()"',
     '')
   writeLines(code, configureFile)
+  writeLines(code, configureFileWin <- paste0(configureFile, ".win"))
   Sys.chmod(configureFile, "0764")
+  Sys.chmod(configureFileWin, "0764")
 }
 
 #' @export
@@ -44,9 +46,7 @@ processModules <- function(folder) {
 
 parseAndWrite <- function(subFolder, subName, subFile) {
   code <- parseModule(subFolder, subName)
-  if (!file.exists(subFile)) {
-    message("*** creating ", subFile)
-  }
+  if (!file.exists(subFile)) message("*** creating %s", subFile)
   writeLines(code, subFile)
 }
 
@@ -55,12 +55,8 @@ parseModule <- function(subFolder, subName) {
   code <- unlist(code)
   doc <- code[grepl(" *#+'", code)]
   code <- code[!grepl(" *#+'", code)]
-  code <- ifelse(code == "", code, paste0("    ", code))
-  disclaimer()
-  assignConst <- sprintf("new%s <- function(...) {", subName)
-  assignArgs <- "  args <- list(...)"
-  constModule <- "  modules::module({"
-  closingParans <- "  })\n}"
+  code <- ifelse(code == "", code, paste0("  ", code))
+  assignConst <- sprintf("new%s <- function() modules::module({", subName)
   assignModule <- sprintf("%s <- new%1$s()", subName)
   c(disclaimer(), assignConst, assignArgs, constModule, code,
     closingParans, "\n", doc, assignModule)

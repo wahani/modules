@@ -16,6 +16,9 @@ writeLines(text, "README.md")
 
 ## TODO
 
+## - amodule
+##   - parameters masked by internals
+##   - dealing with elipses
 ## - depend
 ##   - on .tar.gz
 
