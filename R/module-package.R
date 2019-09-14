@@ -1,12 +1,38 @@
+#' Use modules in package build process
+#'
+#' This function will create a configuration file, such that sub folders inside
+#' the R folder of a package are used as module definition. It will then compile
+#' all modules.
+#'
+#' @param folder (character) the folder where to create the configuration file:
+#'   the package root.
+#'
+#' @details Guiding principles: (1) this is R CMD check compliant (2) we do not
+#'   introduce new logic to the semantics of R code.
+#'
+#' What does it mean to have sub-folders in packages? Each folder defines a
+#'   module. The name of the module is the name of the folder. Having several R
+#'   files in a sub-folder adds no additional logic. All files are sourced into
+#'   the same environment. As with packages, we can make objects public by
+#'   exporting them. As with packages, nested sub-folders are currently ignored.
+#'
+#' Each sub-folder is compiled into one module, represented by a regular R file
+#'   in the package. The file is auto-generated and managed by the build
+#'   process. The presence of this file enables to take advantage of R CMD
+#'   check. Hence checks may refer to the target file, however changes need to
+#'   happen inside the module/sub-folder itself.
+#'
+#' @rdname initModules
 #' @export
-use_modules <- function(folder = ".") {
+useModules <- function(folder = ".") {
   addConfigure(folder)
   initModules(folder)
 }
 
 addConfigure <- function(folder = ".") {
   folder <- normalizePath(folder)
-  message(sprintf("Creating %s[.win]", configureFile <- normalizePath(paste0(folder, "/configure"))))
+  configureFile <- normalizePath(paste0(folder, "/configure"))
+  message(sprintf("Creating %s[.win]", configureFile))
   code <- c(
     '#!/bin/sh', '',
     '$R_HOME/bin/Rscript -e "modules::initModules()"',
@@ -17,8 +43,9 @@ addConfigure <- function(folder = ".") {
   Sys.chmod(configureFileWin, "0764")
 }
 
+#' @rdname initModules
 #' @export
-initModules <- function(folder = ".", where = parent.frame()) {
+initModules <- function(folder = ".") {
   message("** compiling modules")
   folder <- normalizePath(paste0(folder, "/R"), mustWork = FALSE)
   removeOutdatedModules(folder)
