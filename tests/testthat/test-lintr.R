@@ -1,4 +1,5 @@
 test_that("Package Style", {
+  testthat::skip_on_os("mac")
   if (requireNamespace("lintr", quietly = TRUE)) {
     lintr::expect_lint_free(linters = list(
       a = lintr::assignment_linter,
