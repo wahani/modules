@@ -5,3 +5,4 @@
 ^\.travis\.yml$
 ^cran-comments\.md$
 ^\.projectile$
+^\.github$

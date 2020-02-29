@@ -42,8 +42,8 @@ test_that("delayed assignment", {
   # When 'temp' is called, it should not find 'assignment'
   expect_error(m$temp())
   expect_true(m$checkExistens())
-
 })
+
 test_that("package dependencies", {
 
   m <- module({
