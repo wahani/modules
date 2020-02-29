@@ -92,4 +92,3 @@ test_that("download of module works", {
   )
   testthat::expect_identical(m$fun, identity)
 })
-

@@ -18,7 +18,7 @@ addDependency <- function(from, what, where, assignFun, name) {
   # from (list | env | pkg) a collection which is subset-able with [
   # what (character) names of values in from
   # where (environment) where the search path begins
-  # assignFun (function) how to put 'from::what' 'into' 
+  # assignFun (function) how to put 'from::what' 'into'
   # name (character) the name on the search path
 
   addPrefix <- function(name) paste0("modules:", name)

@@ -62,5 +62,3 @@ test_that("Produce an error when 'export' is not available", {
     "exports not defined: fun1, fun2"
   )
 })
-
-

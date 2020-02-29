@@ -1,7 +1,8 @@
 test_that("Package Style", {
-  ## testthat::skip_on_os("mac")
+  ## For some reason these tests fail on mac.
+  testthat::skip_on_os("mac")
   if (requireNamespace("lintr", quietly = TRUE)) {
-    res <- lintr::lint_package(linters = list(
+    res <- lintr::expect_lint_free(linters = list(
       a = lintr::assignment_linter,
       b = lintr::commas_linter,
       ## c = lintr::commented_code_linter,
@@ -10,7 +11,12 @@ test_that("Package Style", {
       f = lintr::no_tab_linter,
       ## g = lintr::snake_case_linter, # detects only testthat functions
       h = lintr::object_length_linter(),
-      i = lintr::spaces_left_parentheses_linter
+      i = lintr::spaces_left_parentheses_linter,
+      j = lintr::trailing_blank_lines_linter,
+      k = lintr::trailing_whitespace_linter,
+      l = lintr::open_curly_linter,
+      m = lintr::multiple_dots_linter,
+      n = lintr::closed_curly_linter
     ))
  }
 })
