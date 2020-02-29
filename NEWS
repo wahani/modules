@@ -1,6 +1,6 @@
 Version 0.9.0
-- Bugfix from issue #16 om Github: extend a module which has been loaded from a
-  file
+- Bugfix from issue #16 on Github: extend a module which has been loaded from a
+  file now actually works
 
 Version 0.8.0
 - CRAN release
