@@ -5,23 +5,23 @@ test_that("modfun in module", {
   }
 
   m <- modules::module({
-    
+
     oneLineDoc <- function(a, b = "a") {
       ## comment
       a + b
     }
-    
+
     multiLineDoc  <- function(a, b = a) {
       ## a numeric
       a + b
       ##
       ## Return:
     }
-    
+
     oneLineFunction <- function(a, b = a) "test"
 
     obj <- 1:10
-    
+
   })
 
   expectOutput(

@@ -45,9 +45,9 @@
 #' })
 extend <- function(module, with) {
   extendCheckPrerequisites(module)
-  originalExpr <- deparse(attr(module, "expr"))
-  additionalExpr <- deparse(match.call()$with)
-  newExpr <- parse(text = c("{", originalExpr, additionalExpr, "}"))[[1]]
+  originalExpr <- attr(module, "expr")
+  additionalExpr <- match.call()$with
+  newExpr <- c(expression(), originalExpr, additionalExpr)
   ModuleConst(newExpr, attr(module, "topEncl"), attr(module, "topenv"))
 }
 

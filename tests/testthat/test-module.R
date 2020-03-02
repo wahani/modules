@@ -56,4 +56,3 @@ test_that("print method for modules", {
   "fun:\nfunction\\(\\)\n")
 
 })
-
