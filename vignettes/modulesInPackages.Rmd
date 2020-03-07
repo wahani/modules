@@ -1,0 +1,40 @@
+---
+title: "Modules and subfolders inside R packages"
+author: "Sebastian Warnholz"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Modules and subfolders inside R packages}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Introduction
+
+In the following you find how you can use modules and subfolders inside of an R
+package. This gives you additional options to impose structure on your
+code-base. While using modules inside of packages is a viable option already, it
+does not affect the way you structure the files. Also, an R package uses the
+sub-folder `R` for all R source code, but ignores all sub-folders within. In
+small code bases, this is no problem. Quite the contrary, it's simplicity stops
+you from over-complicating things. In large code bases, say everything with
+more than 20 files, you may long for something more than a flat folder
+structure.
+
+# Example
+
+The idea is very simple. You add a sub-folder to your package. They contain R
+source files, just like your ordinary R package.
+
+- Copy & Paste aus dem Paket in einen Unterordner muss funktionieren. 
+    - Umgang mit Dokumentation?
+    - Umgang mit Exports
+- Dokumentation von Modulen
+- 

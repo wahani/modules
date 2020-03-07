@@ -26,20 +26,21 @@ Suggests:
     parallel
 RoxygenNote: 6.1.1
 Collate:
-    'amodule.R'
     'NAMESPACE.R'
-    'getSearchPath.R'
+    'amodule.R'
+    'base-override.R'
     'class.R'
     'depend.R'
     'export.R'
     'expose.R'
     'extend.R'
+    'getSearchPath.R'
     'import.R'
     'module-class.R'
     'module-coercion.R'
     'module-helper.R'
-    'module.R'
     'use.R'
+    'module.R'
+    'module-package.R'
     'testModule.R'
-    'base-override.R'
 VignetteBuilder: knitr
