@@ -4,6 +4,7 @@ deparseEllipsis <- function(mc, exclude) {
   args <- Map(deparse, mc)
   args[[1]] <- NULL
   args[exclude] <- NULL
+  args <- lapply(args, paste0, collapse = "\n")
   args <- unlist(args)
   deleteQuotes(args)
 }
