@@ -7,8 +7,8 @@ test_that("Exports of module", {
 
   })
 
-  expect_true(all(c("fun", "pFun") %in% names(m)))
-  expect_true(!(".fun" %in% names(m)))
+  testthat::expect_true(all(c("fun", "pFun") %in% names(m)))
+  testthat::expect_true(!(".fun" %in% names(m)))
 
   m <- module({
 
@@ -20,9 +20,9 @@ test_that("Exports of module", {
 
   })
 
-  expect_true("fun" %in% names(m))
-  expect_true(!(".fun" %in% names(m)))
-  expect_true(!("pFun" %in% names(m)))
+  testthat::expect_true("fun" %in% names(m))
+  testthat::expect_true(!(".fun" %in% names(m)))
+  testthat::expect_true(!("pFun" %in% names(m)))
 
   m <- module({
 
@@ -34,8 +34,8 @@ test_that("Exports of module", {
 
   })
 
-  expect_true(all(c("fun", "pFun") %in% names(m)))
-  expect_true(!(".fun" %in% names(m)))
+  testthat::expect_true(all(c("fun", "pFun") %in% names(m)))
+  testthat::expect_true(!(".fun" %in% names(m)))
 
   m <- module({
 
@@ -48,8 +48,8 @@ test_that("Exports of module", {
 
   })
 
-  expect_true(all(c("fun", "pFun") %in% names(m)))
-  expect_true(!(".fun" %in% names(m)))
+  testthat::expect_true(all(c("fun", "pFun") %in% names(m)))
+  testthat::expect_true(!(".fun" %in% names(m)))
 
 })
 
@@ -59,6 +59,6 @@ test_that("Produce an error when 'export' is not available", {
       modules::export("fun", "fun1", "fun2")
       fun <- function(x) x
     }),
-    "exports not defined: fun1, fun2"
+    "unable to resolve export: fun1"
   )
 })

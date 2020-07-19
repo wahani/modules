@@ -17,14 +17,13 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Suggests:
-    disposables,
     testthat,
     devtools,
     knitr,
     lintr,
     rmarkdown,
     parallel
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.0
 Collate:
     'amodule.R'
     'NAMESPACE.R'

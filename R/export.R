@@ -58,22 +58,29 @@ exportGetCurrentValue <- function(envir) {
   get(exportNameWithinModule(), envir = envir)
 }
 
+exportExtract2List <- function(envir) {
+  exports <- exportResolveFinalValue(envir)
+  objectsAndNames <- Map(exportExtractElement(envir), exports, names(exports))
+  module <- lapply(objectsAndNames, function(x) x$object)
+  names(module) <- vapply(objectsAndNames, function(x) x$name, character(1))
+  duplicateNames <- names(module)[duplicated(names(module))]
+  if (length(duplicateNames) > 0) warning("Found duplicate names in exports!")
+  module
+}
+
 exportResolveFinalValue <- function(envir) {
   isRegEx <- function(s) length(s) == 1 && grepl("^\\^", s)
   exports <- exportGetCurrentValue(envir)
-  if (isRegEx(exports)) ls(envir, pattern = exports)
-  else exports
+  if (isRegEx(exports)) exports <- ls(envir, pattern = exports)
+  if (is.null(names(exports))) names(exports) <-  rep("", length(exports))
+  exports
 }
 
-exportExtract2List <- function(envir) {
-  objectsToExport <- exportResolveFinalValue(envir)
-  module <- as.list(envir)
-  if (any(ind <- !objectsToExport %in% names(module))) {
-    stop(
-      "exports not defined: ",
-      paste(objectsToExport[ind], collapse = ", ")
-    )
-  } else {
-    module[objectsToExport]
-  }
+exportExtractElement <- function(where) function(element, name) {
+  name <- if (name == "") element else name
+  object <- tryCatch(
+    eval(parse(text = element), where, baseenv()),
+    error = function(e) stop(call. = FALSE, sprintf(
+      "unable to resolve export: %s\nfailed with\n%s", name, e)))
+  list(name = name, object = object)
 }

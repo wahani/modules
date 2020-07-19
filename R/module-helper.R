@@ -9,7 +9,14 @@ deparseEllipsis <- function(mc, exclude) {
 }
 
 deleteQuotes <- function(x) {
-  gsub("\\\"|\\\'", "", x)
+  res <- vapply(
+    x, FUN.VALUE = character(1),
+    function(e) {
+      if (grepl("^[\\\"\\\'].*[\\\"\\\']$", e)) gsub("\\\"|\\\'", "", e)
+      else e
+    })
+  if (is.null(names(x))) names(res) <- NULL
+  res
 }
 
 addDependency <- function(from, what, where, assignFun, name) {

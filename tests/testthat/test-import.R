@@ -58,49 +58,6 @@ test_that("package dependencies", {
 
 })
 
-test_that("cross package deps", {
-  ## We skip this test on remote because it produces errors on fedora and debian
-  ## and CI. I cannot reproduce these errors on local ubuntu.
-  testthat::skip_on_cran()
-  testthat::skip_on_ci()
-  testthat::skip_on_travis()
-  if (requireNamespace("disposables", quietly = TRUE)) {
-    disposables::make_packages(
-
-      imports = "modules",
-
-      M1 = {
-        m1 <- module({
-          fun <- function(x) x
-        })
-      },
-
-      M2 = {
-        m2 <- module({
-          import(M1, m1)
-          newFun <- function(...) m1$fun(...)
-        })
-      }
-
-    )
-
-    m1 <- module(
-      topEncl = baseenv(),
-      fun <- function(x) x
-    )
-
-    expect_equal(
-      environmentName(parent.env(parent.env(environment(M1::m1$fun)))),
-      "M1"
-    )
-
-    expect_equal(
-      environmentName(parent.env(parent.env(environment(m1$fun)))),
-      "base"
-    )}
-
-})
-
 test_that("duplications on search path", {
 
   expectEqual <- function(a, b) {
