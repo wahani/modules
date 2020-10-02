@@ -79,6 +79,14 @@ test_that("Rename exports", {
   testthat::expect_equal(m$c(), "foo")
 })
 
+test_that("Export .names", {
+  m <- modules::module({
+    export(.foo = foo)
+    foo <- function() "foo"
+  })
+  testthat::expect_equal(m$.foo(), "foo")
+})
+
 test_that("Warning on duplicate names", {
   testthat::expect_warning(
     modules::module({
