@@ -62,3 +62,39 @@ test_that("Produce an error when 'export' is not available", {
     "unable to resolve export: fun1"
   )
 })
+
+test_that("Rename exports", {
+  m <- modules::module({
+    export(
+      foo,
+      a = foo,
+      b = "foo",
+      c = function() foo()
+    )
+    foo <- function() "foo"
+  })
+  testthat::expect_equal(m$foo(), "foo")
+  testthat::expect_equal(m$a(), "foo")
+  testthat::expect_equal(m$b(), "foo")
+  testthat::expect_equal(m$c(), "foo")
+})
+
+test_that("Warning on duplicate names", {
+  testthat::expect_warning(
+    modules::module({
+      export(foo, "foo")
+      foo <- function() "foo"
+    }),
+    "duplicate names in exports"
+  )
+})
+
+test_that("Warn with do.call", {
+  testthat::expect_warning(
+    modules::module({
+      do.call(export, list("foo"))
+      foo <- function() "foo"
+    }),
+    "non standard call to export"
+  )
+})

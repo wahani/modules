@@ -6,7 +6,7 @@
 #'
 #' @param ... (character, or unquoted expression) names to export from module. A
 #'   character of length 1 with a leading "^" is interpreted as regular
-#'   expression.
+#'   expression. Arguments can be named and used for renaming exports.
 #' @param where (environment) typically the calling environment. Should only be
 #'   relevant for testing.
 #'
@@ -41,15 +41,42 @@
 #'   foo <- function() "foo"
 #'   bar <- function() "bar"
 #' })
+#' 
+#' module({
+#'   export(bar = foo)
+#'   foo <- function() "foo"
+#' })
 #'
 #' @export
 export <- function(..., where = parent.frame()) {
+  exportWarnOnNonStandardCalls(match.call())
   objectsToExport <- deparseEllipsis(match.call(), "where")
   currentExports <- exportGetCurrentValue(where)
   currentExports <- currentExports[currentExports != "^*"]
   assign(exportNameWithinModule(), c(currentExports, objectsToExport),
          envir = where)
   invisible(NULL)
+}
+
+exportWarnOnNonStandardCalls <- function(call) {
+  # exporting with do.call is not working properly, so we throw a warning, in
+  # case we can detect it. Consider the following examples:
+  # m <- module({
+  #   sm <- module({
+  #     x <- 1
+  #     fun <- function() x
+  #   })
+  #   do.call(export, list(fun = sm$fun))
+  # })
+  # It will not work, although `export(fun = sm$fun)` does work as expected.
+  # This is extremely difficult to dubug and it seems to be better to turn it
+  # off until someone can fix it.
+  if (length(deparse(call[[1]])) > 1) warning(
+    "Detected a non standard call to export. The export function relies heavily ",
+    "on non standard evaluation and may not work as expected combined with 'do.call' ",
+    "or 'lapply'. See the docs and https://github.com/wahani/modules/issues/19 for ",
+    "a discussion."
+  )
 }
 
 exportNameWithinModule <- function() ".__exports__"
