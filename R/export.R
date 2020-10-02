@@ -41,7 +41,7 @@
 #'   foo <- function() "foo"
 #'   bar <- function() "bar"
 #' })
-#' 
+#'
 #' module({
 #'   export(bar = foo)
 #'   foo <- function() "foo"
