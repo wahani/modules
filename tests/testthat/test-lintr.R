@@ -15,8 +15,8 @@ test_that("Package Style", {
       j = lintr::trailing_blank_lines_linter,
       k = lintr::trailing_whitespace_linter,
       l = lintr::open_curly_linter,
-      m = lintr::multiple_dots_linter,
+      m = lintr::object_name_linter(c("CamelCase", "camelCase", "dotted.case")),
       n = lintr::closed_curly_linter
     ))
- }
+  }
 })
