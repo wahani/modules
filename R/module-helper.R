@@ -50,8 +50,12 @@ addDependency <- function(from, what, where, assignFun, name) {
       packageStartupMessage(
         "Replacing attached import/use on search path for: ",
         addPrefix(name), ".")
-      if (pos == 1) parent.env(where) <- sp[[2]]
-      else parent.env(sp[[pos - 1]]) <- sp[[pos + 1]]
+      if (identical(globalenv(), where)) {
+        detach(pos = pos)
+      } else {
+        if (pos == 1) parent.env(where) <- sp[[2]]
+        else parent.env(sp[[pos - 1]]) <- sp[[pos + 1]]
+      }
     }
   }
 
