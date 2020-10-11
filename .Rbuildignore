@@ -6,3 +6,5 @@
 ^cran-comments\.md$
 ^\.projectile$
 ^\.github$
+^doc$
+^Meta$

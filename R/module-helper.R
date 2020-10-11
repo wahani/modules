@@ -4,12 +4,20 @@ deparseEllipsis <- function(mc, exclude) {
   args <- Map(deparse, mc)
   args[[1]] <- NULL
   args[exclude] <- NULL
+  args <- lapply(args, paste0, collapse = "\n")
   args <- unlist(args)
   deleteQuotes(args)
 }
 
 deleteQuotes <- function(x) {
-  gsub("\\\"|\\\'", "", x)
+  res <- vapply(
+    x, FUN.VALUE = character(1),
+    function(e) {
+      if (grepl("^[\\\"\\\'].*[\\\"\\\']$", e)) gsub("\\\"|\\\'", "", e)
+      else e
+    })
+  if (is.null(names(x))) names(res) <- NULL
+  res
 }
 
 addDependency <- function(from, what, where, assignFun, name) {
