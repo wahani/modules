@@ -1,3 +1,27 @@
+test_that("Re-attach module", {
+
+  outer <- modules::module({
+
+    m <- modules::module({
+      fun <- function(x) x
+    })
+
+    use(m, attach = TRUE)
+
+    testthat::expect_equal(fun(1), 1)
+
+    m <- modules::module({
+      fun <- function(x) x + 1
+    })
+
+    use(m, attach = TRUE)
+
+    testthat::expect_equal(fun(1), 2)
+
+  })
+
+})
+
 test_that("Attaching other module", {
 
   expectEqual <- function(a, b) {

@@ -22,7 +22,8 @@ test_that("as.module", {
     "base"
   )
 
-  tmpDir <- tempdir()
+  tmpDir <- paste0(tempdir(), "/test-modules")
+  dir.create(tmpDir, FALSE)
   writeLines("fun1 <- function() 1", paste0(tmpDir, "/tmp1.R"))
   writeLines("fun2 <- function() 1", paste0(tmpDir, "/tmp2.r"))
   writeLines("fun2 <- function() 1", paste0(tmpDir, "/tmp3"))
