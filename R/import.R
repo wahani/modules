@@ -74,7 +74,7 @@ importCheckInstall <- function(pkg) {
 
 importGetSelection <- function(mc, pkg) {
   objectsToImport <- importDeparseEllipses(mc)
-  if (length(objectsToImport) == 0) getNamespaceExports(pkg)
+  if (length(objectsToImport) == 0) importGetNamespaceExports(pkg)
   else objectsToImport
 }
 
@@ -86,4 +86,12 @@ importDeparseEllipses <- function(mc) {
   args$attach <- NULL
   args <- unlist(args)
   deleteQuotes(args)
+}
+
+importGetNamespaceExports <- function(pkg) {
+  nsExports <- getNamespaceExports(pkg)
+  nsDatasets <- data(package = pkg)
+  nsDatasets <- nsDatasets$results[, "Item"]
+  nsDatasets <- gsub(" .*", "", nsDatasets)
+  c(nsExports, nsDatasets)
 }

@@ -9,7 +9,7 @@ export(..., where = parent.frame())
 \arguments{
 \item{...}{(character, or unquoted expression) names to export from module. A
 character of length 1 with a leading "^" is interpreted as regular
-expression.}
+expression. Arguments can be named and used for renaming exports.}
 
 \item{where}{(environment) typically the calling environment. Should only be
 relevant for testing.}
@@ -50,6 +50,11 @@ module({
   export("^f.*$")
   foo <- function() "foo"
   bar <- function() "bar"
+})
+
+module({
+  export(bar = foo)
+  foo <- function() "foo"
 })
 
 }

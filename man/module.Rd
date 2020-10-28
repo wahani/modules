@@ -5,8 +5,8 @@
 \alias{autoTopEncl}
 \title{Define Modules in R}
 \usage{
-module(expr = { }, topEncl = autoTopEncl(envir),
-  envir = parent.frame())
+module(expr = {
+}, topEncl = autoTopEncl(envir), envir = parent.frame())
 
 autoTopEncl(where)
 }
