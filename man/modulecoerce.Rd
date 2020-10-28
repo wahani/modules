@@ -8,8 +8,7 @@
 \usage{
 as.module(x, ...)
 
-\method{as.module}{character}(x, topEncl = baseenv(), reInit = TRUE,
-  ..., envir = parent.frame())
+\method{as.module}{character}(x, topEncl = baseenv(), reInit = TRUE, ..., envir = parent.frame())
 
 \method{as.module}{module}(x, reInit = TRUE, ...)
 }

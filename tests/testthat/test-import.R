@@ -1,3 +1,22 @@
+test_that("Import of datasets: #29", {
+  # import all datasets from a package
+  m <- module({
+    import("datasets")
+    getIris <- function() iris
+  })
+  data("iris", envir = environment())
+  expect_equal(m$getIris(), iris)
+  expect_true("iris" %in% getSearchPathContent(m)[["modules:datasets"]])
+  # import just one dataset, like any other object
+  m <- module({
+    import("datasets", "iris")
+    getIris <- function() iris
+  })
+  data("iris", envir = environment())
+  expect_equal(m$getIris(), iris)
+  expect_true("iris" %in% getSearchPathContent(m)[["modules:datasets"]])
+})
+
 test_that("Imports of module", {
   # import and related functions are part of the parent scope. Not the module
   # itself.

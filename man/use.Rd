@@ -4,8 +4,7 @@
 \alias{use}
 \title{Use a module as dependency}
 \usage{
-use(module, ..., attach = FALSE, reInit = TRUE,
-  where = parent.frame())
+use(module, ..., attach = FALSE, reInit = TRUE, where = parent.frame())
 }
 \arguments{
 \item{module}{(character, module) a file or folder name, or an object that

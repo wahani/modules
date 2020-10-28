@@ -1,4 +1,4 @@
-#' @importFrom utils download.file install.packages installed.packages
+#' @importFrom utils data download.file install.packages installed.packages
 #'   packageVersion str
 NULL
 

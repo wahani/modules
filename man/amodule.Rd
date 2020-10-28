@@ -4,8 +4,8 @@
 \alias{amodule}
 \title{Define Augmented and Parameterized Modules}
 \usage{
-amodule(expr = { }, envir = parent.frame(), enclos = baseenv(),
-  class = NULL)
+amodule(expr = {
+}, envir = parent.frame(), enclos = baseenv(), class = NULL)
 }
 \arguments{
 \item{expr}{(expression) a module declaration, same as \link{module}}
