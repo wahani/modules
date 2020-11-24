@@ -62,7 +62,8 @@ importDefaultPackages <- function(except = NULL, where = parent.frame()) {
     "defaultPackages",
     c("datasets", "utils", "grDevices", "graphics", "stats", "methods"))
   pkgs <- setdiff(pkgs, except)
-  for (pkg in pkgs) do.call(modules::import, list(str2lang(pkg)), envir = where)
+  if ("methods" %in% pkgs) pkgs <- unique(c("methods", pkgs))
+  for (pkg in pkgs) do.call(modules::import, list(from = pkg), envir = where)
 }
 
 importCheckAttach <- function(where, attach) {
