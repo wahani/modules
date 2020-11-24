@@ -9,6 +9,8 @@
 #' @param where (environment) typically the calling environment. Should only be
 #'   relevant for testing.
 #' @param attach (logical) whether to attach the imports to the search path.
+#' @param except (character | NULL) a character vactor excluding any packages
+#' from being imported.
 #'
 #' @details
 #' \code{import} and \link{use} can replace \link{library} and \link{attach}.
