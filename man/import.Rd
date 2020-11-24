@@ -18,6 +18,9 @@ importDefaultPackages(except = NULL, where = parent.frame())
 
 \item{where}{(environment) typically the calling environment. Should only be
 relevant for testing.}
+
+\item{except}{(character | NULL) a character vactor excluding any packages
+from being imported.}
 }
 \value{
 An \link{environment} is returned invisibly comprising the imports.
