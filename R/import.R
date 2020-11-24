@@ -55,6 +55,16 @@ import <- function(from, ..., attach = TRUE, where = parent.frame()) {
   invisible(parent.env(where))
 }
 
+#' @export
+#' @rdname import
+importDefaultPackages <- function(except = NULL, where = parent.frame()) {
+  pkgs <- getOption(
+    "defaultPackages",
+    c("datasets", "utils", "grDevices", "graphics", "stats", "methods"))
+  pkgs <- setdiff(pkgs, except)
+  for (pkg in pkgs) do.call(modules::import, list(str2lang(pkg)), envir = where)
+}
+
 importCheckAttach <- function(where, attach) {
   if (!attach) new.env(parent = baseenv()) else where
 }

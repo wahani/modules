@@ -2,9 +2,12 @@
 % Please edit documentation in R/import.R
 \name{import}
 \alias{import}
+\alias{importDefaultPackages}
 \title{Import mechanism for modules}
 \usage{
 import(from, ..., attach = TRUE, where = parent.frame())
+
+importDefaultPackages(except = NULL, where = parent.frame())
 }
 \arguments{
 \item{from}{(character, or unquoted expression) a package name}

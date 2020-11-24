@@ -1,3 +1,35 @@
+test_that("Import of default packages: #31", {
+
+  # import default packages, e.g. stats, utils, etc
+  m <- module(topEncl = baseenv(), {
+    suppressPackageStartupMessages(importDefaultPackages())
+    findsStats <- function() exists("median")
+    findsUtils <- function() exists("data")
+    findsGraphics <- function() exists("plot")
+    findsDatasets <- function() exists("iris")
+  })
+
+  for (fun in m) {
+    testthat::expect_true(fun())
+  }
+
+  # now exclude datasets and utils
+  m <- module(topEncl = baseenv(), {
+    suppressPackageStartupMessages(importDefaultPackages(
+      c("datasets", "utils")
+    ))
+    findsStats <- function() exists("median")
+    findsUtils <- function() !exists("data")
+    findsGraphics <- function() exists("plot")
+    findsDatasets <- function() !exists("iris")
+  })
+
+  for (fun in m) {
+    testthat::expect_true(fun())
+  }
+
+})
+
 test_that("Import of datasets: #29", {
   # import all datasets from a package
   m <- module({
