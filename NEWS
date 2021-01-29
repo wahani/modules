@@ -1,4 +1,5 @@
 Version 0.9.0
+- CRAN release
 - Bugfix from issue #16 on Github: extend a module which has been loaded from a
   file now actually works
 - Extending the export mechanism to allow for renaming: see #19
