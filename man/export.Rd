@@ -15,9 +15,9 @@ expression. Arguments can be named and used for renaming exports.}
 relevant for testing.}
 }
 \description{
-You can declare exports very much like the export mechanism in R packages: you
-define which objects from the module you make available to a user. All other
-objects are kept private, local, to the module.
+You can declare exports very much like the export mechanism in R packages:
+you define which objects from the module you make available to a user. All
+other objects are kept private, local, to the module.
 }
 \details{
 A module can have several export declarations, e.g. directly in

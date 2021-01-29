@@ -4,6 +4,8 @@ Version 0.9.0
 - Extending the export mechanism to allow for renaming: see #19
 - Reattaching a module in the .GlobalEnv now actually works. See #24
 - Importing a complete package now also imports datasets. See #29
+- importDefaultPackages can be used to import Rs default packages, e.g. utils
+  and stats. See #31
 
 Version 0.8.0
 - CRAN release

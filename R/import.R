@@ -9,6 +9,8 @@
 #' @param where (environment) typically the calling environment. Should only be
 #'   relevant for testing.
 #' @param attach (logical) whether to attach the imports to the search path.
+#' @param except (character | NULL) a character vactor excluding any packages
+#' from being imported.
 #'
 #' @details
 #' \code{import} and \link{use} can replace \link{library} and \link{attach}.
@@ -53,6 +55,17 @@ import <- function(from, ..., attach = TRUE, where = parent.frame()) {
   objectsToImport <- importGetSelection(match.call(), pkg)
   addDependency(pkg, objectsToImport, where, makeDelayedAssignment, pkg)
   invisible(parent.env(where))
+}
+
+#' @export
+#' @rdname import
+importDefaultPackages <- function(except = NULL, where = parent.frame()) {
+  pkgs <- getOption(
+    "defaultPackages",
+    c("datasets", "utils", "grDevices", "graphics", "stats", "methods"))
+  pkgs <- setdiff(pkgs, except)
+  if ("methods" %in% pkgs) pkgs <- unique(c("methods", pkgs))
+  for (pkg in pkgs) do.call(modules::import, list(from = pkg), envir = where)
 }
 
 importCheckAttach <- function(where, attach) {

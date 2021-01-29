@@ -1,8 +1,8 @@
 #' Export mechanism for modules
 #'
-#' You can declare exports very much like the export mechanism in R packages: you
-#' define which objects from the module you make available to a user. All other
-#' objects are kept private, local, to the module.
+#' You can declare exports very much like the export mechanism in R packages:
+#' you define which objects from the module you make available to a user. All
+#' other objects are kept private, local, to the module.
 #'
 #' @param ... (character, or unquoted expression) names to export from module. A
 #'   character of length 1 with a leading "^" is interpreted as regular
