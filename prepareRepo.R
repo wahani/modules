@@ -1,5 +1,5 @@
 devtools::build_vignettes()
-knitr::knit("inst/doc/modulesInR.Rmd", "README.md")
+knitr::knit("vignettes/modulesInR.Rmd", "README.md")
 
 text <- c(
   "[![Build Status](https://travis-ci.org/wahani/modules.png?branch=master)](https://travis-ci.org/wahani/modules)",

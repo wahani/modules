@@ -4,10 +4,7 @@
 ![Downloads](http://cranlogs.r-pkg.org/badges/modules)
 # Modules in R
 
-Provides modules as an organizational unit for source code. Modules
-enforce to be more rigorous when defining dependencies and have
-a local search path. They can be used as a sub unit within packages
-or in scripts.
+Provides modules as an organizational unit for source code. Modules enforce to be more rigorous when defining dependencies and have a local search path. They can be used as a sub unit within packages or in scripts.
 
 ## Installation
 
@@ -67,7 +64,7 @@ m$foo()
 ```
 
 Here `m` is the collection of objects created inside the module. This is a
-`list` with the function `foo` as only element. We can do the same thing and define a module in a seperate file:
+`list` with the function `foo` as only element. We can do the same thing and define a module in a separate file:
 
 **module.R**
 
@@ -112,7 +109,7 @@ getSearchPathContent(m)
 ## List of 4
 ##  $ modules:root     : chr "someFunction"
 ##  $ modules:internals: chr [1:9] "attach" "depend" "export" "expose" ...
-##  $ base             : chr [1:1222] "-" "-.Date" "-.POSIXt" ":" ...
+##  $ base             : chr [1:1244] "-" "-.Date" "-.POSIXt" ":" ...
 ##  $ R_EmptyEnv       : chr(0) 
 ##  - attr(*, "class")= chr [1:2] "SearchPathContent" "list"
 ```
@@ -169,7 +166,7 @@ getSearchPathContent(m)
 ##  $ modules:root     : chr "functionWithDep"
 ##  $ modules:stats    : chr "median"
 ##  $ modules:internals: chr [1:9] "attach" "depend" "export" "expose" ...
-##  $ base             : chr [1:1222] "-" "-.Date" "-.POSIXt" ":" ...
+##  $ base             : chr [1:1244] "-" "-.Date" "-.POSIXt" ":" ...
 ##  $ R_EmptyEnv       : chr(0) 
 ##  - attr(*, "class")= chr [1:2] "SearchPathContent" "list"
 ```
@@ -195,9 +192,9 @@ m$functionWithDep(1:10)
 To *import* other modules, the function `use` can be called. *use* really just means *import module*. With `use` we can load modules:
 
 - defined in the calling environment of the module definition
-- or defined in files or folders (see the coresponding vignette on this topic)
+- or defined in files or folders (see the corresponding vignette on this topic)
 
-Consider the following example: 
+Consider the following example:
 
 
 ```r
@@ -261,15 +258,15 @@ m
 
 # Example: Modules as Parallel Process
 
-One example where you may want to have more control of the enclosing environment 
-of a function is when you parallelize your code. First consider the case when a 
+One example where you may want to have more control of the enclosing environment
+of a function is when you parallelize your code. First consider the case when a
 *naive* implementation fails.
 
 
 ```r
 library("parallel")
 dependency <- identity
-fun <- function(x) dependency(x) 
+fun <- function(x) dependency(x)
 
 cl <- makeCluster(2)
 clusterMap(cl, fun, 1:2)
@@ -283,13 +280,13 @@ clusterMap(cl, fun, 1:2)
 stopCluster(cl)
 ```
 
-To make the function `fun` self contained we can define it in a module. 
+To make the function `fun` self contained we can define it in a module.
 
 
 ```r
 m <- module({
   dependency <- identity
-  fun <- function(x) dependency(x) 
+  fun <- function(x) dependency(x)
 })
 
 cl <- makeCluster(2)
@@ -326,9 +323,9 @@ Second you may be interested in
 [import](https://cran.r-project.org/package=import) which provides convenient
 syntax for stating dependencies in script files. This is something which is also
 covered here, although, when you are only interested in a replacement for
-`library` the package `import` is more focused. 
+`library` the package `import` is more focused.
 
-`modules` in this package can act as objects as in object-orientation. In 
+`modules` in this package can act as objects as in object-orientation. In
 contrast to [R6](https://cran.r-project.org/package=R6) and reference classes
 implemented in the methods package here these objects are immutable by default.
 Furthermore it is not being made easy to change state of a module; but it is not
@@ -337,8 +334,8 @@ Furthermore inheritance is not a feature, instead you have various possibilities
 for object composition.
 
 The development of the `modules` package has been inspired by other languages:
-[F#](https://fsharpforfunandprofit.com/posts/organizing-functions/), 
-[Erlang](http://learnyousomeerlang.com/modules) and 
+[F#](https://fsharpforfunandprofit.com/posts/organizing-functions/),
+[Erlang](https://learnyousomeerlang.com/modules/) and
 [julia](https://docs.julialang.org/en/v1/manual/modules/index.html).
 
 
