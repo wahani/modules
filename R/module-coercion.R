@@ -53,11 +53,28 @@ as.module.character <- function(x, topEncl = baseenv(), reInit = TRUE, ...,
     fileAsModule(fileName, topEncl, ...)
   }
 
-  is.url <- function(x) grepl("^(https?|ftp)://", x)
+  isUrl <- function(x) grepl("^(https?|ftp)://", x)
+
+  isInPath <- function(x) !is.null(fileInPath(x))
+
+  fileInPath <- function(x) {
+    path <- getOption(
+      "modulesPath",
+      Sys.getenv("MODULES_PATH", "~/R/modules")
+    )
+    paths <- unlist(strsplit(path, ":"))
+    for (path in paths) {
+      file <- normalizePath(paste(path, x, sep = "/"), mustWork = FALSE)
+      if (file.exists(file)) return(file)
+    }
+    return(NULL)
+  }
 
   if (dir.exists(x)) dirAsModule(x, topEncl, ...)
   else if (file.exists(x)) fileAsModule(x, topEncl, ...)
-  else if (is.url(x)) urlAsModule(x, topEncl, ...)
+  else if (isUrl(x)) urlAsModule(x, topEncl, ...)
+  else if (isInPath(x)) as.module.character(
+    fileInPath(x), topEncl = topEncl, reInit = reInit, ..., envir = envir)
   else stop("Can`t find ", x)
 
 }
