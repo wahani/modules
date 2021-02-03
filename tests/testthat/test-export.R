@@ -1,3 +1,10 @@
+test_that("Exports of special names #37", {
+  m <- module({
+    "%+%" <- function(lhs, rhs) lhs + rhs
+  })
+  m$`%+%`(1, 2)
+})
+
 test_that("Exports of module", {
   m <- module({
 

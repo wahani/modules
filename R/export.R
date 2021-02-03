@@ -106,7 +106,7 @@ exportResolveFinalValue <- function(envir) {
 exportExtractElement <- function(where) function(element, name) {
   name <- if (name == "") element else name
   object <- tryCatch(
-    eval(parse(text = element), where, baseenv()),
+    eval(parse(text = paste0("`", element, "`")), where, baseenv()),
     error = function(e) stop(call. = FALSE, sprintf(
       "unable to resolve export: %s\nfailed with\n%s", name, e)))
   list(name = name, object = object)
