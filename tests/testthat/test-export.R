@@ -1,23 +1,26 @@
+test_that("Exports of special names #37", {
+  m <- module({
+    "%+%" <- function(lhs, rhs) lhs + rhs # Exclude Linting
+  })
+  m$`%+%`(1, 2)
+})
+
 test_that("Exports of module", {
   m <- module({
-
     fun <- function(x) x
     .fun <- function(x) x
     pFun <- function(x) x
-
   })
 
   testthat::expect_true(all(c("fun", "pFun") %in% names(m)))
   testthat::expect_true(!(".fun" %in% names(m)))
 
   m <- module({
-
     export(fun)
 
     fun <- function(x) x
     .fun <- function(x) x
     pFun <- function(x) x
-
   })
 
   testthat::expect_true("fun" %in% names(m))
@@ -25,32 +28,27 @@ test_that("Exports of module", {
   testthat::expect_true(!("pFun" %in% names(m)))
 
   m <- module({
-
     export(fun, "pFun")
 
     fun <- function(x) x
     .fun <- function(x) x
     pFun <- function(x) x
-
   })
 
   testthat::expect_true(all(c("fun", "pFun") %in% names(m)))
   testthat::expect_true(!(".fun" %in% names(m)))
 
   m <- module({
-
     export(fun)
 
     fun <- function(x) x
     .fun <- function(x) x
     pFun <- function(x) x
     export(pFun)
-
   })
 
   testthat::expect_true(all(c("fun", "pFun") %in% names(m)))
   testthat::expect_true(!(".fun" %in% names(m)))
-
 })
 
 test_that("Produce an error when 'export' is not available", {
@@ -69,14 +67,19 @@ test_that("Rename exports", {
       foo,
       a = foo,
       b = "foo",
-      c = function() foo()
+      c = function() foo(),
+      bar = sub$bar
     )
+    sub <- module({
+      bar <- function() "bar"
+    })
     foo <- function() "foo"
   })
   testthat::expect_equal(m$foo(), "foo")
   testthat::expect_equal(m$a(), "foo")
   testthat::expect_equal(m$b(), "foo")
   testthat::expect_equal(m$c(), "foo")
+  testthat::expect_equal(m$bar(), "bar")
 })
 
 test_that("Export .names", {

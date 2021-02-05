@@ -26,16 +26,20 @@ depend <- function(on, ...) UseMethod("depend")
 #' @rdname depend
 #' @export
 depend.default <- function(on, version = "any", libPath = NULL, ...) {
-
   stopifnot(length(on) == 1 && is.character(on))
   stopifnot(is.character(version))
   stopifnot(is.null(libPath) || is.character(libPath))
 
   needsUpdate <- function(on) {
-    if (!is.element(on, lib())) TRUE
-    else if (version == "any") FALSE
-    else if (pkgVersion(on) < version) TRUE
-    else FALSE
+    if (!is.element(on, lib())) {
+      TRUE
+    } else if (version == "any") {
+      FALSE
+    } else if (pkgVersion(on) < version) {
+      TRUE
+    } else {
+      FALSE
+    }
   }
 
   lib <- function() {
@@ -47,9 +51,9 @@ depend.default <- function(on, version = "any", libPath = NULL, ...) {
   }
 
   if (needsUpdate(on)) install.packages(on, lib = libPath, ...)
-  if (needsUpdate(on)) # check if we now have the correct version
+  if (needsUpdate(on)) { # check if we now have the correct version
     stop("'", on, "' package installation failed for version ", version)
+  }
 
   invisible(TRUE)
-
 }

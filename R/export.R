@@ -46,15 +46,17 @@
 #'   export(bar = foo)
 #'   foo <- function() "foo"
 #' })
-#'
 #' @export
 export <- function(..., where = parent.frame()) {
   exportWarnOnNonStandardCalls(match.call())
   objectsToExport <- deparseEllipsis(match.call(), "where")
   currentExports <- exportGetCurrentValue(where)
   currentExports <- currentExports[currentExports != "^*"]
-  assign(exportNameWithinModule(), c(currentExports, objectsToExport),
-         envir = where)
+  assign(
+    exportNameWithinModule(),
+    c(currentExports, objectsToExport),
+    envir = where
+  )
   invisible(NULL)
 }
 
@@ -71,12 +73,14 @@ exportWarnOnNonStandardCalls <- function(call) {
   # It will not work, although `export(fun = sm$fun)` does work as expected.
   # This is extremely difficult to dubug and it seems to be better to turn it
   # off until someone can fix it.
-  if (length(deparse(call[[1]])) > 1) warning(
-    "Detected a non standard call to export. The export function relies heavily ",
-    "on non standard evaluation and may not work as expected combined with 'do.call' ",
-    "or 'lapply'. See the docs and https://github.com/wahani/modules/issues/19 for ",
-    "a discussion."
-  )
+  if (length(deparse(call[[1]])) > 1) {
+    warning(
+      "Detected a non standard call to export. The export function relies heavily ",
+      "on non standard evaluation and may not work as expected combined with 'do.call' ",
+      "or 'lapply'. See the docs and https://github.com/wahani/modules/issues/19 for ",
+      "a discussion."
+    )
+  }
 }
 
 exportNameWithinModule <- function() ".__exports__"
@@ -99,15 +103,24 @@ exportResolveFinalValue <- function(envir) {
   isRegEx <- function(s) length(s) == 1 && grepl("^\\^", s)
   exports <- exportGetCurrentValue(envir)
   if (isRegEx(exports)) exports <- ls(envir, pattern = exports)
-  if (is.null(names(exports))) names(exports) <-  rep("", length(exports))
+  if (is.null(names(exports))) names(exports) <- rep("", length(exports))
   exports
 }
 
-exportExtractElement <- function(where) function(element, name) {
-  name <- if (name == "") element else name
-  object <- tryCatch(
-    eval(parse(text = element), where, baseenv()),
-    error = function(e) stop(call. = FALSE, sprintf(
-      "unable to resolve export: %s\nfailed with\n%s", name, e)))
-  list(name = name, object = object)
+exportExtractElement <- function(where) {
+  function(element, name) {
+    name <- if (name == "") element else name
+    # we need to make sure that special names, e.g. %*% are parsed correctly
+    element <- if (grepl("^%.*%$", element)) paste0("`", element, "`") else element
+    object <- tryCatch(
+      eval(parse(text = element), where, baseenv()),
+      error = function(e) {
+        stop(
+          call. = FALSE,
+          sprintf("unable to resolve export: %s\nfailed with\n%s", name, e)
+        )
+      }
+    )
+    list(name = name, object = object)
+  }
 }
