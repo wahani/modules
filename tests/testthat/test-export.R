@@ -2,7 +2,7 @@ test_that("Exports of special names #37", {
   m <- module({
     "%+%" <- function(lhs, rhs) lhs + rhs # Exclude Linting
   })
-  m$`%+%`(1, 2)
+  testthat::expect_true(m$`%+%`(1, 2) == 3)
 })
 
 test_that("Exports of module", {

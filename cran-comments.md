@@ -1,6 +1,9 @@
 ## Release schedule
-With version 0.9.0 (2021-01-31) I introduced a bug affecting multiple users.
+
+- With version 0.9.0 (2021-01-31) I introduced a bug affecting multiple users.
 This release fixes the issue.
+- There are errors on CRAN for r-oldrel in the tests. I hope these checks now
+  run again.
 
 ## Test environments
 
