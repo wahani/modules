@@ -1,5 +1,6 @@
 Version 0.10.0
-- Bugfix when exporting obejects with special names #37
+- CRAN release
+- Bugfix when exporting objects with special names #37
 
 Version 0.9.0
 - CRAN release
@@ -16,10 +17,10 @@ Version 0.8.0
 - Update to documentation
 - Bugfix: find 'module' inside a module declaration
 - New function 'getSearchPathContent' to investigate the search path of a module
-- getSearchPath can now handle functions and modules as argment
+- getSearchPath can now handle functions and modules as argument
 - New vignettes
 - 'use' and 'import' now signal conflicts using 'packageStartupMessage' instead
-  of 'message'. They can now also be uppressed using
+  of 'message'. They can now also be suppressed using
   'suppressPackageStartupMessage'.
 - Skipping test for cross package dependencies on CRAN - not yet possible to
   reproduce locally.
