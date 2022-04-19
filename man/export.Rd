@@ -56,5 +56,4 @@ module({
   export(bar = foo)
   foo <- function() "foo"
 })
-
 }

@@ -43,7 +43,7 @@ mfun <- local(envir = new.env(parent = baseenv()), {
 
 modules::getSearchPath(environment(m$fun)) # this setup is slow
 modules::getSearchPath(environment(mfun)) # this setup is slow
-##parent.env(parent.env(environment(m$fun))) <- baseenv() # now it is fast
+## parent.env(parent.env(environment(m$fun))) <- baseenv() # now it is fast
 
 system.time({
   cl <- makeCluster(2)
@@ -62,4 +62,3 @@ system.time({
   clusterMap(cl, identity, 1:100)
   stopCluster(cl)
 })
-

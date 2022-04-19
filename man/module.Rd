@@ -75,7 +75,6 @@ m <- module({
 m$fun(1)
 
 m <- module({
-
   import("stats", "median")
   export("fun")
 
@@ -84,10 +83,8 @@ m <- module({
     ## x (ANY)
     x
   }
-
 })
 
 m$fun
 m
-
 }

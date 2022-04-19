@@ -5,6 +5,13 @@ test_that("Exports of special names #37", {
   testthat::expect_true(m$`%+%`(1, 2) == 3)
 })
 
+test_that("Exports of names with whitespace #39", {
+  m <- module({
+    "my fun" <- function(x) x # Exclude Linting
+  })
+  testthat::expect_true(m$`my fun`(1) == 1)
+})
+
 test_that("Exports of module", {
   m <- module({
     fun <- function(x) x
