@@ -34,7 +34,6 @@ Collate:
     'expose.R'
     'extend.R'
     'import.R'
-    'options.R'
     'module-class.R'
     'module-coercion.R'
     'module-helper.R'
