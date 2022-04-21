@@ -9,7 +9,7 @@ vignette: >
 ---
 
 ```{r, results='asis', echo=FALSE}
-cat(gsub("\\n   ", "", packageDescription("modules", fields = "Description",encoding = NA)))
+cat(gsub("\\n   ", "", packageDescription("modules", fields = "Description", encoding = NA)))
 ```
 
 ## Installation
@@ -99,7 +99,7 @@ Two features of modules are important at this point:
 
 - We can keep the global workspace clean, by introducing a local scope
 - We have no direct access to the global environment from modules by default,
-enforcing discipline when using any form of dependency (objects and packages)
+enforcing discipline when using any form of dependency (objects and packages).
 
 The following subsections explain how to work with these two features.
 
@@ -119,11 +119,9 @@ Or you can use `import` for *attaching* single objects or packages. Import acts 
 
 ```{r}
 m <- module({
-
   import("stats", "median") # make median from package stats available
 
   functionWithDep <- function(x) median(x)
-
 })
 m$functionWithDep(1:10)
 getSearchPathContent(m)
@@ -131,11 +129,9 @@ getSearchPathContent(m)
 
 ```{r}
 m <- module({
-
   import("stats")
 
   functionWithDep <- function(x) median(x)
-
 })
 m$functionWithDep(1:10)
 ```
@@ -183,7 +179,6 @@ definition, i.e. directly in front of each function you want to export.
 
 ```{r}
 m <- module({
-
   export("fun")
 
   fun <- identity # public
@@ -191,7 +186,6 @@ m <- module({
 
   # .named are always private
   .privateFunction <- identity
-
 })
 
 m
@@ -258,5 +252,3 @@ The development of the `modules` package has been inspired by other languages:
 [F#](https://fsharpforfunandprofit.com/posts/organizing-functions/),
 [Erlang](https://learnyousomeerlang.com/modules/) and
 [julia](https://docs.julialang.org/en/v1/manual/modules/index.html).
-
-

@@ -110,8 +110,11 @@ exportResolveFinalValue <- function(envir) {
 exportExtractElement <- function(where) {
   function(element, name) {
     name <- if (name == "") element else name
-    # we need to make sure that special names, e.g. %*% are parsed correctly
-    element <- if (grepl("^%.*%$", element)) paste0("`", element, "`") else element
+    # we need to make sure that special names, e.g. %*% and names with
+    # whitespaces are parsed correctly
+    regexp <- "^%.*%$|^[[:alnum:][:space:]]+$"
+    # e.g.      %<>%|my fun name123
+    element <- if (grepl(regexp, element)) paste0("`", element, "`") else element # Exclude Linting
     object <- tryCatch(
       eval(parse(text = element), where, baseenv()),
       error = function(e) {
