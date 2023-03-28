@@ -112,7 +112,7 @@ exportExtractElement <- function(where) {
     name <- if (name == "") element else name
     # we need to make sure that special names, e.g. %*%, ==.foo and names with
     # whitespaces are parsed correctly
-    regexp <- "^[[:alnum:][:space:]]+$|^[[:punct:]]{2,}.*$"
+    regexp <- "^%.*%$|^[[:alnum:][:space:]]+$|^[[:punct:]]{2,}.*$"
     element <- if (grepl(regexp, element)) paste0("`", element, "`") else element # Exclude Linting
     object <- tryCatch(
       eval(parse(text = element), where, baseenv()),
