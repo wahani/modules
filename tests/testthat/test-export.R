@@ -1,3 +1,12 @@
+test_that("Exports of special names #43", {
+  m <- module({
+    "==.foo" <- function(lhs, rhs) base::`==`(lhs, rhs) # Exclude Linting
+    "!=.foo" <- function(lhs, rhs) base::`!=`(lhs, rhs)  # Exclude Linting
+  })
+  testthat::expect_true(m$`==.foo`(1, 1))
+  testthat::expect_true(m$`!=.foo`(1, 2))
+})
+
 test_that("Exports of special names #37", {
   m <- module({
     "%+%" <- function(lhs, rhs) lhs + rhs # Exclude Linting
