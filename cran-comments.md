@@ -1,19 +1,18 @@
-## Release schedule
-
-- With version 0.9.0 (2021-01-31) I introduced a bug affecting multiple users.
-This release fixes the issue.
-- There are errors on CRAN for r-oldrel in the tests. I hope these checks now
-  run again.
-
 ## Test environments
 
 * ubuntu (on travis-ci)
 * win-builder
-* local ubuntu 20.04, R 4.0.2
+* local ubuntu 22.04, R 4.3.0
 
 ## R CMD check results
 
 * There were no ERRORs or WARNINGs or NOTEs
+
+I have resolved the following note on https://cran.r-project.org/web/checks/check_results_modules.html:
+
+Check: LazyData
+Result: NOTE
+     'LazyData' is specified without a 'data' directory 
 
 ## Downstream dependencies
 

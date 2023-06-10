@@ -6,3 +6,5 @@ vignettes/*.R
 vignettes/*.html
 doc
 Meta
+/doc/
+/Meta/
