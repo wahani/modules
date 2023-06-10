@@ -1,5 +1,6 @@
 Version 0.11.0
 - Bugfix when exporting objects with whitespace in its name #39
+- Bugfix when exporting objects with special characters in its name #43
 
 Version 0.10.0
 - CRAN release
