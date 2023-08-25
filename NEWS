@@ -1,3 +1,6 @@
+Version 0.12.0
+- Bugfix when exporting object with special characters of length 1, e.g. `!` #45
+
 Version 0.11.0
 - Bugfix when exporting objects with whitespace in its name #39
 - Bugfix when exporting objects with special characters in its name #43

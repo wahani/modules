@@ -16,6 +16,28 @@ test_that("Exports of special names #37", {
   testthat::expect_true(m$`%add%`(1, 2) == 3)
 })
 
+test_that("Exports of special names #45", {
+  m <- module({
+    "[" <- `[`
+    . <- "."
+    "==" <- "=="
+  })
+  testthat::expect_true(is.primitive(m$"["))
+  testthat::expect_true(is.null(m$.))
+  testthat::expect_true(m$"==" == "==")
+})
+
+test_that("Exports of expressions", {
+  m <- module({
+    export(
+      true = !FALSE,
+      false = !T
+    )
+  })
+  testthat::expect_true(m$true)
+  testthat::expect_true(!m$false)
+})
+
 test_that("Exports of names with whitespace #39", {
   m <- module({
     "my fun" <- function(x) x # Exclude Linting
