@@ -1,18 +1,17 @@
 ## Test environments
 
-* ubuntu (on travis-ci)
+* github-action
 * win-builder
-* local ubuntu 22.04, R 4.3.0
+* local PopOS! 22.04, R 4.3.1
 
 ## R CMD check results
 
 * There were no ERRORs or WARNINGs or NOTEs
 
-I have resolved the following note on https://cran.r-project.org/web/checks/check_results_modules.html:
+There are no notes or issues reported on 
 
-Check: LazyData
-Result: NOTE
-     'LazyData' is specified without a 'data' directory 
+https://cran.r-project.org/web/checks/check_results_modules.html:
+
 
 ## Downstream dependencies
 
