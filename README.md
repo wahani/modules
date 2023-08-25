@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/wahani/modules.png?branch=master)](https://travis-ci.org/wahani/modules)
+[![Build Status](https://github.com/wahani/modules/actions/workflows/rcmdcheck.yml/badge.svg?branch=main)](https://github.com/wahani/modules/actions)
 [![codecov.io](https://codecov.io/github/wahani/modules/coverage.svg?branch=master)](https://codecov.io/github/wahani/modules?branch=master)
 [![CRAN](http://www.r-pkg.org/badges/version/modules)](https://cran.r-project.org/package=modules)
 ![Downloads](http://cranlogs.r-pkg.org/badges/modules)
