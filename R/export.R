@@ -16,6 +16,9 @@
 #' declared. A regular expression is denoted, as a convention, as character
 #' vector of length one with a leading "^".
 #'
+#' When \code{export} is called outside of a module, it has no effect and
+#' returns early. A warning is raised in this case.
+#'
 #' @examples
 #' module({
 #'   export("foo")
@@ -48,6 +51,7 @@
 #' })
 #' @export
 export <- function(..., where = parent.frame()) {
+  if (exportCalledOutsideOfModule(where)) return(invisible(NULL))
   exportWarnOnNonStandardCalls(match.call())
   objectsToExport <- deparseEllipsis(match.call(), "where")
   currentExports <- exportGetCurrentValue(where)
@@ -58,6 +62,14 @@ export <- function(..., where = parent.frame()) {
     envir = where
   )
   invisible(NULL)
+}
+
+exportCalledOutsideOfModule <- function(where) {
+  calledOutsideOfModule <- !exists(exportNameWithinModule(), where, inherits = FALSE)
+  if (calledOutsideOfModule) {
+    warning("Calling 'export' outside of a module has no effect.")
+  }
+  calledOutsideOfModule
 }
 
 exportWarnOnNonStandardCalls <- function(call) {
@@ -71,7 +83,7 @@ exportWarnOnNonStandardCalls <- function(call) {
   #   do.call(export, list(fun = sm$fun))
   # })
   # It will not work, although `export(fun = sm$fun)` does work as expected.
-  # This is extremely difficult to dubug and it seems to be better to turn it
+  # This is extremely difficult to debug and it seems to be better to turn it
   # off until someone can fix it.
   if (length(deparse(call[[1]])) > 1) {
     warning(
@@ -110,13 +122,13 @@ exportResolveFinalValue <- function(envir) {
 exportExtractElement <- function(where) {
   function(element, name) {
     name <- if (name == "") element else name
-    # we need to make sure that special names, 
-    # - infix operators: %*%, 
-    # - S3 methods for binary operators: ==.foo 
-    # - names with whitespaces 
+    # we need to make sure that special names,
+    # - infix operators: %*%,
+    # - S3 methods for binary operators: ==.foo
+    # - names with whitespace
     # - single character punctuation: !
     # are parsed correctly
-    regexp <- "^%.*%$|^[[:alnum:][:space:]]+$|^[[:punct:]]{2,}.*$|^[[:punct:]]$" 
+    regexp <- "^%.*%$|^[[:alnum:][:space:]]+$|^[[:punct:]]{2,}.*$|^[[:punct:]]$"
     element <- if (grepl(regexp, element)) paste0("`", element, "`") else element # Exclude Linting
     object <- tryCatch(
       eval(parse(text = element), where, baseenv()),

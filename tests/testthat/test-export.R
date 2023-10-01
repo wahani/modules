@@ -1,7 +1,14 @@
+testthat::test_that("export can be called savely outside of module #47", {
+  testthat::expect_warning(
+    modules::export("something"),
+    "Calling 'export' outside of a module has no effect."
+  )
+})
+
 test_that("Exports of special names #43", {
   m <- module({
     "==.foo" <- function(lhs, rhs) base::`==`(lhs, rhs) # Exclude Linting
-    "!.foo" <- function(lhs, rhs) base::`!=`(lhs, rhs)  # Exclude Linting
+    "!.foo" <- function(lhs, rhs) base::`!=`(lhs, rhs) # Exclude Linting
   })
   testthat::expect_true(m$`==.foo`(1, 1))
   testthat::expect_true(m$`!.foo`(1, 2))
