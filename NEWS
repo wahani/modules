@@ -1,3 +1,7 @@
+Version 0.13.0
+- 'export' no raises a warning when called from outside of a module instead of
+  raising an error. #47
+
 Version 0.12.0
 - Bugfix when exporting object with special characters of length 1, e.g. `!` #45
 
