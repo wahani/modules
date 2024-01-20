@@ -11,3 +11,4 @@
 ^\.lintr$
 ^CRAN-RELEASE$
 ^CRAN-SUBMISSION$
+^\.vscode$
